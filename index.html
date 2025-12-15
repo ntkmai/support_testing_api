@@ -165,38 +165,25 @@
                                     <label>Chọn Proxy:</label>
                                     <select id="proxyPreset" class="form-control">
                                         <option value="custom">Custom URL</option>
-                                        <option value="cors-anywhere">CORS Anywhere (Free)</option>
-                                        <option value="allorigins">AllOrigins (Reliable)</option>
-                                        <option value="corsproxy">CorsProxy.io (Fast)</option>
-                                        <option value="thingproxy">ThingProxy (Simple)</option>
+                                        <option value="cors-anywhere">CORS Anywhere (cần request access)</option>
+                                        <option value="allorigins">AllOrigins (Reliable ✅)</option>
+                                        <option value="corsproxy">CorsProxy.io (Fast ✅)</option>
+                                        <option value="thingproxy">ThingProxy (Simple ✅)</option>
                                     </select>
+                                    <small>Khuyến khích: AllOrigins hoặc CorsProxy</small>
                                 </div>
                                 <div class="form-group">
                                     <label>Proxy URL:</label>
-                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://cors-anywhere.herokuapp.com/">
+                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://api.allorigins.win/raw?url=">
                                     <small id="proxyUrlHint">Tự động điền khi chọn preset</small>
                                 </div>
-                                    </label>
-                                    <small>Bật để bypass CORS errors khi gọi API</small>
-                                </div>
                                 <div class="form-group">
-                                    <label>Proxy URL:</label>
-                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://cors-anywhere.herokuapp.com/">
-                                    <small>URL của CORS proxy server (mặc định: cors-anywhere)</small>
-                                </div>
-                                <div class="form-group">
-                                    <div class="info-box">
-                                        <strong>💡 Lưu ý:</strong>
-                                        <ul>
-                                            <li>CORS Proxy sẽ thêm prefix vào API URL</li>
-                                            <li>Ví dụ: <code>https://proxy.com/http://localhost:3000/api/users</code></li>
-                                            <li>Các proxy phổ biến:
-                                                <ul>
-                                                    <li><code>https://cors-anywhere.herokuapp.com/</code></li>
-                                                    <li><code>https://api.allorigins.win/raw?url=</code></li>
-                                                    <li>Hoặc tự setup proxy server riêng</li>
-                                                </ul>
-                                            </li>
+                                    <div class="info-box" style="background: #1e3a5f; padding: 12px; border-radius: 6px; margin: 8px 0;">
+                                        <strong>💡 Fix Mixed Content:</strong>
+                                        <ul style="margin: 8px 0; padding-left: 20px; font-size: 13px;">
+                                            <li>✅ Bật proxy để gọi HTTP API từ HTTPS page</li>
+                                            <li>⚠️ CORS Anywhere cần <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" style="color: #60a5fa;">request access</a></li>
+                                            <li>🔧 Nếu 1 proxy không work, thử proxy khác</li>
                                         </ul>
                                     </div>
                                 </div>

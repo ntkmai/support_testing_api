@@ -151,9 +151,22 @@ export class ConfigManager {
         
         // If proxy is enabled, prepend proxy URL
         if (this.config.useProxy) {
-            return `${this.config.proxyUrl}${fullUrl}`;
+            const proxyUrl = this.config.proxyUrl;
+            
+            // AllOrigins và CorsProxy cần encode URL
+            if (proxyUrl.includes('allorigins.win') || proxyUrl.includes('corsproxy.io')) {
+                const proxiedUrl = `${proxyUrl}${encodeURIComponent(fullUrl)}`;
+                console.log('🔄 Using proxy:', proxiedUrl);
+                return proxiedUrl;
+            }
+            
+            // Các proxy khác ghép trực tiếp
+            const proxiedUrl = `${proxyUrl}${fullUrl}`;
+            console.log('🔄 Using proxy:', proxiedUrl);
+            return proxiedUrl;
         }
         
+        console.log('📡 Direct URL:', fullUrl);
         return fullUrl;
     }
 

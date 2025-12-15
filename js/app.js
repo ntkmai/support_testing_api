@@ -255,11 +255,21 @@ class App {
                 return;
             }
 
+            // Warning về CORS Anywhere
+            if (enabled && proxyUrl.includes('cors-anywhere.herokuapp.com')) {
+                UIComponents.showNotification(
+                    '⚠️ CORS Anywhere cần request access tại: https://cors-anywhere.herokuapp.com/corsdemo',
+                    'warning'
+                );
+            }
+
             config.saveProxySettings(enabled, proxyUrl);
-            UIComponents.showNotification(
-                `✅ Đã ${enabled ? 'bật' : 'tắt'} CORS Proxy`,
-                'success'
-            );
+            
+            const message = enabled 
+                ? `✅ Đã bật CORS Proxy - Request sẽ đi qua ${proxyUrl}`
+                : '✅ Đã tắt CORS Proxy - Request trực tiếp';
+            
+            UIComponents.showNotification(message, 'success');
         });
 
         // Test proxy
