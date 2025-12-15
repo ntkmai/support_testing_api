@@ -147,7 +147,7 @@ export class ConfigManager {
     getApiUrl(endpoint) {
         // Remove leading slash from endpoint if present
         endpoint = endpoint.replace(/^\//, '');
-        const fullUrl = `${this.config.baseUrl}/${endpoint}`;
+        let fullUrl = `${this.config.baseUrl}/${endpoint}`;
         
         // If proxy is enabled, prepend proxy URL
         if (this.config.useProxy) {

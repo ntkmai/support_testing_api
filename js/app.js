@@ -35,6 +35,9 @@ class App {
         // Setup auth settings
         this.setupAuthSettings();
 
+        // Setup general settings
+        this.setupGeneralSettings();
+
         // Don't load any file by default - let user choose folder first
         // User will see folder cards on initial load
 
@@ -197,21 +200,50 @@ class App {
     // Setup proxy settings
     setupProxySettings() {
         const enableProxyCheckbox = document.getElementById('enableProxy');
+        const proxyPresetSelect = document.getElementById('proxyPreset');
         const proxyUrlInput = document.getElementById('proxyUrl');
         const saveProxyBtn = document.getElementById('saveProxySettings');
         const testProxyBtn = document.getElementById('testProxy');
 
         if (!enableProxyCheckbox || !proxyUrlInput || !saveProxyBtn) return;
 
+        // Proxy presets
+        const proxyPresets = {
+            'cors-anywhere': 'https://cors-anywhere.herokuapp.com/',
+            'allorigins': 'https://api.allorigins.win/raw?url=',
+            'corsproxy': 'https://corsproxy.io/?',
+            'thingproxy': 'https://thingproxy.freeboard.io/fetch/'
+        };
+
         // Load saved settings
         enableProxyCheckbox.checked = config.isProxyEnabled();
         proxyUrlInput.value = config.getProxyUrl();
         proxyUrlInput.disabled = !enableProxyCheckbox.checked;
+        if (proxyPresetSelect) {
+            proxyPresetSelect.disabled = !enableProxyCheckbox.checked;
+        }
 
-        // Enable/disable proxy URL input based on checkbox
+        // Enable/disable inputs based on checkbox
         enableProxyCheckbox.addEventListener('change', (e) => {
-            proxyUrlInput.disabled = !e.target.checked;
+            const enabled = e.target.checked;
+            proxyUrlInput.disabled = !enabled;
+            if (proxyPresetSelect) {
+                proxyPresetSelect.disabled = !enabled;
+            }
         });
+
+        // Preset selection
+        if (proxyPresetSelect) {
+            proxyPresetSelect.addEventListener('change', (e) => {
+                const preset = e.target.value;
+                if (preset !== 'custom' && proxyPresets[preset]) {
+                    proxyUrlInput.value = proxyPresets[preset];
+                    proxyUrlInput.disabled = !enableProxyCheckbox.checked;
+                } else {
+                    proxyUrlInput.disabled = false;
+                }
+            });
+        }
 
         // Save proxy settings
         saveProxyBtn.addEventListener('click', () => {
@@ -332,6 +364,37 @@ class App {
                 }
             });
         }
+    }
+
+    // Setup general settings (Base URL)
+    setupGeneralSettings() {
+        const baseUrlInput = document.getElementById('settingsBaseUrl');
+        const saveSettingsBtn = document.getElementById('saveSettings');
+
+        if (!baseUrlInput || !saveSettingsBtn) return;
+
+        // Load saved settings
+        baseUrlInput.value = config.getBaseUrl();
+
+        // Save settings
+        saveSettingsBtn.addEventListener('click', () => {
+            const baseUrl = baseUrlInput.value.trim();
+
+            if (!baseUrl) {
+                UIComponents.showNotification('⚠️ Vui lòng nhập Base URL', 'warning');
+                return;
+            }
+
+            config.saveBaseUrl(baseUrl);
+            UIComponents.showNotification('✅ Đã lưu cấu hình', 'success');
+        });
+
+        // Enter key handler
+        baseUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveSettingsBtn.click();
+            }
+        });
     }
 
     // Set theme

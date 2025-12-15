@@ -153,11 +153,29 @@
                             </div>
 
                             <div class="settings-section">
-                                <h4>🔄 CORS Proxy (Bypass CORS)</h4>
+                                <h4>🔄 CORS Proxy (Bypass CORS & Mixed Content)</h4>
                                 <div class="form-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="enableProxy" class="checkbox-input">
                                         <span>Sử dụng CORS Proxy</span>
+                                    </label>
+                                    <small>Giải quyết CORS error và Mixed Content (HTTPS → HTTP)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Chọn Proxy:</label>
+                                    <select id="proxyPreset" class="form-control">
+                                        <option value="custom">Custom URL</option>
+                                        <option value="cors-anywhere">CORS Anywhere (Free)</option>
+                                        <option value="allorigins">AllOrigins (Reliable)</option>
+                                        <option value="corsproxy">CorsProxy.io (Fast)</option>
+                                        <option value="thingproxy">ThingProxy (Simple)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Proxy URL:</label>
+                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://cors-anywhere.herokuapp.com/">
+                                    <small id="proxyUrlHint">Tự động điền khi chọn preset</small>
+                                </div>
                                     </label>
                                     <small>Bật để bypass CORS errors khi gọi API</small>
                                 </div>
