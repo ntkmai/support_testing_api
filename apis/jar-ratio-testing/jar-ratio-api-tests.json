@@ -4,125 +4,255 @@
       "name": "Login - Nhân viên",
       "method": "POST",
       "endpoint": "/api/auth/login",
-      "description": "## Mục đích\nĐăng nhập vào hệ thống với tài khoản nhân viên\n\n## Thông tin tài khoản\nUsername: 55555\nPassword: 55555\n\n## Kết quả mong đợi\nNhận được JWT token để sử dụng cho các request tiếp theo",
+      "description": "## Mục đích\nĐăng nhập để nhận JWT token\n\n## Test Accounts\n- Nhân viên: 55555/55555\n- Giám đốc: 0018/0018\n- Chủ tịch: 0025/0025\n- HĐQT: 44444/44444",
       "headers": {
         "Content-Type": "application/json"
       },
       "body": {
         "username": "55555",
         "password": "55555"
-      }
+      },
+      "templates": [
+        {
+          "name": "Nhân viên (55555)",
+          "description": "Login nhân viên - Tạo/sửa JAR",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Giám đốc (0018)",
+          "description": "Login giám đốc - Phê duyệt Level 1",
+          "body": {
+            "username": "0018",
+            "password": "0018"
+          }
+        },
+        {
+          "name": "Chủ tịch (0025)",
+          "description": "Login chủ tịch - Phê duyệt Level 2",
+          "body": {
+            "username": "0025",
+            "password": "0025"
+          }
+        },
+        {
+          "name": "HĐQT (44444)",
+          "description": "Login chủ tịch HĐQT - Phê duyệt Level 3",
+          "body": {
+            "username": "44444",
+            "password": "44444"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "method": "GET",
+      "endpoint": "/api/health",
+      "description": "## Mục đích\nKiểm tra server đang chạy"
     },
     {
       "name": "Get All JAR Ratios",
       "method": "GET",
-      "endpoint": "/api/jar-ratios",
-      "description": "## Mục đích\nLấy danh sách tất cả các tỷ lệ lọ trong hệ thống\n\n## Yêu cầu\nCần có Bearer token trong header Authorization\n\n## Response\nTrả về mảng các đối tượng JAR Ratio với đầy đủ thông tin",
+      "endpoint": "/api/jar-ratios?page=1&limit=10",
+      "description": "## Mục đích\nLấy danh sách JAR Ratio (có pagination)\n\n## Response\nMảng data + pagination info",
       "headers": {
         "Accept": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"
-      }
-    },
-    {
-      "name": "Create New JAR Ratio",
-      "method": "POST",
-      "endpoint": "/api/jar-ratios",
-      "description": "## Mục đích\nTạo mới một tỷ lệ lọ trong hệ thống\n\n## Thông tin cần thiết\n- jarType: Loại lọ (A, B, C)\n- ratio: Tỷ lệ (0-1)\n- effectiveDate: Ngày hiệu lực\n- description: Mô tả\n\n## Quy trình\nSau khi tạo cần phê duyệt qua 3 cấp",
-      "headers": {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer YOUR_TOKEN_HERE"
-      },
-      "body": {
-        "jarType": "A",
-        "ratio": 0.75,
-        "effectiveDate": "2025-12-15",
-        "description": "Test tỷ lệ lọ mới"
       }
     },
     {
       "name": "Get JAR Ratio by ID",
       "method": "GET",
-      "endpoint": "/api/jar-ratios/1",
-      "description": "## Mục đích\nLấy thông tin chi tiết của một tỷ lệ lọ theo ID\n\n## Tham số\nID trong URL path (ví dụ: 1)\n\n## Response\nĐối tượng JAR Ratio với đầy đủ thông tin bao gồm trạng thái phê duyệt",
+      "endpoint": "/api/jar-ratios/{id}",
+      "description": "## Mục đích\nLấy chi tiết một JAR Ratio theo ID\n\n## Note\nThay {id} bằng ID thực tế (ví dụ: jr_001)",
       "headers": {
         "Accept": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
     },
     {
+      "name": "Create JAR Ratio",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios",
+      "description": "## Mục đích\nTạo mới JAR Ratio cho tháng/năm\n\n## Validation nghiêm ngặt\n- Tổng ratio = 100%\n- Không trùng jar_id\n- Không trùng month/year\n\n## Status sau tạo: waiting_director",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "month": 12,
+        "year": 2025,
+        "note": "Tỷ lệ tháng 12/2025",
+        "details": [
+          {
+            "jar_id": "jar_001",
+            "ratio": 40,
+            "planned_revenue": 100000000,
+            "minimum_cost": 30000000
+          },
+          {
+            "jar_id": "jar_002",
+            "ratio": 35,
+            "planned_revenue": 80000000,
+            "minimum_cost": 25000000
+          },
+          {
+            "jar_id": "jar_003",
+            "ratio": 25,
+            "planned_revenue": 60000000,
+            "minimum_cost": 15000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Happy Path - Tổng 100%",
+          "description": "Tạo thành công",
+          "body": {
+            "month": 12,
+            "year": 2025,
+            "note": "Tỷ lệ tháng 12/2025",
+            "details": [
+              {
+                "jar_id": "jar_001",
+                "ratio": 40,
+                "planned_revenue": 100000000,
+                "minimum_cost": 30000000
+              },
+              {
+                "jar_id": "jar_002",
+                "ratio": 35,
+                "planned_revenue": 80000000,
+                "minimum_cost": 25000000
+              },
+              {
+                "jar_id": "jar_003",
+                "ratio": 25,
+                "planned_revenue": 60000000,
+                "minimum_cost": 15000000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Error - Tổng ratio ≠ 100% (75%)",
+          "description": "Test validation error",
+          "body": {
+            "month": 12,
+            "year": 2025,
+            "note": "Test lỗi ratio",
+            "details": [
+              {
+                "jar_id": "jar_001",
+                "ratio": 40
+              },
+              {
+                "jar_id": "jar_002",
+                "ratio": 35
+              }
+            ]
+          }
+        },
+        {
+          "name": "Error - Trùng jar_id",
+          "description": "Test trùng lọ",
+          "body": {
+            "month": 12,
+            "year": 2025,
+            "note": "Test trùng jar",
+            "details": [
+              {
+                "jar_id": "jar_001",
+                "ratio": 50
+              },
+              {
+                "jar_id": "jar_001",
+                "ratio": 50
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
       "name": "Update JAR Ratio",
       "method": "PUT",
-      "endpoint": "/api/jar-ratios/1",
-      "description": "## Mục đích\nCập nhật thông tin tỷ lệ lọ đã tồn tại\n\n## Lưu ý\nChỉ có thể cập nhật các record chưa được phê duyệt hoặc đã bị từ chối\n\n## Thông tin có thể cập nhật\n- ratio: Tỷ lệ mới\n- description: Mô tả mới\n- effectiveDate: Ngày hiệu lực mới",
+      "endpoint": "/api/jar-ratios/{id}",
+      "description": "## Mục đích\nCập nhật JAR Ratio (chỉ khi status draft/rejected)\n\n## Note\nThay {id} bằng ID thực tế\nBody chỉ cần các field muốn cập nhật",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Cập nhật note",
+          "body": {
+            "note": "Note mới sau chỉnh sửa"
+          }
+        },
+        {
+          "name": "Cập nhật details (tỷ lệ mới)",
+          "body": {
+            "details": [
+              {
+                "jar_id": "jar_001",
+                "ratio": 50,
+                "planned_revenue": 120000000,
+                "minimum_cost": 40000000
+              },
+              {
+                "jar_id": "jar_002",
+                "ratio": 30
+              },
+              {
+                "jar_id": "jar_003",
+                "ratio": 20
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Approve / Reject JAR Ratio",
+      "method": "PUT",
+      "endpoint": "/api/jar-ratios/{id}/approve",
+      "description": "## Mục đích\nPhê duyệt hoặc từ chối tại cấp hiện tại\n\n## Quyền theo status\n- waiting_director → chỉ Giám đốc\n- waiting_president → chỉ Chủ tịch\n- waiting_board_chairman → chỉ HĐQT\n\n## Note\nThay {id} bằng ID thực tế",
       "headers": {
         "Content-Type": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       },
       "body": {
-        "ratio": 0.80,
-        "description": "Cập nhật tỷ lệ lọ"
-      }
-    },
-    {
-      "name": "Approve - Director",
-      "method": "POST",
-      "endpoint": "/api/jar-ratios/1/approve",
-      "description": "## Cấp phê duyệt\nLevel 1 - Giám đốc\n\n## Quyền hạn\nGiám đốc có quyền phê duyệt/từ chối ở cấp đầu tiên\n\n## Thông tin cần thiết\n- approvalLevel: 1\n- comment: Nhận xét về việc phê duyệt",
-      "headers": {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer DIRECTOR_TOKEN"
+        "status": "approved",
+        "note": "Đã duyệt"
       },
-      "body": {
-        "approvalLevel": 1,
-        "comment": "Đồng ý với tỷ lệ này"
-      }
-    },
-    {
-      "name": "Approve - President",
-      "method": "POST",
-      "endpoint": "/api/jar-ratios/1/approve",
-      "description": "## Cấp phê duyệt\nLevel 2 - Chủ tịch\n\n## Điều kiện\nChỉ có thể phê duyệt khi Level 1 đã được phê duyệt\n\n## Thông tin cần thiết\n- approvalLevel: 2\n- comment: Nhận xét về việc phê duyệt",
-      "headers": {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer PRESIDENT_TOKEN"
-      },
-      "body": {
-        "approvalLevel": 2,
-        "comment": "Phê duyệt"
-      }
-    },
-    {
-      "name": "Approve - Board Chairman",
-      "method": "POST",
-      "endpoint": "/api/jar-ratios/1/approve",
-      "description": "## Cấp phê duyệt\nLevel 3 - Chủ tịch HĐQT (Phê duyệt cuối cùng)\n\n## Điều kiện\nLevel 1 và Level 2 phải đã được phê duyệt\n\n## Kết quả\nSau khi phê duyệt, tỷ lệ lọ sẽ có hiệu lực và được áp dụng",
-      "headers": {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer CHAIRMAN_TOKEN"
-      },
-      "body": {
-        "approvalLevel": 3,
-        "comment": "Phê duyệt cuối cùng"
-      }
-    },
-    {
-      "name": "Reject JAR Ratio",
-      "method": "POST",
-      "endpoint": "/api/jar-ratios/1/reject",
-      "description": "## Mục đích\nTừ chối tỷ lệ lọ tại bất kỳ cấp phê duyệt nào\n\n## Quyền hạn\nBất kỳ người phê duyệt nào cũng có thể từ chối\n\n## Kết quả\nTỷ lệ lọ sẽ quay về trạng thái Draft và có thể chỉnh sửa lại",
-      "headers": {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer YOUR_TOKEN_HERE"
-      },
-      "body": {
-        "reason": "Tỷ lệ không phù hợp"
-      }
+      "templates": [
+        {
+          "name": "Phê duyệt (Approved)",
+          "description": "Chuyển sang cấp tiếp theo hoặc approved cuối",
+          "body": {
+            "status": "approved",
+            "note": "Đồng ý với đề xuất tỷ lệ"
+          }
+        },
+        {
+          "name": "Từ chối (Rejected)",
+          "description": "Từ chối → status rejected, có thể sửa lại",
+          "body": {
+            "status": "rejected",
+            "note": "Tỷ lệ chưa phù hợp, cần điều chỉnh"
+          }
+        }
+      ]
     },
     {
       "name": "Delete JAR Ratio",
       "method": "DELETE",
-      "endpoint": "/api/jar-ratios/1",
-      "description": "## Mục đích\nXóa tỷ lệ lọ khỏi hệ thống\n\n## Điều kiện\nChỉ có thể xóa các record ở trạng thái Draft hoặc Rejected\n\n## Lưu ý\nKhông thể xóa các record đã được phê duyệt hoặc đang trong quá trình phê duyệt",
+      "endpoint": "/api/jar-ratios/{id}",
+      "description": "## Mục đích\nXóa JAR Ratio (chỉ draft/rejected)\n\n## Note\nThay {id} bằng ID thực tế",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
@@ -130,31 +260,52 @@
     {
       "name": "Get Approval History",
       "method": "GET",
-      "endpoint": "/api/jar-ratios/1/history",
-      "description": "## Mục đích\nXem lịch sử phê duyệt của một tỷ lệ lọ\n\n## Thông tin trả về\n- Người phê duyệt/từ chối\n- Thời gian phê duyệt/từ chối\n- Nhận xét tại mỗi cấp\n- Trạng thái hiện tại",
+      "endpoint": "/api/jar-ratios/{id}/history",
+      "description": "## Mục đích\nXem lịch sử phê duyệt chi tiết\n\n## Note\nThay {id} bằng ID thực tế",
       "headers": {
         "Accept": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
     },
     {
-      "name": "Health Check",
+      "name": "Get JAR Ratios for Mobile",
       "method": "GET",
-      "endpoint": "/api/health",
-      "description": "## Mục đích\nKiểm tra trạng thái hoạt động của API server\n\n## Response\nTrả về status: ok nếu server đang hoạt động bình thường"
+      "endpoint": "/api/jar-ratios/mobile",
+      "description": "## Mục đích\nDanh sách JAR Ratio tối ưu cho mobile app",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Creators List",
+      "method": "GET",
+      "endpoint": "/api/jar-ratios/creators",
+      "description": "## Mục đích\nLấy danh sách người tạo JAR Ratio",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Jars List",
+      "method": "GET",
+      "endpoint": "/api/jars",
+      "description": "## Mục đích\nLấy danh sách các lọ (jar) để chọn khi tạo",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
     }
   ],
   "baseUrl": "http://localhost:3000",
   "metadata": {
     "name": "JAR Ratio Management API",
-    "version": "1.0.0",
-    "description": "API endpoints cho quản lý tỷ lệ lọ và workflow phê duyệt",
+    "version": "1.0",
+    "description": "API Quản lý Tỷ Lệ Lọ - Workflow phê duyệt 3 cấp với validation nghiêm ngặt và tracking lịch sử",
     "created": "2025-12-15",
     "accounts": {
       "employee": "55555/55555",
       "director": "0018/0018",
       "president": "0025/0025",
-      "chairman": "44444/44444"
+      "board_chairman": "44444/44444"
     }
   }
 }

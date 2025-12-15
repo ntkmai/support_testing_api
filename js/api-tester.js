@@ -43,6 +43,8 @@ export class APITester {
             // Check if data has requests array, if not create from template
             if (data.requests && Array.isArray(data.requests)) {
                 this.requests = data.requests;
+                console.log('✅ Loaded requests:', this.requests.length);
+                console.log('📋 First request templates:', this.requests[0]?.templates);
             } else {
                 // Create requests from base_url if available
                 this.requests = this.getDefaultRequests(data.base_url || 'http://localhost:3000');
@@ -60,6 +62,8 @@ export class APITester {
 
     // Set current folder and load its test data
     async setFolder(folderPath, files = []) {
+        console.log('📂 setFolder called:', folderPath);
+        console.log('📁 Files:', files);
         this.currentFolder = folderPath;
         
         // Auto-load first JSON file in the folder
@@ -72,6 +76,91 @@ export class APITester {
             this.currentRequest = null;
             this.renderRequestList();
         }
+
+    }
+
+    // Render template selector UI (from JSON templates)
+    renderTemplateSelector() {
+        console.log('🎨 renderTemplateSelector called');
+        const container = document.getElementById('requestDetails');
+        console.log('📦 Container:', container);
+        console.log('📋 Current request:', this.currentRequest);
+        console.log('🎯 Templates:', this.currentRequest?.templates);
+        
+        if (!container || !this.currentRequest || !this.currentRequest.templates) {
+            console.log('❌ Missing requirements for template selector');
+            return;
+        }
+
+        const templates = this.currentRequest.templates;
+        console.log('✨ Templates array length:', templates.length);
+        if (templates.length === 0) {
+            console.log('❌ Templates array is empty');
+            return;
+        }
+        
+        const selectorHTML = `
+            <div class="template-selector">
+                <div class="template-header">
+                    <h4>📋 Quick Templates</h4>
+                    <span class="template-count">${templates.length} variations</span>
+                </div>
+                <div class="template-buttons">
+                    ${templates.map((t, idx) => `
+                        <button class="template-btn" data-template-idx="${idx}">
+                            <span class="template-name">${t.name}</span>
+                            ${t.description ? `<span class="template-desc">${t.description}</span>` : ''}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        // Insert at top of request details
+        const existingSelector = container.querySelector('.template-selector');
+        if (existingSelector) {
+            existingSelector.remove();
+        }
+
+        container.insertAdjacentHTML('afterbegin', selectorHTML);
+
+        // Add event listeners to buttons
+        container.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.templateIdx);
+                if (!isNaN(idx) && idx >= 0 && idx < templates.length) {
+                    this.applyTemplate(templates[idx]);
+                }
+            });
+        });
+    }
+
+    // Apply template to current request (from JSON template)
+    applyTemplate(template) {
+        if (!this.currentRequest || !template) return;
+
+        console.log('📋 Applying template:', template.name);
+
+        // Update body if template has body
+        if (template.body) {
+            this.currentRequest.body = { ...template.body };
+        }
+
+        // Update headers if template has headers
+        if (template.headers) {
+            this.currentRequest.headers = { ...this.currentRequest.headers, ...template.headers };
+        }
+
+        // Re-render the details to show updated values
+        this.renderRequestDetails();
+
+        // Auto-switch to Request tab
+        this.switchApiSubTab('request');
+
+        UIComponents.showNotification(
+            `✅ Đã áp dụng template: ${template.name}`, 
+            'success'
+        );
     }
 
     // Get default requests if JSON file not available
@@ -352,6 +441,15 @@ export class APITester {
                 ` : ''}
             </div>
         `;
+
+        // Render template selector if request has templates
+        console.log('🔍 Checking templates:', this.currentRequest.templates);
+        if (this.currentRequest.templates && this.currentRequest.templates.length > 0) {
+            console.log('✅ Rendering template selector with', this.currentRequest.templates.length, 'templates');
+            this.renderTemplateSelector();
+        } else {
+            console.log('⚠️ No templates found for this request');
+        }
     }
 
     // Execute current request

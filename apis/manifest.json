@@ -7,14 +7,7 @@
       "color": "#667eea",
       "description": "JAR Ratio API",
       "files": [
-        "JAR-RATIO-COMPLETE-TEST-GUIDE.md",
-        "TEST-README.md",
-        "QUICK-START-TEST.md",
-        "README-TEST-JAR-RATIO.md",
         "README.md",
-        "TEST-FILES-SUMMARY.md",
-        "TEST-INDEX.md",
-        "jar-ratio-test.http",
         "jar-ratio-api-tests.json"
       ]
     },

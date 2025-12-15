@@ -7,9 +7,34 @@ Công cụ web để xem tài liệu Markdown, test API và quản lý test data
 - 📚 **Markdown Viewer**: Xem và render các file .md
 - 🔗 **HTTP Request Parser**: Parse và execute file .http
 - 🔧 **API Tester**: Test API với request builder
+- 📋 **Template Selector (NEW!)**: Chọn nhanh request template từ file .http
 - 📋 **Test Data Viewer**: Xem file JSON test data
 - 🌍 **Multi-Environment**: Switch giữa Local/Dev/Staging/Production
 - 💾 **Auto-save**: Lưu cấu hình tự động
+
+## 🎯 Template Selector - Test Nhanh với 1 Click!
+
+**Tính năng mới** giúp bạn test API nhanh hơn gấp 10 lần!
+
+### Cách sử dụng:
+1. **Chọn thư mục** API (VD: "Test quản lý tỷ lệ lọ")
+2. **Click file** bất kỳ để mở tab Request
+3. **Dropdown "📋 Quick Templates"** tự động hiện ra
+4. **Chọn template** từ danh sách được nhóm:
+   - 🔐 Authentication (Login, Logout)
+   - 📊 CRUD Operations (Create, Read, Update, Delete)
+   - ✅ Approval Workflow (Multi-level approval)
+   - ❌ Validation Tests (Error cases, Edge cases)
+5. **Click "🚀 Thực thi"** → Done!
+
+### Lợi ích:
+- ✅ Parse tự động tất cả requests từ file `.http`
+- ✅ Không cần copy/paste headers và body
+- ✅ Nhóm theo category dễ tìm
+- ✅ Giữ nguyên variables và authentication
+- ✅ Test nhanh tất cả edge cases
+
+---
 
 ## 🚀 Cách sử dụng
 
