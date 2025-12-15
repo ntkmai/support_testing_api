@@ -15,7 +15,6 @@ class App {
 
     // Initialize application
     async init() {
-        console.log('🚀 Initializing Test Tool Viewer...');
 
         // Initialize modules
         await this.fileExplorer.init();
@@ -44,7 +43,6 @@ class App {
         window.apiTester = this.apiTester;
         window.fileExplorer = this.fileExplorer;
 
-        console.log('✅ Application initialized');
     }
 
     // Setup event handlers
@@ -386,7 +384,6 @@ class App {
     // Search in files
     searchFiles(query) {
         const results = this.fileExplorer.searchFiles(query);
-        console.log('Search results:', results);
         // TODO: Display search results
     }
 }

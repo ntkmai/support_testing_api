@@ -43,8 +43,6 @@ export class APITester {
             // Check if data has requests array, if not create from template
             if (data.requests && Array.isArray(data.requests)) {
                 this.requests = data.requests;
-                console.log('✅ Loaded requests:', this.requests.length);
-                console.log('📋 First request templates:', this.requests[0]?.templates);
             } else {
                 // Create requests from base_url if available
                 this.requests = this.getDefaultRequests(data.base_url || 'http://localhost:3000');
@@ -62,8 +60,6 @@ export class APITester {
 
     // Set current folder and load its test data
     async setFolder(folderPath, files = []) {
-        console.log('📂 setFolder called:', folderPath);
-        console.log('📁 Files:', files);
         this.currentFolder = folderPath;
         
         // Auto-load first JSON file in the folder
@@ -81,21 +77,14 @@ export class APITester {
 
     // Render template selector UI (from JSON templates)
     renderTemplateSelector() {
-        console.log('🎨 renderTemplateSelector called');
         const container = document.getElementById('requestDetails');
-        console.log('📦 Container:', container);
-        console.log('📋 Current request:', this.currentRequest);
-        console.log('🎯 Templates:', this.currentRequest?.templates);
         
         if (!container || !this.currentRequest || !this.currentRequest.templates) {
-            console.log('❌ Missing requirements for template selector');
             return;
         }
 
         const templates = this.currentRequest.templates;
-        console.log('✨ Templates array length:', templates.length);
         if (templates.length === 0) {
-            console.log('❌ Templates array is empty');
             return;
         }
         
@@ -139,7 +128,6 @@ export class APITester {
     applyTemplate(template) {
         if (!this.currentRequest || !template) return;
 
-        console.log('📋 Applying template:', template.name);
 
         // Update body if template has body
         if (template.body) {
@@ -443,12 +431,9 @@ export class APITester {
         `;
 
         // Render template selector if request has templates
-        console.log('🔍 Checking templates:', this.currentRequest.templates);
         if (this.currentRequest.templates && this.currentRequest.templates.length > 0) {
-            console.log('✅ Rendering template selector with', this.currentRequest.templates.length, 'templates');
             this.renderTemplateSelector();
         } else {
-            console.log('⚠️ No templates found for this request');
         }
     }
 
@@ -468,7 +453,6 @@ export class APITester {
 
         // Prepare request options
         const allHeaders = config.getAllHeaders();
-        console.log('Auth Headers:', allHeaders);
         
         const options = {
             method: this.currentRequest.method,
@@ -479,7 +463,6 @@ export class APITester {
             }
         };
         
-        console.log('Final Headers:', options.headers);
 
         // Add body for POST/PUT/PATCH
         if (['POST', 'PUT', 'PATCH'].includes(this.currentRequest.method)) {
@@ -686,16 +669,12 @@ export class APITester {
     autoExtractToken(responseData) {
         try {
             const tokenPath = config.config.tokenPath || 'data.access_token';
-            console.log('Attempting token extraction with path:', tokenPath);
-            console.log('Response data:', responseData);
             
             const token = this.getNestedValue(responseData, tokenPath);
-            console.log('Extracted token:', token);
             
             if (token) {
                 config.saveAuthToken(token);
                 UIComponents.showNotification(`🔑 Đã lưu token tự động!`, 'success');
-                console.log('Token saved:', token.substring(0, 20) + '...');
                 
                 // Update UI if settings tab is open
                 const tokenDisplay = document.getElementById('currentToken');
@@ -703,10 +682,8 @@ export class APITester {
                     tokenDisplay.value = token;
                 }
             } else {
-                console.log('No token found at path:', tokenPath);
             }
         } catch (error) {
-            console.log('Could not extract token:', error.message);
         }
     }
 
