@@ -97,7 +97,7 @@ export class ConfigManager {
 
     // Load base URL from localStorage or use default
     loadBaseUrl() {
-        return localStorage.getItem('baseUrl') || 'http://localhost:8080';
+        return localStorage.getItem('baseUrl') || 'http://localhost:3000';
     }
 
     // Load proxy enabled state

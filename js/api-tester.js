@@ -41,7 +41,7 @@ export class APITester {
     }
 
     // Get default requests if JSON file not available
-    getDefaultRequests(baseUrl = 'http://localhost:8080') {
+    getDefaultRequests(baseUrl = 'http://localhost:3000') {
         return [
             {
                 name: 'Get JAR Ratio',
