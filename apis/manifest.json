@@ -1,18 +1,6 @@
 {
   "folders": [
     {
-      "name": "Đọc dùm (for BE)",
-      "path": "init-template",
-      "icon": "🎁",
-      "color": "#10b981",
-      "description": "Mẫu dùng cho BE",
-      "files": [
-        "README.md",
-        "api-json-template.json",
-        "API-DOCUMENT.md"
-      ]
-    },
-    {
       "name": "Test quản lý tỷ lệ lọ",
       "path": "jar-ratio-testing",
       "icon": "🧪",
