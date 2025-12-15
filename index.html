@@ -162,29 +162,18 @@
                                     <small>Giải quyết CORS error và Mixed Content (HTTPS → HTTP)</small>
                                 </div>
                                 <div class="form-group">
-                                    <label>Chọn Proxy:</label>
-                                    <select id="proxyPreset" class="form-control">
-                                        <option value="custom">Custom URL</option>
-                                        <option value="cors-anywhere">CORS Anywhere (cần request access)</option>
-                                        <option value="allorigins">AllOrigins (Reliable ✅)</option>
-                                        <option value="corsproxy">CorsProxy.io (Fast ✅)</option>
-                                        <option value="thingproxy">ThingProxy (Simple ✅)</option>
-                                    </select>
-                                    <small>Khuyến khích: AllOrigins hoặc CorsProxy</small>
-                                </div>
-                                <div class="form-group">
                                     <label>Proxy URL:</label>
-                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://api.allorigins.win/raw?url=">
-                                    <small id="proxyUrlHint">Tự động điền khi chọn preset</small>
+                                    <input type="text" id="proxyUrl" class="form-control" value="https://cors-anywhere.herokuapp.com/" placeholder="https://cors-anywhere.herokuapp.com/">
                                 </div>
                                 <div class="form-group">
-                                    <div class="info-box" style="background: #1e3a5f; padding: 12px; border-radius: 6px; margin: 8px 0;">
-                                        <strong>💡 Fix Mixed Content:</strong>
-                                        <ul style="margin: 8px 0; padding-left: 20px; font-size: 13px;">
-                                            <li>✅ Bật proxy để gọi HTTP API từ HTTPS page</li>
-                                            <li>⚠️ CORS Anywhere cần <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" style="color: #60a5fa;">request access</a></li>
-                                            <li>🔧 Nếu 1 proxy không work, thử proxy khác</li>
-                                        </ul>
+                                    <div class="info-box" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; margin: 8px 0;">
+                                        <strong>⚠️ Cần Request Access trước khi dùng:</strong>
+                                        <ol style="margin: 8px 0; padding-left: 20px; font-size: 13px; line-height: 1.8;">
+                                            <li>Mở: <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" style="color: var(--link-color); text-decoration: underline; font-weight: bold;">cors-anywhere.herokuapp.com/corsdemo</a></li>
+                                            <li>Click nút <strong>"Request temporary access to the demo server"</strong></li>
+                                            <li>Access valid vài giờ, cần request lại mỗi ngày</li>
+                                            <li>Sau đó về đây bật Proxy và test API</li>
+                                        </ol>
                                     </div>
                                 </div>
                                 <div class="button-group">

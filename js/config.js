@@ -145,24 +145,19 @@ export class ConfigManager {
 
     // Get full API URL
     getApiUrl(endpoint) {
-        // Remove leading slash from endpoint if present
-        endpoint = endpoint.replace(/^\//, '');
-        let fullUrl = `${this.config.baseUrl}/${endpoint}`;
+        // Remove leading and trailing slashes
+        endpoint = endpoint.replace(/^\/+|\/+$/g, '');
+        let baseUrl = this.config.baseUrl.replace(/\/+$/, '');
+        
+        // Build full URL
+        let fullUrl = `${baseUrl}/${endpoint}`;
         
         // If proxy is enabled, prepend proxy URL
         if (this.config.useProxy) {
             const proxyUrl = this.config.proxyUrl;
-            
-            // AllOrigins và CorsProxy cần encode URL
-            if (proxyUrl.includes('allorigins.win') || proxyUrl.includes('corsproxy.io')) {
-                const proxiedUrl = `${proxyUrl}${encodeURIComponent(fullUrl)}`;
-                console.log('🔄 Using proxy:', proxiedUrl);
-                return proxiedUrl;
-            }
-            
-            // Các proxy khác ghép trực tiếp
             const proxiedUrl = `${proxyUrl}${fullUrl}`;
-            console.log('🔄 Using proxy:', proxiedUrl);
+            console.log('🔄 Proxy URL:', proxiedUrl);
+            console.log('📍 Target:', fullUrl);
             return proxiedUrl;
         }
         

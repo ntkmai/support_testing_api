@@ -200,50 +200,22 @@ class App {
     // Setup proxy settings
     setupProxySettings() {
         const enableProxyCheckbox = document.getElementById('enableProxy');
-        const proxyPresetSelect = document.getElementById('proxyPreset');
         const proxyUrlInput = document.getElementById('proxyUrl');
         const saveProxyBtn = document.getElementById('saveProxySettings');
         const testProxyBtn = document.getElementById('testProxy');
 
         if (!enableProxyCheckbox || !proxyUrlInput || !saveProxyBtn) return;
 
-        // Proxy presets
-        const proxyPresets = {
-            'cors-anywhere': 'https://cors-anywhere.herokuapp.com/',
-            'allorigins': 'https://api.allorigins.win/raw?url=',
-            'corsproxy': 'https://corsproxy.io/?',
-            'thingproxy': 'https://thingproxy.freeboard.io/fetch/'
-        };
-
         // Load saved settings
         enableProxyCheckbox.checked = config.isProxyEnabled();
-        proxyUrlInput.value = config.getProxyUrl();
+        const savedUrl = config.getProxyUrl();
+        proxyUrlInput.value = savedUrl || 'https://cors-anywhere.herokuapp.com/';
         proxyUrlInput.disabled = !enableProxyCheckbox.checked;
-        if (proxyPresetSelect) {
-            proxyPresetSelect.disabled = !enableProxyCheckbox.checked;
-        }
 
         // Enable/disable inputs based on checkbox
         enableProxyCheckbox.addEventListener('change', (e) => {
-            const enabled = e.target.checked;
-            proxyUrlInput.disabled = !enabled;
-            if (proxyPresetSelect) {
-                proxyPresetSelect.disabled = !enabled;
-            }
+            proxyUrlInput.disabled = !e.target.checked;
         });
-
-        // Preset selection
-        if (proxyPresetSelect) {
-            proxyPresetSelect.addEventListener('change', (e) => {
-                const preset = e.target.value;
-                if (preset !== 'custom' && proxyPresets[preset]) {
-                    proxyUrlInput.value = proxyPresets[preset];
-                    proxyUrlInput.disabled = !enableProxyCheckbox.checked;
-                } else {
-                    proxyUrlInput.disabled = false;
-                }
-            });
-        }
 
         // Save proxy settings
         saveProxyBtn.addEventListener('click', () => {
@@ -255,19 +227,11 @@ class App {
                 return;
             }
 
-            // Warning về CORS Anywhere
-            if (enabled && proxyUrl.includes('cors-anywhere.herokuapp.com')) {
-                UIComponents.showNotification(
-                    '⚠️ CORS Anywhere cần request access tại: https://cors-anywhere.herokuapp.com/corsdemo',
-                    'warning'
-                );
-            }
-
             config.saveProxySettings(enabled, proxyUrl);
             
             const message = enabled 
-                ? `✅ Đã bật CORS Proxy - Request sẽ đi qua ${proxyUrl}`
-                : '✅ Đã tắt CORS Proxy - Request trực tiếp';
+                ? `✅ Đã bật CORS Proxy`
+                : '✅ Đã tắt CORS Proxy';
             
             UIComponents.showNotification(message, 'success');
         });
