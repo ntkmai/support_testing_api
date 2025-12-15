@@ -103,29 +103,60 @@ class App {
     // Setup config UI
     setupConfigUI() {
         const input = document.getElementById('baseUrlInput');
-        const saveBtn = document.getElementById('saveBaseUrl');
 
-        if (input && saveBtn) {
+        if (input) {
             // Set current value
             input.value = config.getBaseUrl();
 
-            // Save button handler
-            saveBtn.addEventListener('click', () => {
-                const newUrl = input.value.trim();
-                if (newUrl) {
-                    config.saveBaseUrl(newUrl);
-                    UIComponents.showNotification('✅ Đã lưu Base URL', 'success');
-                } else {
-                    UIComponents.showNotification('⚠️ URL không hợp lệ', 'warning');
-                }
+            let validationTimeout;
+
+            // Auto-validate and save on input change
+            input.addEventListener('input', () => {
+                clearTimeout(validationTimeout);
+                
+                validationTimeout = setTimeout(async () => {
+                    const newUrl = input.value.trim();
+                    if (!newUrl) return;
+
+                    // Validate URL format
+                    try {
+                        new URL(newUrl);
+                    } catch (e) {
+                        UIComponents.showNotification('❌ URL không đúng định dạng', 'error');
+                        return;
+                    }
+
+                    // Test health endpoint
+                    const isValid = await this.validateHealthEndpoint(newUrl);
+                    if (isValid) {
+                        config.saveBaseUrl(newUrl);
+                        UIComponents.showNotification('✅ Đã lưu Base URL', 'success');
+                    } else {
+                        UIComponents.showNotification('❌ Không kết nối được api/health', 'error');
+                    }
+                }, 800); // Wait 800ms after user stops typing
+            });
+        }
+    }
+
+    // Validate health endpoint
+    async validateHealthEndpoint(baseUrl) {
+        try {
+            const url = baseUrl + '/api/health';
+            const proxyUrl = config.isProxyEnabled() ? config.getProxyUrl() : '';
+            const finalUrl = proxyUrl + url;
+
+            const response = await fetch(finalUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                signal: AbortSignal.timeout(5000) // 5 second timeout
             });
 
-            // Enter key handler
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    saveBtn.click();
-                }
-            });
+            return response.ok;
+        } catch (error) {
+            return false;
         }
     }
 

@@ -20,7 +20,9 @@ export class MarkdownViewer {
         UIComponents.showLoading('markdownContent');
 
         try {
-            const response = await fetch(filePath);
+            // Add cache-busting to prevent stale markdown content
+            const cacheBuster = filePath.includes('?') ? `&t=${Date.now()}` : `?t=${Date.now()}`;
+            const response = await fetch(filePath + cacheBuster);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -35,10 +37,7 @@ export class MarkdownViewer {
             // Add copy buttons to code blocks
             this.addCopyButtons();
 
-            // Add table of contents if needed
-            this.generateTOC();
-
-            UIComponents.showNotification(`📖 Đã tải: ${fileName}`, 'success');
+            // UIComponents.showNotification(`📖 Đã tải: ${fileName}`, 'success');
 
         } catch (error) {
             console.error('Error loading markdown:', error);

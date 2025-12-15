@@ -22,8 +22,9 @@ export class FileExplorer {
         const basePath = 'apis';
         
         try {
-            // Load manifest file that contains folder structure
-            const response = await fetch(`${basePath}/manifest.json`);
+            // Load manifest file that contains folder structure (with cache-busting)
+            const cacheBuster = `?t=${Date.now()}`;
+            const response = await fetch(`${basePath}/manifest.json${cacheBuster}`);
             const manifest = await response.json();
             
             this.folders = new Map();
@@ -102,16 +103,16 @@ export class FileExplorer {
             html += `
                 <div class="folder-content">
                     <div class="folder-info">
-                        <div class="folder-info-icon">${folder.icon}</div>
+                        <div class="folder-info-icon">📁</div>
                         <div class="folder-info-text">
                             <strong>${this.currentFolder}</strong>
                             <p>${folder.files.length} files</p>
                         </div>
                     </div>
                     <ul class="folder-files">
-                        ${folder.files.map(file => `
+                        ${folder.files.map((file, index) => `
                             <li class="file-item" data-path="${file.path}" data-type="${file.type}">
-                                <span class="file-icon">${file.icon}</span>
+                                <span class="file-icon">${index + 1}</span>
                                 <span class="file-name">${file.name}</span>
                             </li>
                         `).join('')}
@@ -121,20 +122,19 @@ export class FileExplorer {
         } else {
             // Show all folders as cards
             html += '<div class="folder-cards-grid">';
+            let folderIndex = 1;
             this.folders.forEach((folder, folderName) => {
                 html += `
                     <div class="folder-card" data-folder="${folderName}" style="border-left-color: ${folder.color || 'var(--primary-color)'}">
-                        <div class="folder-card-icon">${folder.icon}</div>
+                        <div class="folder-card-icon">${folderIndex}</div>
                         <div class="folder-card-content">
                             <h4 class="folder-card-title">${folderName}</h4>
                             <p class="folder-card-description">${folder.description || ''}</p>
                             <div class="folder-card-stats">
                                 <span class="stat-item">
-                                    <span class="stat-icon">📄</span>
                                     <span class="stat-value">${folder.files.filter(f => f.type === 'md').length} MD</span>
                                 </span>
                                 <span class="stat-item">
-                                    <span class="stat-icon">🧪</span>
                                     <span class="stat-value">${folder.files.filter(f => f.type === 'http' || f.type === 'json').length} Tests</span>
                                 </span>
                             </div>
@@ -142,6 +142,7 @@ export class FileExplorer {
                         <div class="folder-card-arrow">→</div>
                     </div>
                 `;
+                folderIndex++;
             });
             html += '</div>';
         }

@@ -34,7 +34,9 @@ export class APITester {
         }
         
         try {
-            const response = await fetch(filePath);
+            // Add cache-busting to prevent stale data
+            const cacheBuster = filePath.includes('?') ? `&t=${Date.now()}` : `?t=${Date.now()}`;
+            const response = await fetch(filePath + cacheBuster);
             if (!response.ok) throw new Error('Cannot load test data');
 
             const data = await response.json();
@@ -48,7 +50,7 @@ export class APITester {
                 this.requests = this.getDefaultRequests(data.base_url || 'http://localhost:3000');
             }
 
-            UIComponents.showNotification(`🧪 Đã tải ${this.requests.length} API tests`, 'success');
+            // UIComponents.showNotification(`🧪 Đã tải ${this.requests.length} API tests`, 'success');
             this.renderRequestList();
         } catch (error) {
             console.error('Error loading test data:', error);
@@ -200,6 +202,16 @@ export class APITester {
         });
     }
 
+    // Check if request uses multipart/form-data
+    isMultipartRequest() {
+        if (!this.currentRequest || !this.currentRequest.headers) return false;
+        
+        const contentType = this.currentRequest.headers['Content-Type'] || 
+                           this.currentRequest.headers['content-type'];
+        
+        return contentType && contentType.includes('multipart/form-data');
+    }
+
     // Select a request
     selectRequest(index) {
         this.currentRequest = this.requests[index];
@@ -210,6 +222,62 @@ export class APITester {
         });
 
         this.renderRequestDetails();
+        
+        // Check if multipart and update UI accordingly
+        this.updateExecuteButton();
+        if (this.isMultipartRequest()) {
+            this.showMultipartWarning();
+        }
+    }
+
+    // Update execute button state based on request type
+    updateExecuteButton() {
+        const executeBtn = document.getElementById('executeRequestBtn');
+        if (!executeBtn) return;
+        
+        if (this.isMultipartRequest()) {
+            executeBtn.disabled = true;
+            executeBtn.style.opacity = '0.5';
+            executeBtn.style.cursor = 'not-allowed';
+            executeBtn.title = 'Cannot test multipart/form-data requests in this tool';
+        } else {
+            executeBtn.disabled = false;
+            executeBtn.style.opacity = '1';
+            executeBtn.style.cursor = 'pointer';
+            executeBtn.title = '';
+        }
+    }
+
+    // Show warning for multipart requests in Response tab
+    showMultipartWarning() {
+        const responseContainer = document.getElementById('responseContainer');
+        if (!responseContainer) return;
+        
+        responseContainer.style.display = 'block';
+        responseContainer.innerHTML = `
+            <div class="empty-state" style="padding: 40px 20px;">
+                <div class="empty-state-icon">⚠️</div>
+                <h3 style="color: var(--warning-color); margin-bottom: 15px;">Không hỗ trợ Multipart/Form-Data</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    API này sử dụng <code>multipart/form-data</code> để upload file. 
+                    Tool này không hỗ trợ kiểu request này.
+                </p>
+                <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin-top: 20px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <h4 style="margin-bottom: 12px; color: var(--primary-color);">Hướng dẫn test:</h4>
+                    <p style="margin-bottom: 10px; font-size: 13px;"><strong>1. Sử dụng cURL:</strong></p>
+                    <pre style="background: var(--bg-tertiary); padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px;">curl -X POST ${config.getBaseUrl()}${this.currentRequest.endpoint} \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -F "file=@/path/to/file.pdf"</pre>
+                    <p style="margin: 15px 0 10px 0; font-size: 13px;"><strong>2. Sử dụng Postman:</strong></p>
+                    <ul style="font-size: 13px; color: var(--text-secondary); margin-left: 20px;">
+                        <li>Chọn method: ${this.currentRequest.method}</li>
+                        <li>URL: ${config.getBaseUrl()}${this.currentRequest.endpoint}</li>
+                        <li>Headers: Authorization: Bearer YOUR_TOKEN</li>
+                        <li>Body > form-data > Key: file (type = File)</li>
+                    </ul>
+                </div>
+            </div>
+        `;
     }
 
     // Setup sub tabs for Request/Response
@@ -375,6 +443,66 @@ export class APITester {
         return `<input type="text" class="form-control" value="${fullUrl}" readonly>`;
     }
 
+    // Extract path parameters from endpoint (e.g., {id}, {userId})
+    getPathParameters(endpoint) {
+        const regex = /\{([^}]+)\}/g;
+        const params = [];
+        let match;
+        
+        while ((match = regex.exec(endpoint)) !== null) {
+            params.push(match[1]);
+        }
+        
+        return params;
+    }
+
+    // Render path parameter inputs
+    renderPathParameters(endpoint) {
+        const params = this.getPathParameters(endpoint);
+        
+        if (params.length === 0) return '';
+        
+        return `
+            <div class="detail-section collapsible-section">
+                <div class="section-header" onclick="window.apiTester.toggleSection(this)">
+                    <span class="toggle-icon">▼</span>
+                    <label>Path Parameters</label>
+                </div>
+                <div class="section-content">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${params.map(param => `
+                            <div>
+                                <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: block;">{${param}}</label>
+                                <input 
+                                    type="text" 
+                                    id="param-${param}" 
+                                    class="form-control" 
+                                    placeholder="Enter ${param} value"
+                                    style="font-family: monospace;"
+                                >
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Replace path parameters in endpoint
+    replacePathParameters(endpoint) {
+        const params = this.getPathParameters(endpoint);
+        let result = endpoint;
+        
+        params.forEach(param => {
+            const input = document.getElementById(`param-${param}`);
+            if (input && input.value) {
+                result = result.replace(`{${param}}`, input.value);
+            }
+        });
+        
+        return result;
+    }
+
     renderRequestDetails() {
         if (!this.currentRequest) return;
 
@@ -422,6 +550,8 @@ export class APITester {
                     </div>
                 </div>
 
+                ${this.renderPathParameters(this.currentRequest.endpoint)}
+
                 ${this.currentRequest.headers ? `
                     <div class="detail-section collapsible-section">
                         <div class="section-header" onclick="window.apiTester.toggleSection(this)">
@@ -461,12 +591,23 @@ export class APITester {
             UIComponents.showNotification('⚠️ Chưa chọn request', 'warning');
             return;
         }
+        
+        // Prevent execution of multipart requests
+        if (this.isMultipartRequest()) {
+            UIComponents.showNotification('⚠️ Không thể test API multipart/form-data trong tool này', 'warning');
+            this.showMultipartWarning();
+            return;
+        }
 
         const responseContainer = document.getElementById('responseContainer');
         if (!responseContainer) return;
 
         // Get updated values
-        const endpoint = document.getElementById('requestEndpoint')?.value || this.currentRequest.endpoint;
+        let endpoint = document.getElementById('requestEndpoint')?.value || this.currentRequest.endpoint;
+        
+        // Replace path parameters if any
+        endpoint = this.replacePathParameters(endpoint);
+        
         const url = config.getApiUrl(endpoint);
 
         // Prepare request options

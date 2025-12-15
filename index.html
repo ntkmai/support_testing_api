@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔧 Test Tool Viewer - Modular Edition</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>MASTER TEST API - Modular Edition</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -19,13 +22,12 @@
             <div class="header-content" style="display: flex; align-items: center; gap: 12px;">
                 <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
                 <div>
-                    <h1 style="margin-bottom: 2px;">Test Tool Viewer</h1>
+                    <h1 style="margin-bottom: 2px;">MASTER TEST API</h1>
                 </div>
             </div>
             <div class="header-config">
                 <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện">🌙</button>
                 <input type="text" id="baseUrlInput" class="config-input" placeholder="http://localhost:3000">
-                <button id="saveBaseUrl" class="btn-save">💾 Lưu</button>
             </div>
         </div>
 
@@ -41,9 +43,9 @@
             <div class="content-area">
                 <!-- Tabs -->
                 <div class="tabs">
-                    <button class="tab-btn active">📚 Markdown Viewer</button>
+                    <button class="tab-btn active">📚 Tài liệu</button>
                     <button class="tab-btn">🧪 API Tester</button>
-                    <button class="tab-btn">⚙️ Settings</button>
+                    <button class="tab-btn">⚙️ Cấu hình [nhớ cấu hình proxy nhé 😅]</button>
                 </div>
 
                 <!-- Tab Content -->
@@ -101,7 +103,7 @@
                                         <button class="api-sub-tab-btn" data-tab="response">📥 Response</button>
                                     </div>
                                     <div class="api-sub-tabs-right">
-                                        <button id="executeRequestBtn" class="btn btn-primary" style="min-width:120px;">🚀 Thực thi</button>
+                                        <button id="executeRequestBtn" class="btn btn-primary" style="min-width:120px;">▶ Run now</button>
                                     </div>
                                 </div>
 

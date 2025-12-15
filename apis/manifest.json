@@ -3,13 +3,22 @@
     {
       "name": "Test quản lý tỷ lệ lọ",
       "path": "jar-ratio-testing",
-      "icon": "🧪",
       "color": "#667eea",
       "description": "JAR Ratio API",
       "files": [
         "README.md",
         "jar-ratio-api-tests.json"
       ]
+    },
+    {
+        "name": "Test phiếu đề nghị thanh toán",
+        "path": "payment-request-testing",
+        "color": "#f6ad55",
+        "description": "Payment Request API",
+        "files": [
+            "PAYMENT-REQUEST-API-DOCUMENT.md",
+            "payment-request-tests.json"
+        ]
     }
     
 ]

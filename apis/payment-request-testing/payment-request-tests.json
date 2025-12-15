@@ -1,0 +1,522 @@
+{
+  "requests": [
+    {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập hệ thống\nĐăng nhập với các tài khoản theo vai trò khác nhau trong quy trình duyệt phiếu\n\n## Các vai trò\n- Người tạo phiếu: 55555/55555\n- Trưởng đơn vị: 55555/55555\n- Kế toán hàng hóa: 0091/0091\n- Kế toán tài sản: 0025/0001\n- Kế toán thuế: 44444/44444\n- Kế toán thanh toán: 11111/11111\n- TBP KTTT: 22222/22222\n- Kế toán trưởng: 33333/33333\n\n## Kết quả\nTrả về JWT token để sử dụng cho các request tiếp theo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      },
+      "templates": [
+        {
+          "name": "Người tạo phiếu (55555)",
+          "description": "Login người tạo phiếu - Bước 0: Tạo phiếu đề nghị thanh toán",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Trưởng đơn vị (55555)",
+          "description": "Login trưởng đơn vị - Bước 1: Duyệt phiếu",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Kế toán hàng hóa (0091)",
+          "description": "Login KT hàng hóa - Bước 2: Duyệt nếu lọ hàng hóa",
+          "body": {
+            "username": "0091",
+            "password": "0091"
+          }
+        },
+        {
+          "name": "Kế toán tài sản (0025)",
+          "description": "Login KT tài sản - Bước 3: Duyệt nếu lọ tài sản",
+          "body": {
+            "username": "0025",
+            "password": "0001"
+          }
+        },
+        {
+          "name": "Kế toán thuế (44444)",
+          "description": "Login KT thuế - Bước 4: Duyệt thuế",
+          "body": {
+            "username": "44444",
+            "password": "44444"
+          }
+        },
+        {
+          "name": "Kế toán thanh toán (11111)",
+          "description": "Login KT thanh toán - Bước 5: Tạo hạch toán và duyệt",
+          "body": {
+            "username": "11111",
+            "password": "11111"
+          }
+        },
+        {
+          "name": "TBP KTTT (22222)",
+          "description": "Login Trưởng bộ phận KTTT - Bước 6: Duyệt/sửa hạch toán",
+          "body": {
+            "username": "22222",
+            "password": "22222"
+          }
+        },
+        {
+          "name": "Kế toán trưởng (33333)",
+          "description": "Login KT trưởng - Bước 7: Duyệt cuối và tạo lịch chi",
+          "body": {
+            "username": "33333",
+            "password": "33333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lấy danh sách Jar (Lọ ngân sách)",
+      "method": "GET",
+      "endpoint": "/api/jars",
+      "description": "## Lấy danh sách lọ ngân sách\nLấy danh sách các lọ để chọn khi tạo phiếu\n\n## Test Data\n- jar_id: 38fef5aa-c952-49d7-8c0a-9d717668b07a",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh sách đối tượng chi",
+      "method": "GET",
+      "endpoint": "/api/disburser/all",
+      "description": "## Lấy danh sách đối tượng chi\nDùng khi payment_type là 'bank_transfer' (chuyển khoản)\n\n## Lưu ý\n- Chỉ cần khi chọn hình thức chuyển khoản\n- Lấy thông tin: disburser_id, tên, số TK, tên TK, tên ngân hàng\n\n## Test Data - Disburser IDs\n- 06be8c33-bf86-4b9e-b716-1fff27db53e5\n- 0d6c0b17-6a12-4453-876b-f8e98bb6d945\n- 4ea893c1-c5fd-484e-8208-d92476302d23\n- bc4c39cd-e845-4b91-936d-c0905ec314f1\n- f59b174e-b52d-46b6-87cf-b88c6aa93347\n- 8c90a122-0df6-4e3a-91c0-a2d21e155740",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh sách đơn vị tính",
+      "method": "GET",
+      "endpoint": "/api/units",
+      "description": "## Lấy danh sách đơn vị tính\nDùng cho payment_details (chi tiết thanh toán)\n\n## Sử dụng\n- Mỗi payment_detail cần có unit_id\n\n## Test Data - Unit IDs\n- 4ccc730d-3dd2-441a-b6b6-0eff23d9c16b\n- 79f97729-fbe2-4492-bacf-68a0809321b5\n- c3061db2-a12c-46bb-9cf4-7413d5695e96\n- 5c970aad-63d2-4032-beb9-84a723dc89a7\n- 5e97508e-24ed-44a4-b967-7869135043cc\n- 2dd7ec30-d91a-4e46-be32-fef7dc412533\n- c1a9bdc0-7bc2-40b6-b3cb-319fd78bf2b0\n- 1f27bd50-acfe-48a1-9910-e16031ff11b0\n- 3e5fbe81-214b-47fc-91d4-497861b76640",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Upload file đính kèm",
+      "method": "POST",
+      "endpoint": "/api/files/upload",
+      "description": "## Upload file đính kèm\nUpload file và lấy file_id để đính kèm vào phiếu\n\n## ⚠️ Lưu ý quan trọng\n**Tool này KHÔNG hỗ trợ upload file trực tiếp**. Vui lòng sử dụng Postman hoặc cURL để test API này.\n\n## Yêu cầu\n- Multipart form-data\n- Field name: 'file'\n\n## Test bằng cURL\n```bash\ncurl -X POST http://localhost:3000/api/files/upload \\\n  -H \"Authorization: Bearer YOUR_TOKEN\" \\\n  -F \"file=@/path/to/your/file.pdf\"\n```\n\n## Test bằng Postman\n1. Chọn method: POST\n2. URL: http://localhost:3000/api/files/upload\n3. Headers: Authorization: Bearer YOUR_TOKEN\n4. Body > form-data\n5. Key: file (chọn type = File)\n6. Value: Chọn file từ máy\n\n## Kết quả\nTrả về file_id để dùng trong file_ids array\n\n## Test Data - File IDs (đã có sẵn)\nCó thể dùng trực tiếp các ID này thay vì upload mới:\n```\ne41e24c6-215e-43d5-83bf-94cba481daa2\n23b5c8b4-12f5-4189-94ed-101a43b16ba5\n46077b44-248a-4dc6-8bcd-4e5594adb92f\n50acf336-e414-42bd-aba0-ec0ed13eb71a\nc6da163c-3d60-4859-9c38-6e3db17e47cc\nb8b3451d-b32a-47f9-a2a6-b89491167f44\n32e2696b-f01a-45a1-bcd4-c7f8ce403182\n26f7de1a-6712-4dc9-8e0c-051ccfa6cece\n6788268c-b94f-4aab-bf23-825e8e115721\nfe1fb2d9-af63-4f6a-8891-83f65931ef70\n35d128aa-852e-4841-9102-f0d54922bce8\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE",
+        "Content-Type": "multipart/form-data"
+      }
+    },
+    {
+      "name": "Tạo phiếu đề nghị thanh toán",
+      "method": "POST",
+      "endpoint": "/api/payment-request",
+      "description": "## Bước 0: Tạo phiếu đề nghị thanh toán\nNgười tạo: 55555/55555\n\n## Loại thanh toán\n- cash: Tiền mặt\n- bank_transfer: Chuyển khoản\n\n## Test Data cố định\n- jar_id: 38fef5aa-c952-49d7-8c0a-9d717668b07a\n- workplace_type: 0 (Cửa hàng/Chi nhánh)\n- workplace_id: 5ca2799b-8bd8-e711-80d9-00155d0a0504\n- requester_id: 3d9caa7b-52f0-e711-10da-00155d0a0504\n\n## Kết quả\nTrả về ID của phiếu vừa tạo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-15",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_id": "5ca2799b-8bd8-e711-80d9-00155d0a0504",
+        "workplace_type": 0,
+        "jar_id": "38fef5aa-c952-49d7-8c0a-9d717668b07a",
+        "content": "Thanh toán văn phòng phẩm tháng 12",
+        "payment_type": "cash",
+        "previous_payments": 0,
+        "payment_details": [
+          {
+            "description": "Giấy A4",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 10,
+            "price": 50000,
+            "tax": 10,
+            "amount": 550000
+          },
+          {
+            "description": "Bút bi",
+            "unit_id": "79f97729-fbe2-4492-bacf-68a0809321b5",
+            "quantity": 20,
+            "price": 5000,
+            "tax": 10,
+            "amount": 110000
+          }
+        ],
+        "file_ids": [
+          "e41e24c6-215e-43d5-83bf-94cba481daa2",
+          "23b5c8b4-12f5-4189-94ed-101a43b16ba5"
+        ]
+      },
+      "templates": [
+        {
+          "name": "Thanh toán tiền mặt",
+          "description": "Tạo phiếu thanh toán bằng tiền mặt (không có đối tượng chi)",
+          "body": {
+            "date": "2025-12-15",
+            "has_advance": false,
+            "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+            "workplace_id": "5ca2799b-8bd8-e711-80d9-00155d0a0504",
+            "workplace_type": 0,
+            "jar_id": "38fef5aa-c952-49d7-8c0a-9d717668b07a",
+            "content": "Thanh toán văn phòng phẩm",
+            "payment_type": "cash",
+            "previous_payments": 0,
+            "payment_details": [
+              {
+                "description": "Giấy A4",
+                "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+                "quantity": 10,
+                "price": 50000,
+                "tax": 10,
+                "amount": 550000
+              }
+            ],
+            "file_ids": ["e41e24c6-215e-43d5-83bf-94cba481daa2"]
+          }
+        },
+        {
+          "name": "Chuyển khoản",
+          "description": "Tạo phiếu thanh toán bằng chuyển khoản (có đối tượng chi)",
+          "body": {
+            "date": "2025-12-15",
+            "has_advance": false,
+            "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+            "workplace_id": "5ca2799b-8bd8-e711-80d9-00155d0a0504",
+            "workplace_type": 0,
+            "jar_id": "38fef5aa-c952-49d7-8c0a-9d717668b07a",
+            "content": "Thanh toán nhà cung cấp",
+            "payment_type": "bank_transfer",
+            "disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+            "disburser_name": "Công ty TNHH ABC",
+            "disburser_bank_account_number": "1234567890",
+            "disburser_bank_account_name": "CONG TY TNHH ABC",
+            "disburser_bank_name": "Vietcombank",
+            "previous_payments": 0,
+            "payment_details": [
+              {
+                "description": "Thanh toán hóa đơn #123",
+                "unit_id": "c3061db2-a12c-46bb-9cf4-7413d5695e96",
+                "quantity": 1,
+                "price": 10000000,
+                "tax": 10,
+                "amount": 11000000
+              }
+            ],
+            "file_ids": ["46077b44-248a-4dc6-8bcd-4e5594adb92f", "50acf336-e414-42bd-aba0-ec0ed13eb71a"]
+          }
+        },
+        {
+          "name": "Có tạm ứng",
+          "description": "Tạo phiếu thanh toán có tham chiếu đến phiếu tạm ứng",
+          "body": {
+            "date": "2025-12-15",
+            "has_advance": true,
+            "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+            "workplace_id": "5ca2799b-8bd8-e711-80d9-00155d0a0504",
+            "workplace_type": 0,
+            "jar_id": "38fef5aa-c952-49d7-8c0a-9d717668b07a",
+            "content": "Thanh toán và hoàn ứng",
+            "payment_type": "cash",
+            "advance_code": ["PTU0001", "PTU0002"],
+            "previous_payments": 5000000,
+            "payment_details": [
+              {
+                "description": "Chi phí đi công tác",
+                "unit_id": "5c970aad-63d2-4032-beb9-84a723dc89a7",
+                "quantity": 1,
+                "price": 3000000,
+                "tax": 0,
+                "amount": 3000000
+              }
+            ],
+            "file_ids": ["c6da163c-3d60-4859-9c38-6e3db17e47cc"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lấy chi tiết phiếu đề nghị thanh toán",
+      "method": "GET",
+      "endpoint": "/api/payment-request/detail/{id}",
+      "description": "## Xem chi tiết phiếu\nLấy thông tin chi tiết của phiếu đề nghị thanh toán\n\n## Thông tin trả về\n- Thông tin phiếu\n- Chi tiết thanh toán (payment_details)\n- Chứng từ đính kèm (payment_documents)\n- File đính kèm\n- Trạng thái duyệt",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Duyệt phiếu - Trưởng đơn vị (Bước 1)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 1: Trưởng đơn vị duyệt\nTrưởng bộ phận/phòng ban: 55555/55555\n\n## Hành động\n- status: 'approved' (Duyệt) hoặc 'rejected' (Từ chối)\n- reason: Lý do (bắt buộc nếu từ chối)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      },
+      "templates": [
+        {
+          "name": "Duyệt phiếu",
+          "description": "Trưởng đơn vị duyệt phiếu",
+          "body": {
+            "status": "approved"
+          }
+        },
+        {
+          "name": "Từ chối phiếu",
+          "description": "Trưởng đơn vị từ chối phiếu (phải có lý do)",
+          "body": {
+            "status": "rejected",
+            "reason": "Thiếu chứng từ đính kèm"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Duyệt phiếu - Kế toán hàng hóa (Bước 2)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 2: Kế toán hàng hóa duyệt\nKế toán hàng hóa: 0091/0091\n\n**Điều kiện**: Chỉ duyệt nếu phiếu thuộc lọ hàng hóa\n\n**Lưu ý**: Cần login lại với tài khoản 0091/0091",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Duyệt phiếu - Kế toán tài sản (Bước 3)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 3: Kế toán tài sản duyệt\nKế toán tài sản: 0025/0001\n\n**Điều kiện**: Chỉ duyệt nếu phiếu thuộc lọ tài sản\n\n**Lưu ý**: Cần login lại với tài khoản 0025/0001",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Duyệt phiếu - Kế toán thuế (Bước 4)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 4: Kế toán thuế duyệt\nKế toán thuế: 44444/44444\n\n**Lưu ý**: Cần login lại với tài khoản 44444/44444",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Tạo hóa đơn (Invoice)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/invoices/{id}",
+      "description": "## Tạo/Sửa hóa đơn\nKế toán tài sản hoặc kế toán hàng hóa tạo hóa đơn\n\n**Quan trọng**: Cần tạo trước khi kế toán thanh toán duyệt (Bước 5)\n\n**Lưu ý**: Login với tài khoản 11111/11111 (Kế toán thanh toán)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HD001",
+          "date": "2025-12-15",
+          "amount": 11000000,
+          "description": "Hóa đơn văn phòng phẩm"
+        }
+      ]
+    },
+    {
+      "name": "Tạo hợp đồng (Contract)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/contracts/{id}",
+      "description": "## Tạo/Sửa hợp đồng\nKế toán tài sản hoặc kế toán hàng hóa tạo hợp đồng\n\n**Lưu ý**: Tùy chọn, không bắt buộc",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HĐ001",
+          "date": "2025-12-01",
+          "amount": 50000000,
+          "description": "Hợp đồng cung cấp văn phòng phẩm năm 2025"
+        }
+      ]
+    },
+    {
+      "name": "Duyệt phiếu - Kế toán thanh toán (Bước 5)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 5: Kế toán thanh toán duyệt\nKế toán thanh toán: 11111/11111\n\n**Điều kiện**: Phải tạo hạch toán (hóa đơn) xong mới được duyệt\n\n**Lỗi nếu chưa tạo hạch toán**:\n- Error: 'Hạch toán phải được tạo trước khi duyệt ở bước này'\n\n**Lưu ý**: Cần login lại với tài khoản 11111/11111",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Duyệt phiếu - TBP KTTT (Bước 6)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 6: TBP KTTT duyệt\nTrưởng bộ phận kế toán thanh toán: 22222/22222\n\nCó thể duyệt hoặc sửa hạch toán nếu cần\n\n**Lưu ý**: Cần login lại với tài khoản 22222/22222",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Duyệt phiếu - Kế toán trưởng (Bước 7 - Cuối cùng)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Bước 7: Kế toán trưởng duyệt (CUỐI CÙNG)\nKế toán trưởng: 33333/33333\n\n**Kết quả**:\n- Phiếu được duyệt hoàn tất\n- Tự động tạo lịch chi với trạng thái chờ (chưa có ngày chi)\n\n**Lỗi có thể xảy ra**:\n- Nếu chưa chọn ngày chi: 'Vui lòng chọn ngày chi trước khi duyệt'\n- Ngày chi không được trước ngày hiện tại\n\n**Lưu ý**: Cần login lại với tài khoản 33333/33333",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved",
+        "disbursement_date": "2025-12-20"
+      },
+      "templates": [
+        {
+          "name": "Duyệt có ngày chi",
+          "description": "Kế toán trưởng duyệt và chọn ngày chi",
+          "body": {
+            "status": "approved",
+            "disbursement_date": "2025-12-20"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "Kế toán trưởng từ chối phiếu",
+          "body": {
+            "status": "rejected",
+            "reason": "Hạch toán chưa chính xác, vui lòng kiểm tra lại"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cập nhật phiếu đề nghị thanh toán",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Cập nhật phiếu\nNgười tạo hoặc người có quyền sửa phiếu\n\n**Lưu ý**:\n- Không thể sửa khi đang trong quá trình duyệt\n- Không thể sửa khi đã hoàn thành\n- Không thể thay đổi nơi làm việc khi trưởng bộ phận đã duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-15",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_id": "5ca2799b-8bd8-e711-80d9-00155d0a0504",
+        "workplace_type": 0,
+        "jar_id": "38fef5aa-c952-49d7-8c0a-9d717668b07a",
+        "content": "Nội dung đã cập nhật",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "existing-detail-id",
+            "description": "Giấy A4 - Đã cập nhật",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 15,
+            "price": 50000,
+            "tax": 10,
+            "amount": 825000
+          }
+        ],
+        "file_ids": ["b8b3451d-b32a-47f9-a2a6-b89491167f44"]
+      }
+    },
+    {
+      "name": "Thêm comment vào phiếu",
+      "method": "POST",
+      "endpoint": "/api/payment-request/{id}/comments",
+      "description": "## Thêm comment\nThêm ghi chú/comment vào phiếu đề nghị thanh toán\n\n**Sử dụng**: Trao đổi giữa các bước duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "content": "Vui lòng bổ sung chứng từ đính kèm",
+        "parent_id": null
+      }
+    },
+    {
+      "name": "Lấy danh sách comment",
+      "method": "GET",
+      "endpoint": "/api/payment-request/{id}/comments",
+      "description": "## Lấy danh sách comment\nLấy tất cả comment của phiếu",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh sách phiếu đề nghị thanh toán",
+      "method": "GET",
+      "endpoint": "/api/payment-request",
+      "description": "## Lấy danh sách phiếu (Phân trang)\nLấy danh sách tất cả phiếu đề nghị thanh toán với phân trang\n\n**Query parameters**:\n- page: Số trang (default: 1)\n- limit: Số bản ghi/trang (default: 10)\n- search: Tìm kiếm theo mã, nội dung\n- status: Lọc theo trạng thái\n- from_date: Từ ngày\n- to_date: Đến ngày",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "In phiếu đề nghị thanh toán (PDF)",
+      "method": "GET",
+      "endpoint": "/api/payment-request/print/{id}",
+      "description": "## In phiếu PDF\nXuất phiếu đề nghị thanh toán ra file PDF\n\n**Kết quả**: File PDF download",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Cập nhật chứng từ đính kèm",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/documents/{id}",
+      "description": "## Cập nhật chứng từ đính kèm\nThêm/sửa các loại chứng từ đính kèm cho phiếu\n\n**Lưu ý**: Cần có type_document_id (lấy từ API document-type)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "type_document_id": "YOUR_DOCUMENT_TYPE_ID",
+          "ref_id": [
+            "32e2696b-f01a-45a1-bcd4-c7f8ce403182",
+            "26f7de1a-6712-4dc9-8e0c-051ccfa6cece"
+          ],
+          "ref_code": ["HD001", "HD002"]
+        }
+      ]
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Payment Request API Tests",
+    "version": "1.0.0",
+    "description": "Test collection cho chức năng Phiếu đề nghị thanh toán",
+    "created": "2025-12-15",
+    "author": "Accounting System Team"
+  }
+}

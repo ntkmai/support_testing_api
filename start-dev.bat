@@ -1,0 +1,3 @@
+@echo off
+echo Starting dev server with cache disabled...
+npx http-server -p 8000 -c-1 --cors
