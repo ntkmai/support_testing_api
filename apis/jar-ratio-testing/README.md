@@ -217,25 +217,6 @@ Content-Type: application/json
 
 ---
 
-## 📁 Files Hướng Dẫn
-
-### jar-ratio-api-tests.json
-- **12 API endpoints** với mô tả chi tiết
-- Request/Response examples
-- Metadata: accounts, version, description
-- Sử dụng trong **API Tester Tool**
-
-### jar-ratio-test.http
-- **Test file đầy đủ** cho VS Code REST Client
-- **525 dòng** với tất cả scenarios:
-  - ✅ Happy paths (tạo, duyệt thành công)
-  - ❌ Edge cases (validation errors)
-  - 🔄 Full workflow (tạo → duyệt 3 cấp → approved)
-- Auto-save tokens với `@token_*`
-- Ví dụ thực tế với data cụ thể
-
----
-
 ## 🧪 Test Scenarios
 
 ### ✅ Happy Path
@@ -355,58 +336,6 @@ Content-Type: application/json
 | 404 Not Found | ID không tồn tại | Kiểm tra lại ID |
 
 ---
-
-## 📞 Base URL
-
-- **Development**: `http://localhost:3000`
-- **Production**: (Liên hệ Backend team)
-
----
-
-## ✨ Features Nổi Bật
-
-1. **📋 Template Selector (NEW!)**: Chọn nhanh request từ file .http
-   - Parse tự động 525 dòng test cases
-   - Nhóm theo category: Auth, CRUD, Approval, Validation
-   - 1 click fill vào form, không cần copy/paste
-2. **Auto Token Management**: Token tự động lưu và apply
-3. **3-Level Approval**: Workflow rõ ràng, dễ theo dõi
-4. **Strict Validation**: Đảm bảo data luôn chính xác
-5. **Full History**: Tracking đầy đủ mọi thay đổi
-6. **Mobile Ready**: API riêng cho mobile app
-7. **Test Complete**: 12 endpoints + 525 lines test cases
-
----
-
-📚 **Happy Testing!**
-
-
-- [TEST-README.md](TEST-README.md) - Business rules
-- [JAR-RATIO-COMPLETE-TEST-GUIDE.md](JAR-RATIO-COMPLETE-TEST-GUIDE.md) - UAT
-- [QUICK-START-TEST.md](QUICK-START-TEST.md) - Demo
-
-### 🆕 Người Mới
-**Learning path:**
-1. [README-TEST-JAR-RATIO.md](README-TEST-JAR-RATIO.md) - Tổng quan
-2. [QUICK-START-TEST.md](QUICK-START-TEST.md) - Thử ngay
-3. [TEST-README.md](TEST-README.md) - Học chi tiết
-4. [JAR-RATIO-COMPLETE-TEST-GUIDE.md](JAR-RATIO-COMPLETE-TEST-GUIDE.md) - Test đầy đủ
-
----
-
-## ⚡ Quick Commands
-
-### Setup REST Client (VS Code)
-
-```bash
-# 1. Install VS Code extension "REST Client"
-# 2. Open jar-ratio-test.http
-# 3. Click "Send Request"
-```
-
-### Chạy với cURL
-
-```bash
 # Login
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -450,61 +379,6 @@ Tạo → Giám đốc duyệt → Chủ tịch duyệt → Chủ tịch HĐQT d
 - [ ] Hoặc cURL
 
 ---
-
-## 🆘 Cần Giúp?
-
-### Troubleshooting:
-- 🔍 [TEST-README.md#troubleshooting](TEST-README.md#-troubleshooting)
-- 🔍 [TEST-INDEX.md#cần-giúp](TEST-INDEX.md#-cần-giúp)
-
-### Common Issues:
-| Issue | File | Section |
-|-------|------|---------|
-| Token expired | TEST-README.md | Troubleshooting |
-| Ratio ≠ 100% | TEST-README.md | Business Rules |
-| Cannot update | TEST-README.md | Troubleshooting |
-| No report | TEST-README.md | Troubleshooting |
-
----
-
-## 🎯 Next Steps
-
-### Bây giờ:
-
-1️⃣ **Muốn test nhanh?**
-   → Mở [QUICK-START-TEST.md](QUICK-START-TEST.md)
-
-2️⃣ **Muốn hiểu toàn bộ?**
-   → Mở [README-TEST-JAR-RATIO.md](README-TEST-JAR-RATIO.md)
-
-3️⃣ **Muốn test ngay với REST Client?**
-   → Mở [jar-ratio-test.http](jar-ratio-test.http)
-
-### Sau đó:
-
-- 📚 Đọc [TEST-README.md](TEST-README.md) để hiểu sâu
-- 📋 Test đầy đủ với [JAR-RATIO-COMPLETE-TEST-GUIDE.md](JAR-RATIO-COMPLETE-TEST-GUIDE.md)
-- 📊 Tạo báo cáo test
-
----
-
-## 📞 Support
-
-**Có câu hỏi?**
-1. Check [README-TEST-JAR-RATIO.md](README-TEST-JAR-RATIO.md)
-2. Check [TEST-README.md](TEST-README.md)
-3. Check troubleshooting sections
-
----
-
-## 📝 Version
-
-**Version:** 1.0
-**Created:** 2025-12-15
-**Author:** Claude AI Assistant
-
----
-
 ## 🌟 Features
 
 - ✅ 31 test cases đầy đủ
@@ -517,7 +391,3 @@ Tạo → Giám đốc duyệt → Chủ tịch duyệt → Chủ tịch HĐQT d
 - ✅ Multi-level navigation
 
 ---
-
-**Happy Testing! 🎉**
-
-**👉 START: [README-TEST-JAR-RATIO.md](README-TEST-JAR-RATIO.md)**
