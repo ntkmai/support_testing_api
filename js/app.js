@@ -67,10 +67,19 @@ class App {
                 setTimeout(() => {
                     this.markdownViewer.loadFile(file.path, file.name);
                 }, 100);
-            } else if (file.type === 'http' || file.type === 'json') {
+            } else if (file.type === 'json') {
+                // Load API test data from JSON file
+                this.switchTab('api');
+                this.apiTester.loadTestData(file.path);
+            } else if (file.type === 'http') {
                 this.switchTab('api');
                 UIComponents.showNotification(`📄 Đã chọn: ${file.name}`, 'info');
             }
+        });
+        
+        // Folder selection handler
+        this.fileExplorer.onFolderSelect((folderPath, files) => {
+            this.apiTester.setFolder(folderPath, files);
         });
 
         // Config change handler
@@ -154,6 +163,7 @@ class App {
     toggleSidebar(showNotification = true) {
         const sidebar = document.querySelector('.sidebar');
         const mainLayout = document.querySelector('.main-layout');
+        const toggleBtn = document.getElementById('sidebarToggle');
         
         if (!sidebar || !mainLayout) return;
 
@@ -163,6 +173,10 @@ class App {
             // Show sidebar
             sidebar.classList.remove('collapsed');
             mainLayout.classList.remove('sidebar-collapsed');
+            if (toggleBtn) {
+                toggleBtn.classList.remove('collapsed');
+                toggleBtn.textContent = '☰';
+            }
             localStorage.setItem('sidebarCollapsed', 'false');
             if (showNotification) {
                 UIComponents.showNotification('📂 Đã hiện menu', 'info');
@@ -171,6 +185,10 @@ class App {
             // Hide sidebar
             sidebar.classList.add('collapsed');
             mainLayout.classList.add('sidebar-collapsed');
+            if (toggleBtn) {
+                toggleBtn.classList.add('collapsed');
+                toggleBtn.textContent = '»';
+            }
             localStorage.setItem('sidebarCollapsed', 'true');
             if (showNotification) {
                 UIComponents.showNotification('📂 Đã ẩn menu', 'info');

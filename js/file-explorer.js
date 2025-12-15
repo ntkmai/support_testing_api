@@ -8,6 +8,7 @@ export class FileExplorer {
         this.currentFile = null;
         this.currentFolder = null;
         this.onFileSelectCallback = null;
+        this.onFolderSelectCallback = null;
     }
 
     // Initialize file explorer
@@ -16,38 +17,65 @@ export class FileExplorer {
         this.render();
     }
 
-    // Load file structure from jar-ratio-testing folder
+    // Load file structure from apis folder
     async loadFileStructure() {
-        const basePath = 'apis/jar-ratio-testing';
+        const basePath = 'apis';
         
-        // Define folder structure with descriptions
-        this.folders = new Map([
-            ['JAR Ratio Testing', {
-                icon: '🧪',
-                color: '#667eea',
-                description: 'Tài liệu và test cases cho JAR Ratio API',
-                path: basePath,
-                files: [
-                    { name: 'JAR-RATIO-COMPLETE-TEST-GUIDE.md', icon: '📚', path: `${basePath}/JAR-RATIO-COMPLETE-TEST-GUIDE.md`, type: 'md' },
-                    { name: 'TEST-README.md', icon: '📖', path: `${basePath}/TEST-README.md`, type: 'md' },
-                    { name: 'QUICK-START-TEST.md', icon: '🚀', path: `${basePath}/QUICK-START-TEST.md`, type: 'md' },
-                    { name: 'README-TEST-JAR-RATIO.md', icon: '📘', path: `${basePath}/README-TEST-JAR-RATIO.md`, type: 'md' },
-                    { name: 'README.md', icon: '📄', path: `${basePath}/README.md`, type: 'md' },
-                    { name: 'TEST-FILES-SUMMARY.md', icon: '📋', path: `${basePath}/TEST-FILES-SUMMARY.md`, type: 'md' },
-                    { name: 'TEST-INDEX.md', icon: '📑', path: `${basePath}/TEST-INDEX.md`, type: 'md' },
-                    { name: 'jar-ratio-test.http', icon: '🌐', path: `${basePath}/jar-ratio-test.http`, type: 'http' },
-                    { name: 'jar-ratio-test-data.json', icon: '📊', path: `${basePath}/jar-ratio-test-data.json`, type: 'json' }
-                ]
-            }]
-            // Có thể thêm thư mục khác ở đây
-            // ['Tên thư mục khác', { icon: '📁', color: '#10b981', description: 'Mô tả...', path: 'path/to/folder', files: [...] }]
-        ]);
-
-        // Flatten all files
-        this.files = [];
-        this.folders.forEach(folder => {
-            this.files.push(...folder.files);
-        });
+        try {
+            // Load manifest file that contains folder structure
+            const response = await fetch(`${basePath}/manifest.json`);
+            const manifest = await response.json();
+            
+            this.folders = new Map();
+            
+            // Process each folder from manifest
+            for (const folderConfig of manifest.folders) {
+                const folderPath = `${basePath}/${folderConfig.path}`;
+                const files = [];
+                
+                // Create file objects for each file in the folder
+                for (const fileName of folderConfig.files) {
+                    let icon = '📄';
+                    let type = 'file';
+                    
+                    if (fileName.endsWith('.md')) {
+                        icon = fileName.includes('README') ? '📖' : '📝';
+                        type = 'md';
+                    } else if (fileName.endsWith('.json')) {
+                        icon = '📊';
+                        type = 'json';
+                    } else if (fileName.endsWith('.http')) {
+                        icon = '🌐';
+                        type = 'http';
+                    }
+                    
+                    files.push({
+                        name: fileName,
+                        icon: icon,
+                        path: `${folderPath}/${fileName}`,
+                        type: type
+                    });
+                }
+                
+                this.folders.set(folderConfig.name, {
+                    icon: folderConfig.icon,
+                    color: folderConfig.color,
+                    description: folderConfig.description,
+                    path: folderPath,
+                    files: files
+                });
+            }
+            
+            // Flatten all files
+            this.files = [];
+            this.folders.forEach(folder => {
+                this.files.push(...folder.files);
+            });
+            
+        } catch (error) {
+            console.error('Error loading file structure:', error);
+            UIComponents.showNotification('❌ Không thể tải danh sách thư mục', 'error');
+        }
     }
 
     // Render folder tree
@@ -151,6 +179,11 @@ export class FileExplorer {
         
         const folder = this.folders.get(folderName);
         UIComponents.showNotification(`📂 ${folderName} - ${folder.files.length} files`, 'info');
+        
+        // Trigger folder select callback with files
+        if (this.onFolderSelectCallback) {
+            this.onFolderSelectCallback(folder.path, folder.files);
+        }
     }
 
     // Show all folders
@@ -179,6 +212,11 @@ export class FileExplorer {
     // Set callback for file selection
     onFileSelect(callback) {
         this.onFileSelectCallback = callback;
+    }
+
+    // Set callback for folder selection
+    onFolderSelect(callback) {
+        this.onFolderSelectCallback = callback;
     }
 
     // Get all files

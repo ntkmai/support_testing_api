@@ -7,22 +7,38 @@ export class APITester {
         this.requests = [];
         this.currentRequest = null;
         this.history = [];
+        this.currentFolder = null;
+        this.testDataPath = null;
     }
 
     // Initialize API tester
     async init() {
-        await this.loadTestData();
+        // Don't load any data initially, wait for folder selection
         this.renderRequestList();
         this.setupSubTabs();
     }
 
-    // Load test data from JSON file
-    async loadTestData() {
+    // Load test data from specific JSON file path
+    async loadTestData(filePath = null) {
+        // If no path provided, try to find JSON file in current folder
+        if (!filePath && this.currentFolder) {
+            // Auto-detect JSON file in folder
+            return;
+        }
+        
+        if (!filePath) {
+            // No folder selected, show empty state
+            this.requests = [];
+            this.renderRequestList();
+            return;
+        }
+        
         try {
-            const response = await fetch('apis/jar-ratio-testing/jar-ratio-api-tests.json');
+            const response = await fetch(filePath);
             if (!response.ok) throw new Error('Cannot load test data');
 
             const data = await response.json();
+            this.testDataPath = filePath;
             
             // Check if data has requests array, if not create from template
             if (data.requests && Array.isArray(data.requests)) {
@@ -33,10 +49,28 @@ export class APITester {
             }
 
             UIComponents.showNotification(`🧪 Đã tải ${this.requests.length} API tests`, 'success');
+            this.renderRequestList();
         } catch (error) {
             console.error('Error loading test data:', error);
-            this.requests = this.getDefaultRequests();
-            UIComponents.showNotification('⚠️ Dùng API mẫu', 'warning');
+            this.requests = [];
+            this.renderRequestList();
+            UIComponents.showNotification('❌ Không thể tải test data', 'error');
+        }
+    }
+
+    // Set current folder and load its test data
+    async setFolder(folderPath, files = []) {
+        this.currentFolder = folderPath;
+        
+        // Auto-load first JSON file in the folder
+        const jsonFile = files.find(f => f.type === 'json');
+        if (jsonFile) {
+            await this.loadTestData(jsonFile.path);
+        } else {
+            // Clear current requests if no JSON file found
+            this.requests = [];
+            this.currentRequest = null;
+            this.renderRequestList();
         }
     }
 

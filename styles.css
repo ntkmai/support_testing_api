@@ -83,12 +83,16 @@ body:not([data-theme="light"]) .header {
 .header-content h1 {
     color: var(--primary-color);
     font-size: 28px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+    margin-right: 0;
+    display: inline-block;
 }
 
 .header-content p {
     color: var(--text-secondary);
     font-size: 14px;
+    margin: 0;
+    display: inline-block;
 }
 
 .header-config {
@@ -136,13 +140,12 @@ body:not([data-theme="light"]) .header {
     border-radius: 8px;
     font-size: 20px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.3s ease, background 0.2s;
     font-weight: bold;
 }
 
 .btn-sidebar-toggle:hover {
     background: var(--primary-color);
-    transform: scale(1.05);
 }
 
 .btn-save {
@@ -172,6 +175,11 @@ body:not([data-theme="light"]) .header {
 
 .main-layout.sidebar-collapsed {
     grid-template-columns: 0 1fr;
+}
+
+.main-layout.sidebar-collapsed .content-area {
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Sidebar */
@@ -570,7 +578,12 @@ body:not([data-theme="light"]) .content-area {
     font-size: 15px;
     line-height: 1.7;
     max-width: 900px;
+    margin: 0 auto;
     color: var(--text-primary);
+}
+
+.main-layout.sidebar-collapsed .markdown-body {
+    max-width: 1400px;
 }
 
 .markdown-body h1,

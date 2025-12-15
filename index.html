@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔧 Test Tool Viewer - Modular Edition</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -15,12 +16,13 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-content">
-                <h1>🔧 Test Tool Viewer</h1>
-                <p>Modular Architecture - Markdown Viewer & API Tester</p>
+            <div class="header-content" style="display: flex; align-items: center; gap: 12px;">
+                <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
+                <div>
+                    <h1 style="margin-bottom: 2px;">Test Tool Viewer</h1>
+                </div>
             </div>
             <div class="header-config">
-                <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
                 <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện">🌙</button>
                 <input type="text" id="baseUrlInput" class="config-input" placeholder="http://localhost:3000">
                 <button id="saveBaseUrl" class="btn-save">💾 Lưu</button>

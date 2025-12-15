@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "Test quản lý tỷ lệ lọ JAR",
+      "path": "jar-ratio-testing",
+      "icon": "🧪",
+      "color": "#667eea",
+      "description": "Tài liệu và test cases cho JAR Ratio API",
+      "files": [
+        "JAR-RATIO-COMPLETE-TEST-GUIDE.md",
+        "TEST-README.md",
+        "QUICK-START-TEST.md",
+        "README-TEST-JAR-RATIO.md",
+        "README.md",
+        "TEST-FILES-SUMMARY.md",
+        "TEST-INDEX.md",
+        "jar-ratio-test.http",
+        "jar-ratio-api-tests.json"
+      ]
+    },
+    {
+      "name": "User Management",
+      "path": "user-management",
+      "icon": "👥",
+      "color": "#10b981",
+      "description": "API quản lý người dùng",
+      "files": [
+        "README.md",
+        "user-api-tests.json"
+      ]
+    }
+]
+}
