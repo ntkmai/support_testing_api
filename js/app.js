@@ -91,6 +91,11 @@ class App {
                 if (this.apiTester.currentRequest) {
                     this.apiTester.renderRequestDetails();
                 }
+            } else if (key === 'proxy') {
+                // Re-render request details when proxy settings change
+                if (this.apiTester.currentRequest) {
+                    this.apiTester.renderRequestDetails();
+                }
             }
         });
     }
