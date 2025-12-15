@@ -1,0 +1,134 @@
+{
+  "requests": [
+    {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Mục đích\nĐăng nhập vào hệ thống\n\n## Yêu cầu\n- username: Tên đăng nhập\n- password: Mật khẩu\n\n## Kết quả\nTrả về JWT token",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "admin",
+        "password": "password123"
+      },
+      "templates": [
+        {
+          "name": "Admin Account",
+          "description": "Đăng nhập với tài khoản admin",
+          "body": {
+            "username": "admin",
+            "password": "admin123"
+          }
+        },
+        {
+          "name": "User Account",
+          "description": "Đăng nhập với tài khoản user thường",
+          "body": {
+            "username": "user01",
+            "password": "user123"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get List",
+      "method": "GET",
+      "endpoint": "/api/items",
+      "description": "## Mục đích\nLấy danh sách tất cả items\n\n## Yêu cầu\nCần Bearer token trong header",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get By ID",
+      "method": "GET",
+      "endpoint": "/api/items/1",
+      "description": "Lấy thông tin chi tiết item theo ID",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Create New",
+      "method": "POST",
+      "endpoint": "/api/items",
+      "description": "## Mục đích\nTạo item mới\n\n## Thông tin cần thiết\n- name: Tên item\n- value: Giá trị\n- status: Trạng thái",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Item Name",
+        "value": 100,
+        "status": "active"
+      },
+      "templates": [
+        {
+          "name": "Active Item",
+          "description": "Tạo item với trạng thái active",
+          "body": {
+            "name": "New Active Item",
+            "value": 100,
+            "status": "active"
+          }
+        },
+        {
+          "name": "Pending Item",
+          "description": "Tạo item với trạng thái pending",
+          "body": {
+            "name": "New Pending Item",
+            "value": 50,
+            "status": "pending"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update",
+      "method": "PUT",
+      "endpoint": "/api/items/1",
+      "description": "Cập nhật thông tin item",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Updated Name",
+        "value": 200
+      },
+      "templates": [
+        {
+          "name": "Update Value",
+          "description": "Cập nhật giá trị",
+          "body": {
+            "value": 150
+          }
+        },
+        {
+          "name": "Update Status",
+          "description": "Cập nhật trạng thái",
+          "body": {
+            "status": "inactive"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete",
+      "method": "DELETE",
+      "endpoint": "/api/items/1",
+      "description": "Xóa item khỏi hệ thống",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "API Test Collection",
+    "version": "1.0.0",
+    "description": "Template mẫu cho API testing",
+    "created": "2025-12-15"
+  }
+}
