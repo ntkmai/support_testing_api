@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Test Tool Viewer - Modular Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🔧 Test Tool Viewer</h1>
+                <p>Modular Architecture - Markdown Viewer & API Tester</p>
+            </div>
+            <div class="header-config">
+                <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
+                <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện">🌙</button>
+                <input type="text" id="baseUrlInput" class="config-input" placeholder="http://localhost:8080">
+                <button id="saveBaseUrl" class="btn-save">💾 Lưu</button>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Sidebar - File Explorer -->
+            <div class="sidebar">
+                <h3>📂 Chọn thư mục</h3>
+                <div id="fileList" class="file-explorer"></div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active">📚 Markdown Viewer</button>
+                    <button class="tab-btn">🧪 API Tester</button>
+                    <button class="tab-btn">⚙️ Settings</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Markdown Tab -->
+                    <div class="tab-pane active" id="markdownTab">
+                        <div id="tableOfContents" class="toc-sidebar" style="display:none;"></div>
+                        <div id="markdownContent" class="markdown-body">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <h3>Chào mừng đến với Test Tool Viewer</h3>
+                                <p>Chọn một file từ File Explorer để bắt đầu</p>
+                                <div class="feature-list">
+                                    <div class="feature-item">
+                                        <span class="feature-icon">📂</span>
+                                        <div>
+                                            <strong>File Explorer</strong>
+                                            <p>Duyệt các file Markdown theo cấu trúc thư mục</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item">
+                                        <span class="feature-icon">🧪</span>
+                                        <div>
+                                            <strong>API Tester</strong>
+                                            <p>Test API với giao diện trực quan</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item">
+                                        <span class="feature-icon">⚙️</span>
+                                        <div>
+                                            <strong>Dynamic Config</strong>
+                                            <p>Thay đổi Base URL linh hoạt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Tester Tab -->
+                    <div class="tab-pane" id="apiTab">
+                        <div class="api-layout">
+                            <!-- Left: Request List -->
+                            <div class="request-list-container">
+                                <h4>📋 Saved Requests</h4>
+                                <div id="requestList" class="request-list"></div>
+                            </div>
+
+                            <!-- Right: Request/Response Tabs -->
+                            <div class="request-response-container">
+                                <!-- Sub Tabs -->
+                                <div class="api-sub-tabs">
+                                    <div class="api-sub-tabs-left">
+                                        <button class="api-sub-tab-btn active" data-tab="request">📝 Request</button>
+                                        <button class="api-sub-tab-btn" data-tab="response">📥 Response</button>
+                                    </div>
+                                    <div class="api-sub-tabs-right">
+                                        <button id="executeRequestBtn" class="btn btn-primary" style="min-width:120px;">🚀 Thực thi</button>
+                                    </div>
+                                </div>
+
+                                <!-- Tab Contents -->
+                                <div class="api-sub-tab-content">
+                                    <!-- Request Tab -->
+                                    <div class="api-sub-pane active" id="requestPane">
+                                        <div id="requestDetails" class="request-details">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">🧪</div>
+                                                <h3>API Tester</h3>
+                                                <p>Chọn một request từ danh sách hoặc tạo request mới</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Response Tab -->
+                                    <div class="api-sub-pane" id="responsePane">
+                                        <div id="responseContainer" class="response-container-full">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">📭</div>
+                                                <h3>No Response</h3>
+                                                <p>Thực thi một request để xem response</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane" id="settingsTab">
+                        <div class="settings-container">                         
+                            <div class="settings-section">
+                                <h4>🌍 API Configuration</h4>
+                                <div class="form-group">
+                                    <label>Base URL:</label>
+                                    <input type="text" id="settingsBaseUrl" class="form-control" placeholder="http://localhost:8080">
+                                    <small>Địa chỉ server API của bạn</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Timeout (ms):</label>
+                                    <input type="number" class="form-control" value="30000">
+                                </div>
+                                <div class="button-group">
+                                    <button id="saveSettings" class="btn btn-primary">💾 Lưu cấu hình</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>🔄 CORS Proxy (Bypass CORS)</h4>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="enableProxy" class="checkbox-input">
+                                        <span>Sử dụng CORS Proxy</span>
+                                    </label>
+                                    <small>Bật để bypass CORS errors khi gọi API</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Proxy URL:</label>
+                                    <input type="text" id="proxyUrl" class="form-control" placeholder="https://cors-anywhere.herokuapp.com/">
+                                    <small>URL của CORS proxy server (mặc định: cors-anywhere)</small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="info-box">
+                                        <strong>💡 Lưu ý:</strong>
+                                        <ul>
+                                            <li>CORS Proxy sẽ thêm prefix vào API URL</li>
+                                            <li>Ví dụ: <code>https://proxy.com/http://localhost:3000/api/users</code></li>
+                                            <li>Các proxy phổ biến:
+                                                <ul>
+                                                    <li><code>https://cors-anywhere.herokuapp.com/</code></li>
+                                                    <li><code>https://api.allorigins.win/raw?url=</code></li>
+                                                    <li>Hoặc tự setup proxy server riêng</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="button-group">
+                                    <button id="saveProxySettings" class="btn btn-primary">💾 Lưu Proxy</button>
+                                    <button id="testProxy" class="btn btn-primary">🧪 Test Proxy</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>🔐 Authentication</h4>
+                                <div class="form-group">
+                                    <label>Auth Type:</label>
+                                    <select id="authType" class="form-control">
+                                        <option value="Bearer">Bearer Token</option>
+                                        <option value="Basic">Basic Auth</option>
+                                        <option value="Token">Token</option>
+                                        <option value="Custom">Custom</option>
+                                    </select>
+                                    <small>Loại authentication sử dụng trong header</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Token Path (Auto Extract):</label>
+                                    <input type="text" id="tokenPath" class="form-control" placeholder="data.access_token">
+                                    <small>Đường dẫn JSON để tự động lấy token (vd: data.access_token, token, access_token)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Current Token:</label>
+                                    <textarea id="currentToken" class="form-control" rows="3" readonly></textarea>
+                                    <small>Token hiện tại (tự động lấy sau khi login)</small>
+                                </div>
+                                <div class="button-group">
+                                    <button id="saveAuthSettings" class="btn btn-primary">💾 Lưu Auth</button>
+                                    <button id="clearToken" class="btn btn-primary">🗑️ Xóa Token</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>📝 Custom Headers</h4>
+                                <div class="form-group">
+                                    <label>Headers (JSON format):</label>
+                                    <textarea id="customHeaders" class="form-control" rows="6" placeholder='{\n  "X-API-Key": "your-key",\n  "X-Custom-Header": "value"\n}'></textarea>
+                                    <small>Thêm custom headers cho tất cả requests (JSON format)</small>
+                                </div>
+                                <div class="button-group">
+                                    <button id="saveCustomHeaders" class="btn btn-primary">💾 Lưu Headers</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>💾 Export/Import</h4>
+                                <div class="button-group">
+                                    <button class="btn btn-primary">📥 Export Config</button>
+                                    <button class="btn btn-primary">📤 Import Config</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>ℹ️ About</h4>
+                                <p><strong>Test Tool Viewer</strong> v2.0</p>
+                                <p>Modular architecture with ES6 modules</p>
+                                <p>Built with ❤️ for testing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Module -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

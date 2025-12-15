@@ -1,0 +1,160 @@
+{
+  "requests": [
+    {
+      "name": "Login - Nhân viên",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Mục đích\nĐăng nhập vào hệ thống với tài khoản nhân viên\n\n## Thông tin tài khoản\nUsername: 55555\nPassword: 55555\n\n## Kết quả mong đợi\nNhận được JWT token để sử dụng cho các request tiếp theo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "Get All JAR Ratios",
+      "method": "GET",
+      "endpoint": "/api/jar-ratios",
+      "description": "## Mục đích\nLấy danh sách tất cả các tỷ lệ lọ trong hệ thống\n\n## Yêu cầu\nCần có Bearer token trong header Authorization\n\n## Response\nTrả về mảng các đối tượng JAR Ratio với đầy đủ thông tin",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Create New JAR Ratio",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios",
+      "description": "## Mục đích\nTạo mới một tỷ lệ lọ trong hệ thống\n\n## Thông tin cần thiết\n- jarType: Loại lọ (A, B, C)\n- ratio: Tỷ lệ (0-1)\n- effectiveDate: Ngày hiệu lực\n- description: Mô tả\n\n## Quy trình\nSau khi tạo cần phê duyệt qua 3 cấp",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "jarType": "A",
+        "ratio": 0.75,
+        "effectiveDate": "2025-12-15",
+        "description": "Test tỷ lệ lọ mới"
+      }
+    },
+    {
+      "name": "Get JAR Ratio by ID",
+      "method": "GET",
+      "endpoint": "/api/jar-ratios/1",
+      "description": "## Mục đích\nLấy thông tin chi tiết của một tỷ lệ lọ theo ID\n\n## Tham số\nID trong URL path (ví dụ: 1)\n\n## Response\nĐối tượng JAR Ratio với đầy đủ thông tin bao gồm trạng thái phê duyệt",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Update JAR Ratio",
+      "method": "PUT",
+      "endpoint": "/api/jar-ratios/1",
+      "description": "## Mục đích\nCập nhật thông tin tỷ lệ lọ đã tồn tại\n\n## Lưu ý\nChỉ có thể cập nhật các record chưa được phê duyệt hoặc đã bị từ chối\n\n## Thông tin có thể cập nhật\n- ratio: Tỷ lệ mới\n- description: Mô tả mới\n- effectiveDate: Ngày hiệu lực mới",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "ratio": 0.80,
+        "description": "Cập nhật tỷ lệ lọ"
+      }
+    },
+    {
+      "name": "Approve - Director",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios/1/approve",
+      "description": "## Cấp phê duyệt\nLevel 1 - Giám đốc\n\n## Quyền hạn\nGiám đốc có quyền phê duyệt/từ chối ở cấp đầu tiên\n\n## Thông tin cần thiết\n- approvalLevel: 1\n- comment: Nhận xét về việc phê duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer DIRECTOR_TOKEN"
+      },
+      "body": {
+        "approvalLevel": 1,
+        "comment": "Đồng ý với tỷ lệ này"
+      }
+    },
+    {
+      "name": "Approve - President",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios/1/approve",
+      "description": "## Cấp phê duyệt\nLevel 2 - Chủ tịch\n\n## Điều kiện\nChỉ có thể phê duyệt khi Level 1 đã được phê duyệt\n\n## Thông tin cần thiết\n- approvalLevel: 2\n- comment: Nhận xét về việc phê duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer PRESIDENT_TOKEN"
+      },
+      "body": {
+        "approvalLevel": 2,
+        "comment": "Phê duyệt"
+      }
+    },
+    {
+      "name": "Approve - Board Chairman",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios/1/approve",
+      "description": "## Cấp phê duyệt\nLevel 3 - Chủ tịch HĐQT (Phê duyệt cuối cùng)\n\n## Điều kiện\nLevel 1 và Level 2 phải đã được phê duyệt\n\n## Kết quả\nSau khi phê duyệt, tỷ lệ lọ sẽ có hiệu lực và được áp dụng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer CHAIRMAN_TOKEN"
+      },
+      "body": {
+        "approvalLevel": 3,
+        "comment": "Phê duyệt cuối cùng"
+      }
+    },
+    {
+      "name": "Reject JAR Ratio",
+      "method": "POST",
+      "endpoint": "/api/jar-ratios/1/reject",
+      "description": "## Mục đích\nTừ chối tỷ lệ lọ tại bất kỳ cấp phê duyệt nào\n\n## Quyền hạn\nBất kỳ người phê duyệt nào cũng có thể từ chối\n\n## Kết quả\nTỷ lệ lọ sẽ quay về trạng thái Draft và có thể chỉnh sửa lại",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "reason": "Tỷ lệ không phù hợp"
+      }
+    },
+    {
+      "name": "Delete JAR Ratio",
+      "method": "DELETE",
+      "endpoint": "/api/jar-ratios/1",
+      "description": "## Mục đích\nXóa tỷ lệ lọ khỏi hệ thống\n\n## Điều kiện\nChỉ có thể xóa các record ở trạng thái Draft hoặc Rejected\n\n## Lưu ý\nKhông thể xóa các record đã được phê duyệt hoặc đang trong quá trình phê duyệt",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Approval History",
+      "method": "GET",
+      "endpoint": "/api/jar-ratios/1/history",
+      "description": "## Mục đích\nXem lịch sử phê duyệt của một tỷ lệ lọ\n\n## Thông tin trả về\n- Người phê duyệt/từ chối\n- Thời gian phê duyệt/từ chối\n- Nhận xét tại mỗi cấp\n- Trạng thái hiện tại",
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Health Check",
+      "method": "GET",
+      "endpoint": "/api/health",
+      "description": "## Mục đích\nKiểm tra trạng thái hoạt động của API server\n\n## Response\nTrả về status: ok nếu server đang hoạt động bình thường"
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "JAR Ratio Management API",
+    "version": "1.0.0",
+    "description": "API endpoints cho quản lý tỷ lệ lọ và workflow phê duyệt",
+    "created": "2025-12-15",
+    "accounts": {
+      "employee": "55555/55555",
+      "director": "0018/0018",
+      "president": "0025/0025",
+      "chairman": "44444/44444"
+    }
+  }
+}
