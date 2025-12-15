@@ -239,34 +239,6 @@ Content-Type: application/json
 
 ---
 
-## 💡 Sử Dụng
-
-### Với Template Selector (Mới! ✨)
-1. Vào thư mục **"Test quản lý tỷ lệ lọ"**
-2. Click bất kỳ file nào để mở tab Request
-3. **Dropdown "Quick Templates"** sẽ hiện ở đầu tab
-4. Chọn template từ danh sách (được nhóm theo loại):
-   - **Authentication**: Login các users
-   - **CRUD Operations**: Tạo, sửa, xóa, lấy danh sách
-   - **Approval Workflow**: Phê duyệt 3 cấp
-   - **Validation Tests**: Test các trường hợp lỗi
-5. Template tự động fill vào form → Click **"🚀 Thực thi"**
-
-### Với REST Client (VS Code)
-1. Install extension: **REST Client**
-2. Mở file `jar-ratio-test.http`
-3. Click **"Send Request"** từng endpoint
-4. Token tự động lưu, không cần copy/paste
-
-### Với API Tester Tool
-1. Vào tab **"🧪 API Tester"**
-2. Chọn folder **"Test quản lý tỷ lệ lọ"**
-3. Click file **jar-ratio-api-tests.json**
-4. Chọn endpoint → Click **"🚀 Thực thi"**
-5. Token tự động apply cho các request
-
----
-
 ## 📝 Response Examples
 
 ### Success - Get All
