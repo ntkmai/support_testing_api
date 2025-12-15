@@ -1,11 +1,11 @@
 {
   "folders": [
     {
-      "name": "Test quản lý tỷ lệ lọ JAR",
+      "name": "Test quản lý tỷ lệ lọ",
       "path": "jar-ratio-testing",
       "icon": "🧪",
       "color": "#667eea",
-      "description": "Tài liệu và test cases cho JAR Ratio API",
+      "description": "JAR Ratio API",
       "files": [
         "JAR-RATIO-COMPLETE-TEST-GUIDE.md",
         "TEST-README.md",
@@ -19,11 +19,11 @@
       ]
     },
     {
-      "name": "User Management",
+      "name": "Thư mục test",
       "path": "user-management",
-      "icon": "👥",
+      "icon": "🎁",
       "color": "#10b981",
-      "description": "API quản lý người dùng",
+      "description": "API test haha",
       "files": [
         "README.md",
         "user-api-tests.json"
