@@ -356,7 +356,25 @@ export class APITester {
         }
     }
 
-    // Render request details
+    // Render request details with proxy badge if enabled
+    renderUrlWithProxyBadge(fullUrl) {
+        const proxyUrl = config.getProxyUrl();
+        const useProxy = config.isProxyEnabled();
+        
+        if (useProxy && proxyUrl && fullUrl.startsWith(proxyUrl)) {
+            // Remove proxy URL and show badge
+            const actualUrl = fullUrl.replace(proxyUrl, '');
+            return `
+                <div style="display: flex; align-items: center;">
+                    <span class="proxy-badge">use_proxy</span>
+                    <input type="text" class="form-control" value="${actualUrl}" readonly style="flex: 1;">
+                </div>
+            `;
+        }
+        
+        return `<input type="text" class="form-control" value="${fullUrl}" readonly>`;
+    }
+
     renderRequestDetails() {
         if (!this.currentRequest) return;
 
@@ -390,7 +408,7 @@ export class APITester {
                         <label>URL</label>
                     </div>
                     <div class="section-content">
-                        <input type="text" class="form-control" value="${fullUrl}" readonly>
+                        ${this.renderUrlWithProxyBadge(fullUrl)}
                     </div>
                 </div>
 

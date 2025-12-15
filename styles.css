@@ -825,6 +825,20 @@ body:not([data-theme="light"]) .content-area {
     color: white;
 }
 
+/* Proxy badge */
+.proxy-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1.5px solid var(--link-color);
+    color: var(--link-color);
+    background-color: transparent;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 .request-name {
     font-weight: 600;
     font-size: 13px;
