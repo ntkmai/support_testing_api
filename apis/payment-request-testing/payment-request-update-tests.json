@@ -1,0 +1,459 @@
+{
+  "requests": [
+    {
+      "name": "Login - Người tạo phiếu",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập để tạo và sửa phiếu\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "BƯỚC 0: Tạo phiếu mới",
+      "method": "POST",
+      "endpoint": "/api/payment-request",
+      "description": "## Tạo phiếu để test update",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST UPDATE - Phiếu ban đầu",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "description": "Laptop - 1 x 10,000,000 x 1.1 = 11,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 1,
+            "price": 10000000,
+            "tax": 10,
+            "amount": 11000000
+          }
+        ],
+        "payment_documents": [
+          {
+            "type_document_id": "7835a8dc-707a-45d0-a006-4cbb9002c568",
+            "ref_id": ["11111111-1111-1111-1111-111111111111"],
+            "ref_code": ["REF001"]
+          }
+        ],
+        "file_ids": ["e41e24c6-215e-43d5-83bf-94cba481daa2"]
+      }
+    },
+    {
+      "name": "Lấy chi tiết phiếu vừa tạo",
+      "method": "GET",
+      "endpoint": "/api/payment-request/detail/{id}",
+      "description": "## Xem chi tiết phiếu\nLưu lại:\n- payment_request.id\n- payment_details[].id\n- payment_documents[].id",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "TEST 1: Sửa phiếu TRƯỚC KHI duyệt (KHÔNG CẦN approval_id)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Sửa phiếu khi chưa vào quy trình duyệt\n\n**Trường hợp**: Phiếu ở trạng thái NEW, chưa ai duyệt\n**approval_id**: KHÔNG CẦN gửi\n**Kết quả**: Status vẫn là NEW",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "UPDATED: Nội dung đã được sửa",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DETAIL_ID",
+            "description": "UPDATED: Laptop - 2 x 15,000,000 x 1.1 = 33,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          }
+        ],
+        "payment_documents": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DOCUMENT_ID",
+            "type_document_id": "7835a8dc-707a-45d0-a006-4cbb9002c568",
+            "ref_id": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222"
+            ],
+            "ref_code": ["REF001", "REF002"]
+          }
+        ],
+        "file_ids": ["e41e24c6-215e-43d5-83bf-94cba481daa2"]
+      }
+    },
+    {
+      "name": "Login - Trưởng bộ phận",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập Trưởng BP để duyệt\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "BƯỚC 1: Trưởng BP duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## Trưởng BP duyệt phiếu",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - Kế toán Tài sản",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập KT Tài sản\nUser: 0025/0001",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "0025",
+        "password": "0001"
+      }
+    },
+    {
+      "name": "BƯỚC 2: KT Tài sản TỪ CHỐI",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## KT Tài sản từ chối để test sửa sau khi từ chối",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "rejected",
+        "reason": "Thiếu chứng từ, cần bổ sung"
+      }
+    },
+    {
+      "name": "Lấy chi tiết phiếu sau khi bị từ chối",
+      "method": "GET",
+      "endpoint": "/api/payment-request/detail/{id}",
+      "description": "## Xem chi tiết để lấy approval_id\n\n**CHÚ Ý**: Lưu lại approval_id của bước bị REJECTED\n- Tìm trong `approvals[]` array\n- Lấy approval có `status: 'rejected'`\n- Copy `approval.id` để dùng cho update",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Login - Người tạo phiếu (để sửa)",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập lại người tạo để sửa\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "TEST 2: Sửa SAU KHI bị từ chối (KHÔNG GỬI approval_id)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Sửa phiếu SAU KHI bị từ chối - Tự động gửi lại người từ chối\n\n**Trường hợp**: Phiếu bị REJECTED\n**approval_id**: KHÔNG GỬI (để null/undefined)\n**Logic**:\n- Hệ thống tự tìm bước bị rejected cuối cùng\n- Tạo lại approval ở bước đó\n- Gửi thông báo cho người đã từ chối\n**Status**: RESTORE",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "FIXED: Đã bổ sung đầy đủ chứng từ theo yêu cầu",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DETAIL_ID",
+            "description": "FIXED: Laptop Dell - 2 x 15,000,000 x 1.1 = 33,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          }
+        ],
+        "payment_documents": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DOCUMENT_ID",
+            "type_document_id": "7835a8dc-707a-45d0-a006-4cbb9002c568",
+            "ref_id": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222",
+              "33333333-3333-3333-3333-333333333333"
+            ],
+            "ref_code": ["REF001", "REF002", "REF003"]
+          }
+        ],
+        "file_ids": [
+          "e41e24c6-215e-43d5-83bf-94cba481daa2",
+          "23b5c8b4-12f5-4189-94ed-101a43b16ba5"
+        ]
+      }
+    },
+    {
+      "name": "TEST 3: Sửa SAU KHI bị từ chối (CÓ GỬI approval_id)",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Sửa phiếu SAU KHI bị từ chối - Chọn bước duyệt cụ thể\n\n**Trường hợp**: Phiếu bị REJECTED, muốn chọn người hỗ trợ khác\n**approval_id**: GỬI ID của bước duyệt đã APPROVED trước đó\n**Logic**:\n- Tạo lại approval ở bước có approval_id\n- Gửi thông báo cho người đã duyệt ở bước đó\n- Cho phép chọn người hỗ trợ từ lịch sử duyệt\n**Status**: RESTORE\n\n**VÍ DỤ**:\n- Bước 1 (TBP): APPROVED by User A\n- Bước 2 (KT Tài sản): REJECTED by User B\n- Sửa phiếu + gửi approval_id của Bước 1\n- → Phiếu sẽ gửi lại cho User A (TBP)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "approval_id": "REPLACE_WITH_APPROVED_STEP_APPROVAL_ID",
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "HELP: Cần Trưởng BP hỗ trợ duyệt lại",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DETAIL_ID",
+            "description": "HELP: Laptop Dell - 2 x 15,000,000 x 1.1 = 33,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          }
+        ],
+        "payment_documents": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DOCUMENT_ID",
+            "type_document_id": "7835a8dc-707a-45d0-a006-4cbb9002c568",
+            "ref_id": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222",
+              "33333333-3333-3333-3333-333333333333"
+            ],
+            "ref_code": ["REF001", "REF002", "REF003"]
+          }
+        ],
+        "file_ids": [
+          "e41e24c6-215e-43d5-83bf-94cba481daa2",
+          "23b5c8b4-12f5-4189-94ed-101a43b16ba5"
+        ]
+      }
+    },
+    {
+      "name": "TEST 4: Sửa payment_type sang bank_transfer",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Test sửa loại thanh toán sang chuyển khoản\n\n**Lưu ý**: Khi payment_type = 'bank_transfer', BẮT BUỘC:\n- disburser_name\n- disburser_bank_account_number\n- disburser_bank_account_name\n- disburser_bank_name",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST: Chuyển sang thanh toán chuyển khoản",
+        "payment_type": "bank_transfer",
+        "disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+        "disburser_name": "Công ty TNHH ABC",
+        "disburser_bank_account_number": "0123456789",
+        "disburser_bank_account_name": "CTY TNHH ABC",
+        "disburser_bank_name": "Vietcombank",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DETAIL_ID",
+            "description": "Laptop Dell - 2 x 15,000,000 x 1.1 = 33,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          }
+        ]
+      }
+    },
+    {
+      "name": "TEST 5: Thêm tạm ứng vào phiếu",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Test thêm tạm ứng\n\n**Lưu ý**:\n- has_advance = true\n- advance_code phải có ít nhất 1 mã",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": true,
+        "advance_code": ["PTU0001"],
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST: Có tạm ứng",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_PAYMENT_DETAIL_ID",
+            "description": "Laptop Dell - 2 x 15,000,000 x 1.1 = 33,000,000",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          }
+        ]
+      }
+    },
+    {
+      "name": "TEST 6: Thêm payment_detail mới",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Test thêm dòng chi tiết mới\n\n**Lưu ý**: \n- Dòng có `id`: sẽ UPDATE\n- Dòng KHÔNG có `id`: sẽ CREATE mới",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST: Thêm chi tiết mới",
+        "payment_type": "cash",
+        "payment_details": [
+          {
+            "id": "REPLACE_WITH_EXISTING_PAYMENT_DETAIL_ID",
+            "description": "EXISTING: Laptop Dell - 2 x 15,000,000 x 1.1",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 2,
+            "price": 15000000,
+            "tax": 10,
+            "amount": 33000000
+          },
+          {
+            "description": "NEW: Màn hình - 1 x 5,000,000 x 1.1 = 5,500,000",
+            "unit_id": "79f97729-fbe2-4492-bacf-68a0809321b5",
+            "quantity": 1,
+            "price": 5000000,
+            "tax": 10,
+            "amount": 5500000
+          }
+        ]
+      }
+    },
+    {
+      "name": "TEST 7: KHÔNG ĐƯỢC sửa workplace sau khi TBP đã duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Test validation: Không được đổi workplace_id sau khi TBP duyệt\n\n**Kết quả mong đợi**: 400 Bad Request\n**Message**: CANNOT_CHANGE_WORKPLACE",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "DIFFERENT_WORKPLACE_ID",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST: Đổi workplace (phải fail)",
+        "payment_type": "cash",
+        "payment_details": []
+      }
+    },
+    {
+      "name": "TEST 8: KHÔNG ĐƯỢC sửa khi status = IN_PROGRESS",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/{id}",
+      "description": "## Test validation: Không sửa được khi đang IN_PROGRESS\n\n**Kết quả mong đợi**: 400 Bad Request\n**Message**: IN_PROGRESS",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "content": "TEST: Sửa khi IN_PROGRESS (phải fail)",
+        "payment_type": "cash",
+        "payment_details": []
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Payment Request - UPDATE API Tests",
+    "version": "1.0.0",
+    "description": "Test cases cho API cập nhật phiếu đề nghị thanh toán",
+    "created": "2025-12-16",
+    "approval_id_guide": {
+      "what_is_it": "ID của bước duyệt trong lịch sử approvals, dùng để chọn người hỗ trợ khi sửa phiếu sau khi bị từ chối",
+      "when_to_use": "Khi phiếu bị REJECTED và muốn gửi lại cho người duyệt ở bước trước đó (không phải người từ chối)",
+      "when_not_use": "Khi sửa phiếu chưa vào quy trình duyệt HOẶC muốn gửi lại cho người từ chối",
+      "how_to_get": "1. Call GET /api/payment-request/detail/{id}\n2. Tìm trong approvals[] array\n3. Lấy approval.id của bước có status='approved'",
+      "example_flow": "Bước 1 (TBP) APPROVED by User A → Bước 2 (KT) REJECTED by User B → Update với approval_id của Bước 1 → Phiếu gửi lại User A"
+    },
+    "update_logic": {
+      "before_approval": "Không cần approval_id, status = NEW",
+      "after_rejected_auto": "Không gửi approval_id, hệ thống tự gửi lại người từ chối, status = RESTORE",
+      "after_rejected_manual": "Gửi approval_id, chọn người hỗ trợ từ lịch sử, status = RESTORE"
+    },
+    "validation_rules": {
+      "cannot_update_if": [
+        "status = IN_PROGRESS",
+        "status = COMPLETED"
+      ],
+      "cannot_change_workplace_after": "HEAD_OF_DEPARTMENT đã APPROVED",
+      "bank_transfer_required": [
+        "disburser_name",
+        "disburser_bank_account_number",
+        "disburser_bank_account_name",
+        "disburser_bank_name"
+      ],
+      "advance_required": "Nếu has_advance=true thì advance_code phải có ít nhất 1 mã"
+    }
+  }
+}

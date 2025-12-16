@@ -226,6 +226,8 @@ class App {
 
             if (state === 'walking-right') {
                 posX += walkSpeed;
+                // Giới hạn không cho pet vượt quá màn hình
+                posX = Math.min(posX, screenWidth - 50);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
                 pet.className = 'pet walking-right';
@@ -237,6 +239,8 @@ class App {
                 }
             } else if (state === 'walking-left') {
                 posX -= walkSpeed;
+                // Giới hạn không cho pet vượt quá màn hình
+                posX = Math.max(posX, 0);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
                 pet.className = 'pet walking-left';
@@ -248,6 +252,9 @@ class App {
                 }
             } else if (state === 'climbing-right' || state === 'climbing-left') {
                 posY += climbSpeed;
+                // Luôn giữ pet trong màn hình khi leo
+                posX = Math.max(0, Math.min(posX, screenWidth - 50));
+                pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
 
                 // Chạm cạnh trên → rơi xuống
@@ -259,6 +266,10 @@ class App {
             } else if (state === 'falling') {
                 velocityY += gravity;
                 posY -= velocityY;
+                // Luôn giữ pet trong màn hình khi rơi
+                posX = Math.max(0, Math.min(posX, screenWidth - 50));
+                pet.style.left = posX + 'px';
+                pet.style.bottom = posY + 'px';
                 
                 if (posY <= 20) {
                     posY = 20;
@@ -274,8 +285,6 @@ class App {
                         posX = -60;
                     }
                 }
-                
-                pet.style.bottom = posY + 'px';
             }
 
             if (petEnabled) {

@@ -20,7 +20,8 @@
             "payment-request-tests.json",
             "payment-request-tests-goods-jar.json",
             "payment-request-tests-asset-jar.json",
-            "payment-request-tests-other-jar.json"
+            "payment-request-tests-other-jar.json",
+            "payment-request-update-tests.json"
         ]
     }
     
