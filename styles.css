@@ -985,11 +985,11 @@ body:not([data-theme="light"]) .content-area {
 
 .request-name {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 9px;
 }
 
 .request-endpoint {
-    font-size: 11px;
+    font-size: 7px;
     opacity: 0.8;
     font-family: monospace;
 }

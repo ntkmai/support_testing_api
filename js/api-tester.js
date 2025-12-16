@@ -35,7 +35,7 @@ export class APITester {
     }
 
     // Toggle request completed status
-    toggleRequestCompleted(request) {
+    toggleRequestCompleted(request, index) {
         const id = this.getRequestId(request);
         if (this.completedRequests[id]) {
             delete this.completedRequests[id];
@@ -43,7 +43,9 @@ export class APITester {
             this.completedRequests[id] = true;
         }
         this.saveCompletedRequests();
-        this.renderRequestList();
+        
+        // Update UI without full re-render
+        this.updateRequestItemUI(index, request);
     }
 
     // Initialize API tester
@@ -254,9 +256,36 @@ export class APITester {
                 e.stopPropagation();
                 const index = parseInt(checkbox.dataset.index);
                 const request = this.requests[index];
-                this.toggleRequestCompleted(request);
+                this.toggleRequestCompleted(request, index);
             });
         });
+    }
+
+    // Update single request item UI without full re-render
+    updateRequestItemUI(index, request) {
+        const item = document.querySelector(`.request-item[data-index="${index}"]`);
+        if (!item) return;
+        
+        const completed = this.isRequestCompleted(request);
+        const checkbox = item.querySelector('.request-checkbox-input');
+        
+        // Update checkbox state
+        if (checkbox) {
+            checkbox.checked = completed;
+        }
+        
+        // Update item classes
+        if (completed) {
+            item.classList.add('completed');
+        } else {
+            item.classList.remove('completed');
+        }
+        
+        // Update title
+        const checkboxContainer = item.querySelector('.request-checkbox');
+        if (checkboxContainer) {
+            checkboxContainer.title = completed ? 'Bỏ đánh dấu hoàn thành' : 'Đánh dấu hoàn thành';
+        }
     }
 
     // Check if request uses multipart/form-data
@@ -280,6 +309,9 @@ export class APITester {
         });
 
         this.renderRequestDetails();
+        
+        // Clear previous response when selecting new request
+        this.clearResponse();
         
         // Auto-switch to Request tab when selecting a request
         this.switchApiSubTab('request');

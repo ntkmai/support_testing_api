@@ -1,0 +1,358 @@
+{
+  "requests": [
+    {
+      "name": "Login - Người tạo phiếu",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## BƯỚC 0: Đăng nhập để tạo phiếu\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "BƯỚC 0: Tạo phiếu - LỌ HÀNG HÓA",
+      "method": "POST",
+      "endpoint": "/api/payment-request",
+      "description": "## Tạo phiếu đề nghị thanh toán - LỌ HÀNG HÓA\n\n**jar_id**: 7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b\n**type_document_id**: a13deb11-8acf-4076-aea2-ca98b4fad403\n\n**TEST Tính tiền**:\n- Giấy A4: 100 x 25,000 x 1.08 = 2,700,000\n- Bút bi: 200 x 3,000 x 1.08 = 648,000\n**Tổng**: 3,348,000",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "date": "2025-12-16",
+        "has_advance": false,
+        "requester_id": "3d9caa7b-52f0-e711-10da-00155d0a0504",
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b",
+        "content": "LỌ HÀNG HÓA - Nhập hàng văn phòng phẩm",
+        "payment_type": "bank_transfer",
+        "disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+        "disburser_name": "Công ty TNHH Cung cấp văn phòng phẩm",
+        "disburser_bank_account_number": "0123456789",
+        "disburser_bank_account_name": "CTY TNHH VPP",
+        "disburser_bank_name": "Vietcombank",
+        "payment_details": [
+          {
+            "description": "Giấy in A4 - 100 x 25,000 x 1.08 = 2,700,000",
+            "unit_id": "79f97729-fbe2-4492-bacf-68a0809321b5",
+            "quantity": 100,
+            "price": 25000,
+            "tax": 8,
+            "amount": 2700000
+          },
+          {
+            "description": "Bút bi - 200 x 3,000 x 1.08 = 648,000",
+            "unit_id": "c3061db2-a12c-46bb-9cf4-7413d5695e96",
+            "quantity": 200,
+            "price": 3000,
+            "tax": 8,
+            "amount": 648000
+          }
+        ],
+        "payment_documents": [
+          {
+            "type_document_id": "a13deb11-8acf-4076-aea2-ca98b4fad403",
+            "ref_id": ["44444444-4444-4444-4444-444444444444"],
+            "ref_code": ["REF-HH001"]
+          }
+        ],
+        "file_ids": ["46077b44-248a-4dc6-8bcd-4e5594adb92f"]
+      }
+    },
+    {
+      "name": "Lấy chi tiết phiếu",
+      "method": "GET",
+      "endpoint": "/api/payment-request/detail/{id}",
+      "description": "## Xem chi tiết và lấy payment_documents IDs",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Login - Trưởng bộ phận",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập Trưởng BP\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      }
+    },
+    {
+      "name": "BƯỚC 1: Trưởng bộ phận duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 1: Trưởng bộ phận duyệt\nUser: 55555/55555",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - Kế toán Hàng hóa",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập KT Hàng hóa\nUser: 0091/0091",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "0091",
+        "password": "0091"
+      }
+    },
+    {
+      "name": "BƯỚC 2: KT Hàng hóa - Sửa chứng từ đính kèm",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/documents/{id}",
+      "description": "## BƯỚC 2A: KT Hàng hóa sửa chứng từ\n\n**CHÚ Ý**: Thay ids bằng ID thực tế từ payment_documents",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "ids": ["REPLACE_WITH_ACTUAL_PAYMENT_DOCUMENT_ID"],
+          "type_document_id": "a13deb11-8acf-4076-aea2-ca98b4fad403",
+          "ref_id": ["44444444-4444-4444-4444-444444444444"],
+          "ref_code": ["REF-HH001"]
+        }
+      ]
+    },
+    {
+      "name": "BƯỚC 2: KT Hàng hóa - Duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 2B: KT Hàng hóa duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - Kế toán Thuế",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập KT Thuế\nUser: 44444/44444",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "44444",
+        "password": "44444"
+      }
+    },
+    {
+      "name": "BƯỚC 3: KT Thuế - Tạo hóa đơn",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/invoices/{id}",
+      "description": "## BƯỚC 3A: KT Thuế tạo hóa đơn",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HD-HH-001",
+          "date": "2025-12-16",
+          "company_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+          "file_id": "46077b44-248a-4dc6-8bcd-4e5594adb92f",
+          "place": "Công ty VPP",
+          "amount": "3348000"
+        }
+      ]
+    },
+    {
+      "name": "BƯỚC 3: KT Thuế - Tạo hợp đồng",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/contracts/{id}",
+      "description": "## BƯỚC 3B: KT Thuế tạo hợp đồng (tùy chọn)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HĐ-HH-001",
+          "date": "2025-12-01",
+          "company_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+          "file_id": "23b5c8b4-12f5-4189-94ed-101a43b16ba5",
+          "place": "Công ty VPP",
+          "amount": "10000000"
+        }
+      ]
+    },
+    {
+      "name": "BƯỚC 3: KT Thuế - Duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 3C: KT Thuế duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - Kế toán Thanh toán",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập KT Thanh toán\nUser: 11111/11111",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "11111",
+        "password": "11111"
+      }
+    },
+    {
+      "name": "BƯỚC 4: KT Thanh toán - Tạo hạch toán",
+      "method": "POST",
+      "endpoint": "/api/payment-request/{id}/accounting",
+      "description": "## BƯỚC 4A: KT Thanh toán TẠO HẠCH TOÁN (BẮT BUỘC)\n\n**jar_category_id**: 8e8c4e1a-6605-4652-b81c-945feab01392 (Lọ hàng hóa)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "jar_category_id": "8e8c4e1a-6605-4652-b81c-945feab01392",
+        "items": [
+          {
+            "debit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+            "credit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+            "debit_disburser_type": "bank_account",
+            "credit_disburser_type": "bank_account",
+            "debit_disburser_id": "a8eb8907-17bb-460a-9380-2f9982212540",
+            "credit_disburser_id": "c3a51ba7-7095-4d2d-9781-f8431bc11d96",
+            "unit_id": "79f97729-fbe2-4492-bacf-68a0809321b5",
+            "quantity": 100,
+            "price": 25000,
+            "tax": 8,
+            "description": "Giấy A4 - 100 x 25,000 x 1.08 = 2,700,000",
+            "expense_code": "CDC"
+          },
+          {
+            "debit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+            "credit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+            "debit_disburser_type": "bank_account",
+            "credit_disburser_type": "bank_account",
+            "debit_disburser_id": "89a735f5-a6fb-4d9c-9d86-1c2fd7b5a1be",
+            "credit_disburser_id": "08fe1c29-4b17-4764-b5c5-68394836f73a",
+            "unit_id": "c3061db2-a12c-46bb-9cf4-7413d5695e96",
+            "quantity": 200,
+            "price": 3000,
+            "tax": 8,
+            "description": "Bút bi - 200 x 3,000 x 1.08 = 648,000",
+            "expense_code": "CDC"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BƯỚC 4: KT Thanh toán - Duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 4B: KT Thanh toán duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - TBP KTTT",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập TBP KTTT\nUser: 22222/22222",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "22222",
+        "password": "22222"
+      }
+    },
+    {
+      "name": "BƯỚC 5: TBP KTTT - Duyệt",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 5: TBP KTTT duyệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved"
+      }
+    },
+    {
+      "name": "Login - Kế toán trưởng",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Đăng nhập KT Trưởng\nUser: 33333/33333",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "33333",
+        "password": "33333"
+      }
+    },
+    {
+      "name": "BƯỚC 6: Kế toán trưởng - Duyệt CUỐI CÙNG",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/status/{id}",
+      "description": "## BƯỚC 6: Kế toán trưởng duyệt CUỐI CÙNG\n\n**KẾT QUẢ**: Phiếu hoàn tất, tự động tạo lịch chi",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "status": "approved",
+        "disbursement_date": "2025-12-20"
+      }
+    },
+    {
+      "name": "Verify - In phiếu PDF",
+      "method": "GET",
+      "endpoint": "/api/payment-request/print/{id}",
+      "description": "## Kiểm tra kết quả - In phiếu PDF",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Payment Request - LỌ HÀNG HÓA",
+    "version": "1.0.0",
+    "description": "Test luồng phê duyệt cho LỌ HÀNG HÓA",
+    "jar_info": {
+      "jar_id": "7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b",
+      "jar_type": "Lọ Hàng hóa",
+      "type_document_id": "a13deb11-8acf-4076-aea2-ca98b4fad403",
+      "jar_category_id": "8e8c4e1a-6605-4652-b81c-945feab01392"
+    },
+    "workflow": "BP → KT Hàng hóa → KT Thuế → KT Thanh toán → TBP KTTT → KT Trưởng (6 bước)",
+    "created": "2025-12-16"
+  }
+}
