@@ -856,6 +856,9 @@ body:not([data-theme="light"]) .content-area {
     cursor: pointer;
     transition: all 0.2s;
     border-left: 3px solid transparent;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
 }
 
 .request-item:hover {
@@ -868,97 +871,67 @@ body:not([data-theme="light"]) .content-area {
     background: var(--primary-color);
     color: white;
     border-left-color: var(--primary-color);
-    overflow: visible; /* Cho phép đốm lửa bay ra ngoài */
-    animation: fire-flicker 1.8s ease-in-out infinite alternate;
-    box-shadow: 
-        0 0 15px rgba(255, 140, 0, 0.6),
-        0 0 30px rgba(255, 69, 0, 0.4);
+    overflow: visible; 
 }
 
-/* Glow lửa nhấp nháy (flicker) */
-@keyframes fire-flicker {
-    0% {
-        box-shadow: 
-            0 0 10px rgba(255, 100, 0, 0.4),
-            0 0 20px rgba(255, 140, 0, 0.3);
-    }
-    50% {
-        box-shadow: 
-            0 0 25px rgba(255, 69, 0, 0.8),
-            0 0 45px rgba(255, 165, 0, 0.6);
-    }
-    100% {
-        box-shadow: 
-            0 0 15px rgba(255, 100, 0, 0.5),
-            0 0 35px rgba(255, 140, 0, 0.4);
-    }
+/* Completed request styles */
+.request-item.completed {
+    background: rgba(52, 211, 153, 0.15);
+    border-left-color: var(--success-color);
+    opacity: 0.85;
 }
 
-/* Đốm lửa (embers) bay lên nhẹ nhàng - lớp 1 */
-.request-item.active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: transparent;
-    box-shadow:
-        12% 90% 0 3px #ff4500,
-        28% 85% 0 4px #ff8c00,
-        45% 92% 0 2px #ffd700,
-        62% 88% 0 4px #ff6347,
-        78% 90% 0 3px #ffa500,
-        90% 85% 0 4px #ff0000,
-        20% 88% 0 3px #ffff00,
-        35% 92% 0 2px #ff4500,
-        55% 87% 0 4px #ff8c00,
-        70% 90% 0 3px #ffd700;
-    animation: embers-rise 3s linear infinite;
-    opacity: 0.7;
+.request-item.completed:hover {
+    background: rgba(52, 211, 153, 0.25);
+    opacity: 1;
 }
 
-@keyframes embers-rise {
-    0% {
-        transform: translateY(10%) scale(1);
-        opacity: 0.7;
-    }
-    100% {
-        transform: translateY(-110%) scale(0.6);
-        opacity: 0;
-    }
+.request-item.completed.active {
+    background: var(--success-color);
+    border-left-color: var(--success-color);
 }
 
-/* Đốm lửa lớp 2 - chậm hơn, lan tỏa thêm */
-.request-item.active::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: transparent;
-    box-shadow:
-        18% 90% 0 4px #ff4500,
-        35% 85% 0 3px #ff8c00,
-        52% 92% 0 4px #ffd700,
-        68% 88% 0 3px #ff6347,
-        82% 90% 0 4px #ffa500;
-    animation: embers-rise-slow 4s linear infinite 1s;
-    opacity: 0.5;
+.request-item.completed .request-name {
+    text-decoration: line-through;
+    color: var(--text-secondary);
 }
 
-@keyframes embers-rise-slow {
-    0% {
-        transform: translateY(20%) scale(1);
-        opacity: 0.5;
-    }
-    100% {
-        transform: translateY(-130%) scale(0.4);
-        opacity: 0;
-    }
+.request-item.completed .request-endpoint {
+    color: var(--text-secondary);
+}
+
+/* Light theme completed styles */
+[data-theme="light"] .request-item.completed {
+    background: rgba(16, 185, 129, 0.12);
+    border-left-color: var(--success-color);
+}
+
+[data-theme="light"] .request-item.completed:hover {
+    background: rgba(16, 185, 129, 0.2);
+}
+
+/* Checkbox container */
+.request-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+.request-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    accent-color: var(--success-color);
+}
+
+/* Request content area */
+.request-content {
+    flex: 1;
+    cursor: pointer;
 }
 
 .request-header {
@@ -982,12 +955,12 @@ body:not([data-theme="light"]) .content-area {
 }
 
 .method-badge.post {
-    background: var(--primary-color);
+    background: #f59e0b;
     color: white;
 }
 
 .method-badge.put {
-    background: var(--warning-color);
+    background: #3b82f6;
     color: white;
 }
 
@@ -1524,6 +1497,19 @@ textarea.form-control {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Button spinner (smaller for inline use) */
+.btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 /* Empty State */

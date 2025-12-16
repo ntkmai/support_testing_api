@@ -91,7 +91,7 @@ export class FileExplorer {
             html += `
                 <div class="breadcrumb">
                     <span class="breadcrumb-item" onclick="window.fileExplorer.showAllFolders()">
-                        <span style="font-size: 14px;">⬅️</span> Tất cả thư mục
+                        <span style="font-size: 14px;">⬅</span> Tất cả thư mục
                     </span>
                 </div>
             `;

@@ -38,6 +38,9 @@ class App {
         // Setup general settings
         this.setupGeneralSettings();
 
+        // Setup environment variables UI
+        this.setupEnvironmentVarsUI();
+
         // Don't load any file by default - let user choose folder first
         // User will see folder cards on initial load
 
@@ -358,7 +361,7 @@ class App {
             clearTokenBtn.addEventListener('click', () => {
                 config.clearAuthToken();
                 currentTokenTextarea.value = '';
-                UIComponents.showNotification('🗑️ Đã xóa token', 'info');
+                UIComponents.showNotification('❌️ Đã xóa token', 'info');
             });
         }
 
@@ -403,6 +406,93 @@ class App {
         baseUrlInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 saveSettingsBtn.click();
+            }
+        });
+    }
+
+    // Setup environment variables UI
+    setupEnvironmentVarsUI() {
+        const refreshBtn = document.getElementById('refreshEnvVars');
+        const clearBtn = document.getElementById('clearEnvVars');
+        const envVarsList = document.getElementById('envVarsList');
+
+        // Render environment variables list
+        const renderEnvVars = () => {
+            const envVars = config.environmentVars;
+            const keys = Object.keys(envVars);
+
+            if (keys.length === 0) {
+                envVarsList.innerHTML = `
+                    <div style="color: var(--text-secondary); text-align: center; padding: 20px;">
+                        Chưa có biến môi trường nào được lưu
+                    </div>
+                `;
+                return;
+            }
+
+            envVarsList.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    ${keys.map(key => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 4px;">
+                            <div style="flex: 1;">
+                                <strong style="color: var(--primary-color); font-family: monospace;">{${key}}</strong>
+                                <span style="color: var(--text-secondary); margin-left: 12px; font-family: monospace; font-size: 13px;">${envVars[key]}</span>
+                            </div>
+                            <button 
+                                class="btn-delete-env-var" 
+                                data-key="${key}"
+                                style="background: none; border: none; color: var(--error-color); cursor: pointer; padding: 4px 8px; font-size: 16px;"
+                                title="Xóa biến này"
+                            >❌️</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Add delete handlers
+            envVarsList.querySelectorAll('.btn-delete-env-var').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.key;
+                    const newVars = { ...config.environmentVars };
+                    delete newVars[key];
+                    config.saveEnvironmentVars(newVars);
+                    UIComponents.showNotification(`❌️ Đã xóa biến: {${key}}`, 'success');
+                    renderEnvVars();
+                });
+            });
+        };
+
+        // Initial render
+        renderEnvVars();
+
+        // Refresh button
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                renderEnvVars();
+                UIComponents.showNotification('🔄 Đã refresh danh sách biến môi trường', 'info');
+            });
+        }
+
+        // Clear all button
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if (Object.keys(config.environmentVars).length === 0) {
+                    UIComponents.showNotification('⚠️ Không có biến môi trường nào để xóa', 'warning');
+                    return;
+                }
+
+                if (confirm('⚠️ Bạn có chắc muốn xóa TẤT CẢ biến môi trường?')) {
+                    config.clearEnvironmentVars();
+                    renderEnvVars();
+                    UIComponents.showNotification('❌️ Đã xóa tất cả biến môi trường', 'success');
+                }
+            });
+        }
+
+        // Listen to config changes to auto-refresh the list
+        config.onChange((key, value) => {
+            if (key === 'environmentVars') {
+                renderEnvVars();
             }
         });
     }

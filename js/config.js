@@ -13,6 +13,39 @@ export class ConfigManager {
         };
         
         this.listeners = [];
+        this.environmentVars = this.loadEnvironmentVars();
+    }
+
+    // Load environment variables (path parameters)
+    loadEnvironmentVars() {
+        const saved = localStorage.getItem('environmentVars');
+        return saved ? JSON.parse(saved) : {};
+    }
+
+    // Save environment variables
+    saveEnvironmentVars(vars) {
+        this.environmentVars = { ...this.environmentVars, ...vars };
+        localStorage.setItem('environmentVars', JSON.stringify(this.environmentVars));
+        this.notifyListeners('environmentVars', this.environmentVars);
+    }
+
+    // Get environment variable
+    getEnvVar(key) {
+        return this.environmentVars[key] || '';
+    }
+
+    // Set environment variable
+    setEnvVar(key, value) {
+        this.environmentVars[key] = value;
+        localStorage.setItem('environmentVars', JSON.stringify(this.environmentVars));
+        this.notifyListeners('environmentVars', this.environmentVars);
+    }
+
+    // Clear all environment variables
+    clearEnvironmentVars() {
+        this.environmentVars = {};
+        localStorage.removeItem('environmentVars');
+        this.notifyListeners('environmentVars', this.environmentVars);
     }
 
     // Load auth type

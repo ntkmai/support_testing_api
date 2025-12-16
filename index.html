@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>MASTER TEST API - Modular Edition</title>
+    <title>MASTER BACK-END API - Modular Edition</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -22,7 +22,7 @@
             <div class="header-content" style="display: flex; align-items: center; gap: 12px;">
                 <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
                 <div>
-                    <h1 style="margin-bottom: 2px;">MASTER TEST API</h1>
+                    <h1 style="margin-bottom: 2px;">MASTER BACK-END API</h1>
                 </div>
             </div>
             <div class="header-config">
@@ -208,7 +208,7 @@
                                 </div>
                                 <div class="button-group">
                                     <button id="saveAuthSettings" class="btn btn-primary">💾 Lưu Auth</button>
-                                    <button id="clearToken" class="btn btn-primary">🗑️ Xóa Token</button>
+                                    <button id="clearToken" class="btn btn-primary">❌️ Xóa Token</button>
                                 </div>
                             </div>
 
@@ -225,7 +225,24 @@
                             </div>
 
                             <div class="settings-section">
-                                <h4>💾 Export/Import</h4>
+                                <h4>� Environment Variables (Path Parameters)</h4>
+                                <div class="form-group">
+                                    <label>Saved Parameters:</label>
+                                    <div id="envVarsList" style="background: var(--bg-secondary); padding: 12px; border-radius: 6px; min-height: 100px;">
+                                        <div style="color: var(--text-secondary); text-align: center; padding: 20px;">
+                                            Chưa có biến môi trường nào được lưu
+                                        </div>
+                                    </div>
+                                    <small>Các path parameters sẽ tự động lưu và tái sử dụng cho tất cả requests</small>
+                                </div>
+                                <div class="button-group">
+                                    <button id="refreshEnvVars" class="btn btn-primary">🔄 Refresh</button>
+                                    <button id="clearEnvVars" class="btn btn-primary">❌️ Clear All</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h4>�💾 Export/Import</h4>
                                 <div class="button-group">
                                     <button class="btn btn-primary">📥 Export Config</button>
                                     <button class="btn btn-primary">📤 Import Config</button>

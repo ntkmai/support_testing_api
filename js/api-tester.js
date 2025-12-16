@@ -9,6 +9,41 @@ export class APITester {
         this.history = [];
         this.currentFolder = null;
         this.testDataPath = null;
+        this.completedRequests = this.loadCompletedRequests();
+    }
+
+    // Load completed requests from localStorage
+    loadCompletedRequests() {
+        const saved = localStorage.getItem('completedRequests');
+        return saved ? JSON.parse(saved) : {};
+    }
+
+    // Save completed requests to localStorage
+    saveCompletedRequests() {
+        localStorage.setItem('completedRequests', JSON.stringify(this.completedRequests));
+    }
+
+    // Get request ID (unique identifier)
+    getRequestId(request) {
+        return `${request.method}-${request.endpoint}`;
+    }
+
+    // Check if request is completed
+    isRequestCompleted(request) {
+        const id = this.getRequestId(request);
+        return this.completedRequests[id] === true;
+    }
+
+    // Toggle request completed status
+    toggleRequestCompleted(request) {
+        const id = this.getRequestId(request);
+        if (this.completedRequests[id]) {
+            delete this.completedRequests[id];
+        } else {
+            this.completedRequests[id] = true;
+        }
+        this.saveCompletedRequests();
+        this.renderRequestList();
     }
 
     // Initialize API tester
@@ -183,21 +218,43 @@ export class APITester {
         const container = document.getElementById('requestList');
         if (!container) return;
 
-        container.innerHTML = this.requests.map((req, index) => `
-            <div class="request-item" data-index="${index}">
-                <div class="request-header">
-                    <span class="method-badge ${req.method.toLowerCase()}">${req.method}</span>
-                    <span class="request-name">${req.name}</span>
+        // No sorting - keep original order, just mark completed ones
+        container.innerHTML = this.requests.map((req, index) => {
+            const completed = this.isRequestCompleted(req);
+            return `
+                <div class="request-item ${completed ? 'completed' : ''}" data-index="${index}">
+                    <div class="request-checkbox" data-index="${index}" title="${completed ? 'Bỏ đánh dấu hoàn thành' : 'Đánh dấu hoàn thành'}">
+                        <input type="checkbox" class="request-checkbox-input" data-index="${index}" ${completed ? 'checked' : ''}>
+                    </div>
+                    <div class="request-content">
+                        <div class="request-header">
+                            <span class="method-badge ${req.method.toLowerCase()}">${req.method}</span>
+                            <span class="request-name">${req.name}</span>
+                        </div>
+                        <div class="request-endpoint">${req.endpoint}</div>
+                    </div>
                 </div>
-                <div class="request-endpoint">${req.endpoint}</div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
-        // Add click handlers
+        // Add click handlers for request items
         container.querySelectorAll('.request-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const index = parseInt(item.dataset.index);
-                this.selectRequest(index);
+            const contentArea = item.querySelector('.request-content');
+            if (contentArea) {
+                contentArea.addEventListener('click', () => {
+                    const index = parseInt(item.dataset.index);
+                    this.selectRequest(index);
+                });
+            }
+        });
+
+        // Add click handlers for checkboxes
+        container.querySelectorAll('.request-checkbox-input').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                e.stopPropagation();
+                const index = parseInt(checkbox.dataset.index);
+                const request = this.requests[index];
+                this.toggleRequestCompleted(request);
             });
         });
     }
@@ -216,12 +273,16 @@ export class APITester {
     selectRequest(index) {
         this.currentRequest = this.requests[index];
 
-        // Update active state
-        document.querySelectorAll('.request-item').forEach((item, i) => {
-            item.classList.toggle('active', i === index);
+        // Update active state - compare by data-index, not DOM position
+        document.querySelectorAll('.request-item').forEach((item) => {
+            const itemIndex = parseInt(item.dataset.index);
+            item.classList.toggle('active', itemIndex === index);
         });
 
         this.renderRequestDetails();
+        
+        // Auto-switch to Request tab when selecting a request
+        this.switchApiSubTab('request');
         
         // Check if multipart and update UI accordingly
         this.updateExecuteButton();
@@ -466,26 +527,81 @@ export class APITester {
             <div class="detail-section collapsible-section">
                 <div class="section-header" onclick="window.apiTester.toggleSection(this)">
                     <span class="toggle-icon">▼</span>
-                    <label>Path Parameters</label>
+                    <label>Path Parameters <span style="font-size: 11px; color: var(--text-secondary); font-weight: normal;">(Auto-saved)</span></label>
                 </div>
                 <div class="section-content">
                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                        ${params.map(param => `
-                            <div>
-                                <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: block;">{${param}}</label>
-                                <input 
-                                    type="text" 
-                                    id="param-${param}" 
-                                    class="form-control" 
-                                    placeholder="Enter ${param} value"
-                                    style="font-family: monospace;"
-                                >
-                            </div>
-                        `).join('')}
+                        ${params.map(param => {
+                            const savedValue = config.getEnvVar(param);
+                            return `
+                                <div>
+                                    <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: block;">
+                                        {${param}}
+                                        ${savedValue ? '<span style="color: var(--success-color); margin-left: 5px;">✓</span>' : ''}
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="param-${param}" 
+                                        class="form-control param-input" 
+                                        data-param-name="${param}"
+                                        placeholder="Enter ${param} value"
+                                        value="${savedValue}"
+                                        style="font-family: monospace;"
+                                    >
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                 </div>
             </div>
         `;
+    }
+
+    // Setup event listeners for path parameters to auto-save and sync
+    setupPathParameterListeners() {
+        const paramInputs = document.querySelectorAll('.param-input');
+        
+        paramInputs.forEach(input => {
+            // Save to environment variables on change
+            input.addEventListener('input', (e) => {
+                const paramName = e.target.dataset.paramName;
+                const value = e.target.value;
+                
+                // Save to environment variables
+                config.setEnvVar(paramName, value);
+                
+                // Sync all inputs with the same parameter name
+                this.syncPathParameter(paramName, value);
+            });
+        });
+    }
+
+    // Sync all inputs with the same parameter name across the page
+    syncPathParameter(paramName, value) {
+        const allInputs = document.querySelectorAll(`[data-param-name="${paramName}"]`);
+        allInputs.forEach(input => {
+            if (input.value !== value) {
+                input.value = value;
+            }
+        });
+    }
+
+    // Validate path parameters are filled
+    validatePathParameters(endpoint) {
+        const params = this.getPathParameters(endpoint);
+        const missingParams = [];
+        
+        params.forEach(param => {
+            const input = document.getElementById(`param-${param}`);
+            if (!input || !input.value || input.value.trim() === '') {
+                missingParams.push(param);
+            }
+        });
+        
+        return {
+            valid: missingParams.length === 0,
+            missingParams: missingParams
+        };
     }
 
     // Replace path parameters in endpoint
@@ -583,6 +699,9 @@ export class APITester {
             this.renderTemplateSelector();
         } else {
         }
+
+        // Setup event listeners for path parameters
+        this.setupPathParameterListeners();
     }
 
     // Execute current request
@@ -601,9 +720,49 @@ export class APITester {
 
         const responseContainer = document.getElementById('responseContainer');
         if (!responseContainer) return;
+        
+        const executeBtn = document.getElementById('executeRequestBtn');
 
         // Get updated values
         let endpoint = document.getElementById('requestEndpoint')?.value || this.currentRequest.endpoint;
+        
+        // Validate path parameters before executing
+        const validation = this.validatePathParameters(endpoint);
+        if (!validation.valid) {
+            const paramList = validation.missingParams.map(p => `{${p}}`).join(', ');
+            UIComponents.showNotification(
+                `⚠️ Vui lòng điền đầy đủ path parameters: ${paramList}`, 
+                'warning'
+            );
+            // Auto switch to Request tab to show the missing fields
+            this.switchApiSubTab('request');
+            // Highlight the first missing parameter input
+            const firstMissingInput = document.getElementById(`param-${validation.missingParams[0]}`);
+            if (firstMissingInput) {
+                firstMissingInput.focus();
+                firstMissingInput.style.border = '2px solid var(--error-color)';
+                setTimeout(() => {
+                    firstMissingInput.style.border = '';
+                }, 2000);
+            }
+            return;
+        }
+        
+        // Switch to Response tab immediately
+        this.switchApiSubTab('response');
+        
+        // Show loading in button
+        if (executeBtn) {
+            executeBtn.disabled = true;
+            executeBtn.innerHTML = '<span class="btn-spinner"></span> Loading...';
+        }
+        
+        // Replace path parameters if any
+        endpoint = this.replacePathParameters(endpoint);
+        if (executeBtn) {
+            executeBtn.disabled = true;
+            executeBtn.innerHTML = '<span class="btn-spinner"></span> Loading...';
+        }
         
         // Replace path parameters if any
         endpoint = this.replacePathParameters(endpoint);
@@ -687,11 +846,23 @@ export class APITester {
                 `${response.ok ? '✅' : '❌'} ${response.status} - ${UIComponents.formatDuration(duration)}`,
                 statusType
             );
+            
+            // Reset button state
+            if (executeBtn) {
+                executeBtn.disabled = false;
+                executeBtn.innerHTML = '▶ Run now';
+            }
 
         } catch (error) {
             const duration = Date.now() - startTime;
             this.renderError(error, duration, url);
             UIComponents.showNotification(`❌ Request failed: ${error.message}`, 'error');
+            
+            // Reset button state
+            if (executeBtn) {
+                executeBtn.disabled = false;
+                executeBtn.innerHTML = '▶ Run now';
+            }
         }
     }
 
@@ -706,7 +877,7 @@ export class APITester {
         container.innerHTML = `
             <div class="response-header">
                 <h4>📥 Response</h4>
-                <button class="btn btn-sm" onclick="window.apiTester.clearResponse()">🗑️ Clear</button>
+                <button class="btn btn-sm" onclick="window.apiTester.clearResponse()">❌️ Clear</button>
             </div>
 
             <div class="response-meta">
@@ -750,7 +921,7 @@ export class APITester {
         container.innerHTML = `
             <div class="response-header">
                 <h4>❌ Error</h4>
-                <button class="btn btn-sm" onclick="window.apiTester.clearResponse()">🗑️ Clear</button>
+                <button class="btn btn-sm" onclick="window.apiTester.clearResponse()">❌️ Clear</button>
             </div>
 
             <div class="response-meta error">
