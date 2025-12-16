@@ -184,6 +184,9 @@ class App {
             );
         });
 
+        // Pet toggle
+        this.setupPetToggle();
+
         // Sidebar toggle
         const sidebarToggleBtn = document.getElementById('sidebarToggle');
         if (sidebarToggleBtn) {
@@ -197,6 +200,126 @@ class App {
                 this.toggleSidebar();
             });
         }
+    }
+
+    // Setup pet toggle and animation
+    setupPetToggle() {
+        const petToggleBtn = document.getElementById('petToggle');
+        const pet = document.getElementById('pet');
+        
+        if (!petToggleBtn || !pet) return;
+
+        let petEnabled = localStorage.getItem('petEnabled') === 'true';
+        let animationFrame;
+        let state = 'walking-right'; // walking-right, walking-left, climbing, falling
+        let direction = 'right';
+        let posX = -60;
+        let posY = 20;
+        let velocityY = 0;
+        const gravity = 0.5;
+        const climbSpeed = 2;
+        const walkSpeed = 3;
+
+        const updatePet = () => {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            if (state === 'walking-right') {
+                posX += walkSpeed;
+                pet.style.left = posX + 'px';
+                pet.style.bottom = posY + 'px';
+                pet.className = 'pet walking-right';
+
+                // Chạm cạnh phải → chạy lên (chân hướng vào tường bên trái)
+                if (posX >= screenWidth - 50) {
+                    state = 'climbing-right';
+                    pet.className = 'pet climbing-right';
+                }
+            } else if (state === 'walking-left') {
+                posX -= walkSpeed;
+                pet.style.left = posX + 'px';
+                pet.style.bottom = posY + 'px';
+                pet.className = 'pet walking-left';
+
+                // Chạm cạnh trái → chạy lên (chân hướng vào tường bên phải)
+                if (posX <= 0) {
+                    state = 'climbing-left';
+                    pet.className = 'pet climbing-left';
+                }
+            } else if (state === 'climbing-right' || state === 'climbing-left') {
+                posY += climbSpeed;
+                pet.style.bottom = posY + 'px';
+
+                // Chạm cạnh trên → rơi xuống
+                if (posY >= screenHeight - 70) {
+                    state = 'falling';
+                    velocityY = 0;
+                    pet.className = 'pet falling';
+                }
+            } else if (state === 'falling') {
+                velocityY += gravity;
+                posY -= velocityY;
+                
+                if (posY <= 20) {
+                    posY = 20;
+                    velocityY = 0;
+                    // Rơi xuống xong → đổi hướng đi ngang
+                    if (direction === 'right') {
+                        direction = 'left';
+                        state = 'walking-left';
+                        posX = screenWidth + 60;
+                    } else {
+                        direction = 'right';
+                        state = 'walking-right';
+                        posX = -60;
+                    }
+                }
+                
+                pet.style.bottom = posY + 'px';
+            }
+
+            if (petEnabled) {
+                animationFrame = requestAnimationFrame(updatePet);
+            }
+        };
+
+        const startPetAnimation = () => {
+            petEnabled = true;
+            pet.style.display = 'block';
+            state = 'walking-right';
+            direction = 'right';
+            posX = -60;
+            posY = 20;
+            velocityY = 0;
+            updatePet();
+        };
+
+        const stopPetAnimation = () => {
+            petEnabled = false;
+            pet.style.display = 'none';
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+        };
+
+        // Initialize pet state
+        if (petEnabled) {
+            startPetAnimation();
+        }
+
+        // Toggle button handler
+        petToggleBtn.addEventListener('click', () => {
+            petEnabled = !petEnabled;
+            localStorage.setItem('petEnabled', petEnabled);
+            
+            if (petEnabled) {
+                startPetAnimation();
+                UIComponents.showNotification('🐾 Pet đã được bật!', 'success');
+            } else {
+                stopPetAnimation();
+                UIComponents.showNotification('🐾 Pet đã được tắt!', 'info');
+            }
+        });
     }
 
     // Toggle sidebar visibility

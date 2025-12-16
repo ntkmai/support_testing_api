@@ -1752,3 +1752,75 @@ textarea.form-control {
         overflow-y: auto;
     }
 }
+
+/* Pet Animation */
+.pet {
+    position: absolute;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.pet img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+@keyframes petWalkRight {
+    0% {
+        left: -60px;
+    }
+    100% {
+        left: calc(100% + 60px);
+    }
+}
+
+@keyframes petWalkLeft {
+    0% {
+        left: calc(100% + 60px);
+    }
+    100% {
+        left: -60px;
+    }
+}
+
+.pet.walking-right {
+    animation: petWalkRight 10s linear forwards;
+}
+
+.pet.walking-right img {
+    transform: scaleX(-1);
+}
+
+.pet.walking-left {
+    animation: petWalkLeft 10s linear forwards;
+}
+
+.pet.walking-left img {
+    transform: scaleX(1);
+}
+
+.pet.climbing img {
+    transform: rotate(90deg) scaleX(-1);
+}
+
+/* TODO: Điều chỉnh góc xoay khi leo tường bên phải */
+.pet.climbing-right img {
+    transform: scaleX(-1) rotate(90deg);
+
+}
+
+/* TODO: Điều chỉnh góc xoay khi leo tường bên trái */
+.pet.climbing-left img {
+    transform: scaleX(1) rotate(90deg);
+}
+
+.pet.falling img {
+    transform: rotate(0deg);
+}
+
+
