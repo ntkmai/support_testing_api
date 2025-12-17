@@ -215,19 +215,25 @@ class App {
 
         let petEnabled = localStorage.getItem('petEnabled') === 'true';
         let animationFrame;
-        let state = 'walking-right'; // walking-right, walking-left, climbing, falling, dragging
+        let state = 'walking-right'; // walking-right, walking-left, climbing, falling, dragging, throwing
         let direction = 'right';
         let posX = -60;
         let posY = 20;
         let velocityY = 0;
+        let velocityX = 0;
         const gravity = 0.5;
         const climbSpeed = 2;
         const walkSpeed = 3;
+        const bounce = 0.7; // Độ nảy khi chạm tường (70% vận tốc)
+        const friction = 0.98; // Lực ma sát
 
         // Drag & drop variables
         let isDragging = false;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let lastTime = 0;
 
         const updatePet = () => {
             const screenWidth = window.innerWidth;
@@ -235,44 +241,36 @@ class App {
 
             if (state === 'walking-right') {
                 posX += walkSpeed;
-                // Giới hạn không cho pet vượt quá màn hình
                 posX = Math.min(posX, screenWidth - 50);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
-                // Chỉ set class để flip ảnh, không dùng CSS animation
                 if (!pet.classList.contains('walking-right')) {
                     pet.className = 'pet walking-right';
                 }
 
-                // Chạm cạnh phải → chạy lên (chân hướng vào tường bên trái)
                 if (posX >= screenWidth - 50) {
                     state = 'climbing-right';
                     pet.className = 'pet climbing-right';
                 }
             } else if (state === 'walking-left') {
                 posX -= walkSpeed;
-                // Giới hạn không cho pet vượt quá màn hình
                 posX = Math.max(posX, 0);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
-                // Chỉ set class để flip ảnh, không dùng CSS animation
                 if (!pet.classList.contains('walking-left')) {
                     pet.className = 'pet walking-left';
                 }
 
-                // Chạm cạnh trái → chạy lên (chân hướng vào tường bên phải)
                 if (posX <= 0) {
                     state = 'climbing-left';
                     pet.className = 'pet climbing-left';
                 }
             } else if (state === 'climbing-right' || state === 'climbing-left') {
                 posY += climbSpeed;
-                // Luôn giữ pet trong màn hình khi leo
                 posX = Math.max(0, Math.min(posX, screenWidth - 50));
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
 
-                // Chạm cạnh trên → rơi xuống
                 if (posY >= screenHeight - 70) {
                     state = 'falling';
                     velocityY = 0;
@@ -281,7 +279,6 @@ class App {
             } else if (state === 'falling') {
                 velocityY += gravity;
                 posY -= velocityY;
-                // Luôn giữ pet trong màn hình khi rơi
                 posX = Math.max(0, Math.min(posX, screenWidth - 50));
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
@@ -290,18 +287,59 @@ class App {
                 if (posY <= 20) {
                     posY = 20;
                     velocityY = 0;
-                    // Rơi xuống xong → đổi về gif chạy và chạy từ vị trí hiện tại
                     petImg.src = 'images/pet-run.gif';
-                    // Nếu ở nửa trái màn hình thì chạy sang phải, nửa phải thì chạy sang trái
+                    petImg.style.transform = '';
                     if (posX < screenWidth / 2) {
                         state = 'walking-right';
                     } else {
                         state = 'walking-left';
                     }
                 }
+            } else if (state === 'throwing') {
+                velocityY -= gravity;
+                velocityX *= friction;
+                velocityY *= friction;
+
+                posX += velocityX;
+                posY += velocityY;
+
+                if (posX <= 0) {
+                    posX = 0;
+                    velocityX = Math.abs(velocityX) * bounce;
+                } else if (posX >= screenWidth - 50) {
+                    posX = screenWidth - 50;
+                    velocityX = -Math.abs(velocityX) * bounce;
+                }
+
+                if (posY >= screenHeight - 70) {
+                    posY = screenHeight - 70;
+                    velocityY = -Math.abs(velocityY) * bounce;
+                }
+
+                if (posY <= 20) {
+                    posY = 20;
+                    velocityY = Math.abs(velocityY) * bounce;
+                    
+                    if (Math.abs(velocityY) < 2 && Math.abs(velocityX) < 1) {
+                        velocityY = 0;
+                        velocityX = 0;
+                        petImg.src = 'images/pet-run.gif';
+                        petImg.style.transform = '';
+                        if (posX < screenWidth / 2) {
+                            state = 'walking-right';
+                        } else {
+                            state = 'walking-left';
+                        }
+                    }
+                }
+
+                pet.style.left = posX + 'px';
+                pet.style.bottom = posY + 'px';
+                
+                const rotation = Math.atan2(velocityY, velocityX) * (180 / Math.PI);
+                petImg.style.transform = `rotate(${rotation}deg)`;
             }
 
-            // Only continue animation if not dragging
             if (petEnabled && state !== 'dragging') {
                 animationFrame = requestAnimationFrame(updatePet);
             }
@@ -315,6 +353,7 @@ class App {
             posX = -60;
             posY = 20;
             velocityY = 0;
+            velocityX = 0;
             updatePet();
         };
 
@@ -326,30 +365,28 @@ class App {
             }
         };
 
-        // Drag & Drop handlers
         const onMouseDown = (e) => {
             if (!petEnabled) return;
 
             isDragging = true;
             state = 'dragging';
 
-            // Stop animation while dragging
             if (animationFrame) {
                 cancelAnimationFrame(animationFrame);
                 animationFrame = null;
             }
 
-            // Remove all animation classes
             pet.className = 'pet';
-
-            // Change to drag image
             petImg.src = 'images/pet-drag.png';
+            petImg.style.transform = '';
 
-            // Calculate offset from mouse to current pet position (left, bottom)
             dragOffsetX = e.clientX - posX;
             dragOffsetY = e.clientY - (window.innerHeight - posY - pet.offsetHeight);
 
-            // Add dragging cursor
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            lastTime = Date.now();
+
             pet.style.cursor = 'grabbing';
             pet.style.pointerEvents = 'auto';
 
@@ -359,55 +396,79 @@ class App {
         const onMouseMove = (e) => {
             if (!isDragging) return;
 
-            // Calculate new position from mouse position minus offset
+            // Always update last position before calculating new position
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastTime;
+            
+            if (timeDiff > 0) {
+                // Calculate velocity during drag
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                
+                // Store velocity (smooth with previous velocity)
+                velocityX = (deltaX / timeDiff) * 16 * 0.8; // 80% strength
+                velocityY = -(deltaY / timeDiff) * 16 * 0.8; // Invert Y
+            }
+
             posX = e.clientX - dragOffsetX;
             const mouseBottomY = window.innerHeight - e.clientY + dragOffsetY;
             posY = mouseBottomY;
 
-            // Clamp positions to screen bounds
             posX = Math.max(0, Math.min(posX, window.innerWidth - 50));
             posY = Math.max(20, Math.min(posY, window.innerHeight - 70));
 
             pet.style.left = posX + 'px';
             pet.style.bottom = posY + 'px';
+
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            lastTime = currentTime;
         };
 
-        const onMouseUp = () => {
+        const onMouseUp = (e) => {
             if (!isDragging) return;
 
             isDragging = false;
 
-            // Change back to running gif
-            petImg.src = 'images/pet-run.gif';
-
-            // Start falling
-            state = 'falling';
-            velocityY = 0;
-            pet.className = 'pet falling';
+            // Check if we have enough velocity to throw
+            const speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+            
+            console.log('Throw speed:', speed, 'vX:', velocityX, 'vY:', velocityY); // Debug
+            
+            if (speed > 2) { // Lower threshold from 3 to 2
+                // Throwing mode - pet will bounce around
+                state = 'throwing';
+                petImg.src = 'images/pet-drag.png';
+                pet.className = 'pet';
+                UIComponents.showNotification(`🎯 Ném pet! Tốc độ: ${speed.toFixed(1)}`, 'info');
+            } else {
+                // Normal drop - just fall straight down
+                state = 'falling';
+                velocityY = 0;
+                velocityX = 0;
+                petImg.src = 'images/pet-run.gif';
+                petImg.style.transform = '';
+                pet.className = 'pet falling';
+            }
 
             pet.style.cursor = 'grab';
 
-            // Restart animation
             if (petEnabled && !animationFrame) {
                 updatePet();
             }
         };
 
-        // Add event listeners for dragging
         pet.addEventListener('mousedown', onMouseDown);
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
 
-        // Enable pointer events and cursor
         pet.style.pointerEvents = 'auto';
         pet.style.cursor = 'grab';
 
-        // Initialize pet state
         if (petEnabled) {
             startPetAnimation();
         }
 
-        // Toggle button handler
         petToggleBtn.addEventListener('click', () => {
             petEnabled = !petEnabled;
             localStorage.setItem('petEnabled', petEnabled);
