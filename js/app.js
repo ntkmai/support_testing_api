@@ -221,11 +221,13 @@ class App {
         let posY = 20;
         let velocityY = 0;
         let velocityX = 0;
+        let rotation = 0; // Góc xoay khi ném
         const gravity = 0.5;
         const climbSpeed = 2;
         const walkSpeed = 3;
         const bounce = 0.7; // Độ nảy khi chạm tường (70% vận tốc)
         const friction = 0.98; // Lực ma sát
+        const spinSpeed = 20; // Tốc độ xoay (degrees per frame)
 
         // Drag & drop variables
         let isDragging = false;
@@ -308,6 +310,11 @@ class App {
                 posX += velocityX;
                 posY += velocityY;
 
+                // Luôn xoay nhanh khi đang throwing
+                const speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+                // Xoay 40 độ/frame (≈6-7 vòng/giây), tăng thêm khi tốc độ cao
+                rotation += 40 + (speed * 3); // Xoay tròn liên tục nhiều vòng
+
                 if (posX <= 0) {
                     posX = 0;
                     velocityX = Math.abs(velocityX) * bounce;
@@ -328,6 +335,7 @@ class App {
                     if (Math.abs(velocityY) < 2 && Math.abs(velocityX) < 1) {
                         velocityY = 0;
                         velocityX = 0;
+                        rotation = 0; // Reset rotation
                         petImg.src = 'images/pet-run.gif';
                         petImg.style.transform = '';
                         if (posX < screenWidth / 2) {
@@ -341,7 +349,7 @@ class App {
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
                 
-                const rotation = Math.atan2(velocityY, velocityX) * (180 / Math.PI);
+                // Sử dụng rotation angle thay vì tính toán từ velocity
                 petImg.style.transform = `rotate(${rotation}deg)`;
             }
 
@@ -442,8 +450,7 @@ class App {
             
             if (speed > 2) { // Lower threshold from 3 to 2
                 // Throwing mode - pet will bounce around
-                state = 'throwing';
-                petImg.src = 'images/pet-drag.png';
+                state = 'throwing';                rotation = 0; // Reset rotation để bắt đầu xoay từ 0                petImg.src = 'images/pet-drag.png';
                 pet.className = 'pet';
                 UIComponents.showNotification(`😲 OMG cú ném hoang dã!!!`, 'info');
             } else {
