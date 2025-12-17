@@ -41,6 +41,9 @@ class App {
         // Setup environment variables UI
         this.setupEnvironmentVarsUI();
 
+        // Setup Christmas snowfall effect (December only)
+        this.setupChristmasSnowfall();
+
         // Don't load any file by default - let user choose folder first
         // User will see folder cards on initial load
 
@@ -762,6 +765,45 @@ class App {
             if (buttons[tabIndex]) {
                 buttons[tabIndex].classList.add('active');
             }
+        }
+    }
+
+    // Setup Christmas snowfall effect (December only)
+    setupChristmasSnowfall() {
+        const currentMonth = new Date().getMonth(); // 0 = January, 11 = December
+        
+        // Only show snowfall in December (month 11)
+        if (currentMonth !== 11) return;
+
+        const snowflakeCount = 50;
+        const snowflakes = ['❄', '❅', '❆'];
+        const container = document.body;
+
+        // Create snowflakes
+        for (let i = 0; i < snowflakeCount; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+            
+            // Random horizontal position
+            snowflake.style.left = Math.random() * 100 + '%';
+            
+            // Random animation duration (5-15 seconds)
+            const duration = 5 + Math.random() * 10;
+            snowflake.style.animationDuration = duration + 's';
+            
+            // Random delay to stagger the start
+            const delay = Math.random() * 5;
+            snowflake.style.animationDelay = delay + 's';
+            
+            container.appendChild(snowflake);
+            
+            // Remove snowflake after animation completes (once)
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.parentNode.removeChild(snowflake);
+                }
+            }, (duration + delay) * 1000);
         }
     }
 

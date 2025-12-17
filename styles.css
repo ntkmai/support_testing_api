@@ -23,6 +23,7 @@
     --link-color: #60a5fa;
     --shadow: 0 1px 3px rgba(0,0,0,0.3);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
+    --snowflake-color: #ffffff;
 }
 
 [data-theme="light"] {
@@ -42,6 +43,7 @@
     --link-color: #2563eb;
     --shadow: 0 1px 3px rgba(0,0,0,0.1);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+    --snowflake-color: #1e3a8a;
 }
 
 body {
@@ -1894,6 +1896,51 @@ i[data-lucide] svg {
 
 .pet.falling img {
     transform: rotate(0deg);
+}
+
+/* Snowfall Effect - December Only */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 9998;
+    color: var(--snowflake-color);
+    font-size: 1em;
+    user-select: none;
+    pointer-events: none;
+    animation: snowfall linear forwards;
+}
+
+@keyframes snowfall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+.snowflake:nth-of-type(2n) {
+    font-size: 0.8em;
+}
+
+.snowflake:nth-of-type(3n) {
+    font-size: 1.2em;
+}
+
+.snowflake:nth-of-type(4n) {
+    font-size: 0.6em;
+}
+
+.snowflake:nth-of-type(5n) {
+    font-size: 1.4em;
 }
 
 
