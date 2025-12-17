@@ -10,6 +10,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,14 +21,14 @@
         <!-- Header -->
         <div class="header">
             <div class="header-content" style="display: flex; align-items: center; gap: 12px;">
-                <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu">☰</button>
+                <button id="sidebarToggle" class="btn-sidebar-toggle" title="Ẩn/Hiện menu"><i data-lucide="menu"></i></button>
                 <div>
                     <h1 style="margin-bottom: 2px;">MASTER BACK-END API</h1>
                 </div>
             </div>
             <div class="header-config">
-                <button id="petToggle" class="btn-theme-toggle" title="Bật/Tắt Pet">🐾</button>
-                <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện">🌙</button>
+                <button id="petToggle" class="btn-theme-toggle" title="Bật/Tắt Pet"><i data-lucide="paw-print"></i></button>
+                <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện"><i data-lucide="moon"></i></button>
                 <input type="text" id="baseUrlInput" class="config-input" placeholder="http://localhost:3000">
             </div>
         </div>
@@ -36,7 +37,7 @@
         <div class="main-layout">
             <!-- Sidebar - File Explorer -->
             <div class="sidebar">
-                <h3>📂 Chọn thư mục</h3>
+                <h3><span class="icon-text"><i data-lucide="folder-open"></i>Chọn thư mục</span></h3>
                 <div id="fileList" class="file-explorer"></div>
             </div>
 
@@ -44,9 +45,9 @@
             <div class="content-area">
                 <!-- Tabs -->
                 <div class="tabs">
-                    <button class="tab-btn active">📚 Tài liệu</button>
-                    <button class="tab-btn">🧪 API Tester</button>
-                    <button class="tab-btn">⚙️ Cấu hình [nhớ cấu hình proxy nhé 😅]</button>
+                    <button class="tab-btn active"><span class="icon-text"><i data-lucide="book-open"></i>Tài liệu</span></button>
+                    <button class="tab-btn"><span class="icon-text"><i data-lucide="flask-conical"></i>API Tester</span></button>
+                    <button class="tab-btn"><span class="icon-text"><i data-lucide="settings"></i>Cấu hình</span></button>
                 </div>
 
                 <!-- Tab Content -->
@@ -56,26 +57,26 @@
                         <div id="tableOfContents" class="toc-sidebar" style="display:none;"></div>
                         <div id="markdownContent" class="markdown-body">
                             <div class="empty-state">
-                                <div class="empty-state-icon">📝</div>
+                                <div class="empty-state-icon"><i data-lucide="file-text" style="width: 48px; height: 48px;"></i></div>
                                 <h3>Chào mừng đến với Test Tool Viewer</h3>
                                 <p>Chọn một file từ File Explorer để bắt đầu</p>
                                 <div class="feature-list">
                                     <div class="feature-item">
-                                        <span class="feature-icon">📂</span>
+                                        <span class="feature-icon"><i data-lucide="folder-open"></i></span>
                                         <div>
                                             <strong>File Explorer</strong>
                                             <p>Duyệt các file Markdown theo cấu trúc thư mục</p>
                                         </div>
                                     </div>
                                     <div class="feature-item">
-                                        <span class="feature-icon">🧪</span>
+                                        <span class="feature-icon"><i data-lucide="flask-conical"></i></span>
                                         <div>
                                             <strong>API Tester</strong>
                                             <p>Test API với giao diện trực quan</p>
                                         </div>
                                     </div>
                                     <div class="feature-item">
-                                        <span class="feature-icon">⚙️</span>
+                                        <span class="feature-icon"><i data-lucide="settings"></i></span>
                                         <div>
                                             <strong>Dynamic Config</strong>
                                             <p>Thay đổi Base URL linh hoạt</p>
@@ -91,7 +92,7 @@
                         <div class="api-layout">
                             <!-- Left: Request List -->
                             <div class="request-list-container">
-                                <h4>📋 Saved Requests</h4>
+                                <h4><span class="icon-text"><i data-lucide="clipboard-list"></i>Saved Requests</span></h4>
                                 <div id="requestList" class="request-list"></div>
                             </div>
 
@@ -100,11 +101,11 @@
                                 <!-- Sub Tabs -->
                                 <div class="api-sub-tabs">
                                     <div class="api-sub-tabs-left">
-                                        <button class="api-sub-tab-btn active" data-tab="request">📝 Request</button>
-                                        <button class="api-sub-tab-btn" data-tab="response">📥 Response</button>
+                                        <button class="api-sub-tab-btn active" data-tab="request"><span class="icon-text"><i data-lucide="file-edit"></i>Request</span></button>
+                                        <button class="api-sub-tab-btn" data-tab="response"><span class="icon-text"><i data-lucide="inbox"></i>Response</span></button>
                                     </div>
                                     <div class="api-sub-tabs-right">
-                                        <button id="executeRequestBtn" class="btn btn-primary" style="min-width:120px;">▶ Run now</button>
+                                        <button id="executeRequestBtn" class="btn btn-primary" style="min-width:120px;"><span class="icon-text"><i data-lucide="play"></i>Run now</span></button>
                                     </div>
                                 </div>
 
@@ -114,7 +115,7 @@
                                     <div class="api-sub-pane active" id="requestPane">
                                         <div id="requestDetails" class="request-details">
                                             <div class="empty-state">
-                                                <div class="empty-state-icon">🧪</div>
+                                                <div class="empty-state-icon"><i data-lucide="flask-conical" style="width: 48px; height: 48px;"></i></div>
                                                 <h3>API Tester</h3>
                                                 <p>Chọn một request từ danh sách hoặc tạo request mới</p>
                                             </div>
@@ -125,7 +126,7 @@
                                     <div class="api-sub-pane" id="responsePane">
                                         <div id="responseContainer" class="response-container-full">
                                             <div class="empty-state">
-                                                <div class="empty-state-icon">📭</div>
+                                                <div class="empty-state-icon"><i data-lucide="inbox" style="width: 48px; height: 48px;"></i></div>
                                                 <h3>No Response</h3>
                                                 <p>Thực thi một request để xem response</p>
                                             </div>
@@ -138,9 +139,9 @@
 
                     <!-- Settings Tab -->
                     <div class="tab-pane" id="settingsTab">
-                        <div class="settings-container">                         
+                        <div class="settings-container">
                             <div class="settings-section">
-                                <h4>🌍 API Configuration</h4>
+                                <h4><span class="icon-text"><i data-lucide="globe"></i>API Configuration</span></h4>
                                 <div class="form-group">
                                     <label>Base URL:</label>
                                     <input type="text" id="settingsBaseUrl" class="form-control" placeholder="http://localhost:3000">
@@ -151,12 +152,12 @@
                                     <input type="number" class="form-control" value="30000">
                                 </div>
                                 <div class="button-group">
-                                    <button id="saveSettings" class="btn btn-primary">💾 Lưu cấu hình</button>
+                                    <button id="saveSettings" class="btn btn-primary"><span class="icon-text"><i data-lucide="save"></i>Lưu cấu hình</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>🔄 CORS Proxy (Bypass CORS & Mixed Content)</h4>
+                                <h4><span class="icon-text"><i data-lucide="refresh-cw"></i>CORS Proxy (Bypass CORS & Mixed Content)</span></h4>
                                 <div class="form-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="enableProxy" class="checkbox-input">
@@ -170,7 +171,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="info-box" style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; margin: 8px 0;">
-                                        <strong>⚠️ Cần Request Access trước khi dùng:</strong>
+                                        <strong><i data-lucide="alert-triangle"></i> Cần Request Access trước khi dùng:</strong>
                                         <ol style="margin: 8px 0; padding-left: 20px; font-size: 13px; line-height: 1.8;">
                                             <li>Mở: <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" style="color: var(--link-color); text-decoration: underline; font-weight: bold;">cors-anywhere.herokuapp.com/corsdemo</a></li>
                                             <li>Click nút <strong>"Request temporary access to the demo server"</strong></li>
@@ -180,13 +181,13 @@
                                     </div>
                                 </div>
                                 <div class="button-group">
-                                    <button id="saveProxySettings" class="btn btn-primary">💾 Lưu Proxy</button>
-                                    <button id="testProxy" class="btn btn-primary">🧪 Test Proxy</button>
+                                    <button id="saveProxySettings" class="btn btn-primary"><span class="icon-text"><i data-lucide="save"></i>Lưu Proxy</span></button>
+                                    <button id="testProxy" class="btn btn-primary"><span class="icon-text"><i data-lucide="flask-conical"></i>Test Proxy</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>🔐 Authentication</h4>
+                                <h4><span class="icon-text"><i data-lucide="shield-check"></i>Authentication</span></h4>
                                 <div class="form-group">
                                     <label>Auth Type:</label>
                                     <select id="authType" class="form-control">
@@ -208,25 +209,25 @@
                                     <small>Token hiện tại (tự động lấy sau khi login)</small>
                                 </div>
                                 <div class="button-group">
-                                    <button id="saveAuthSettings" class="btn btn-primary">💾 Lưu Auth</button>
-                                    <button id="clearToken" class="btn btn-primary">❌️ Xóa Token</button>
+                                    <button id="saveAuthSettings" class="btn btn-primary"><span class="icon-text"><i data-lucide="save"></i>Lưu Auth</span></button>
+                                    <button id="clearToken" class="btn btn-primary"><span class="icon-text"><i data-lucide="x-circle"></i>Xóa Token</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>📝 Custom Headers</h4>
+                                <h4><span class="icon-text"><i data-lucide="file-code"></i>Custom Headers</span></h4>
                                 <div class="form-group">
                                     <label>Headers (JSON format):</label>
                                     <textarea id="customHeaders" class="form-control" rows="6" placeholder='{\n  "X-API-Key": "your-key",\n  "X-Custom-Header": "value"\n}'></textarea>
                                     <small>Thêm custom headers cho tất cả requests (JSON format)</small>
                                 </div>
                                 <div class="button-group">
-                                    <button id="saveCustomHeaders" class="btn btn-primary">💾 Lưu Headers</button>
+                                    <button id="saveCustomHeaders" class="btn btn-primary"><span class="icon-text"><i data-lucide="save"></i>Lưu Headers</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>� Environment Variables (Path Parameters)</h4>
+                                <h4><span class="icon-text"><i data-lucide="database"></i>Environment Variables (Path Parameters)</span></h4>
                                 <div class="form-group">
                                     <label>Saved Parameters:</label>
                                     <div id="envVarsList" style="background: var(--bg-secondary); padding: 12px; border-radius: 6px; min-height: 100px;">
@@ -237,24 +238,24 @@
                                     <small>Các path parameters sẽ tự động lưu và tái sử dụng cho tất cả requests</small>
                                 </div>
                                 <div class="button-group">
-                                    <button id="refreshEnvVars" class="btn btn-primary">🔄 Refresh</button>
-                                    <button id="clearEnvVars" class="btn btn-primary">❌️ Clear All</button>
+                                    <button id="refreshEnvVars" class="btn btn-primary"><span class="icon-text"><i data-lucide="refresh-cw"></i>Refresh</span></button>
+                                    <button id="clearEnvVars" class="btn btn-primary"><span class="icon-text"><i data-lucide="x-circle"></i>Clear All</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>�💾 Export/Import</h4>
+                                <h4><span class="icon-text"><i data-lucide="package"></i>Export/Import</span></h4>
                                 <div class="button-group">
-                                    <button class="btn btn-primary">📥 Export Config</button>
-                                    <button class="btn btn-primary">📤 Import Config</button>
+                                    <button class="btn btn-primary"><span class="icon-text"><i data-lucide="download"></i>Export Config</span></button>
+                                    <button class="btn btn-primary"><span class="icon-text"><i data-lucide="upload"></i>Import Config</span></button>
                                 </div>
                             </div>
 
                             <div class="settings-section">
-                                <h4>ℹ️ About</h4>
+                                <h4><span class="icon-text"><i data-lucide="info"></i>About</span></h4>
                                 <p><strong>Test Tool Viewer</strong> v2.0</p>
                                 <p>Modular architecture with ES6 modules</p>
-                                <p>Built with ❤️ for testing</p>
+                                <p>Built with <i data-lucide="heart" style="width: 16px; height: 16px; color: #e74c3c;"></i> for testing</p>
                             </div>
                         </div>
                     </div>
@@ -270,5 +271,11 @@
 
     <!-- Main App Module -->
     <script type="module" src="js/app.js"></script>
+    <script>
+        // Initialize Lucide icons after page load
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 </html>

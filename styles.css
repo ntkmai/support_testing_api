@@ -1753,6 +1753,81 @@ textarea.form-control {
     }
 }
 
+/* Lucide Icons Alignment with Flex Wrapper */
+.icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.icon-text i[data-lucide] {
+    flex-shrink: 0;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+}
+
+.icon-text i[data-lucide] svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Button icon-text wrapper */
+button .icon-text i[data-lucide] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Heading icon-text wrapper */
+h3 .icon-text i[data-lucide],
+h4 .icon-text i[data-lucide] {
+    width: 20px;
+    height: 20px;
+}
+
+h3 .icon-text,
+h4 .icon-text {
+    gap: 8px;
+}
+
+/* Tab button icon-text */
+.tab-btn .icon-text i[data-lucide] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Standalone icons (without text) */
+i[data-lucide] {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+}
+
+i[data-lucide] svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+/* Feature icons (large) */
+.feature-icon i[data-lucide] {
+    width: 32px;
+    height: 32px;
+}
+
+/* Empty state icons (extra large) */
+.empty-state-icon i[data-lucide] {
+    width: 48px;
+    height: 48px;
+}
+
 /* Pet Animation */
 .pet {
     position: absolute;

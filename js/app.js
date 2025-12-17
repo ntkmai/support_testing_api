@@ -634,10 +634,16 @@ class App {
         const toggleBtn = document.getElementById('themeToggle');
         if (theme === 'light') {
             document.body.setAttribute('data-theme', 'light');
-            if (toggleBtn) toggleBtn.textContent = '☀️';
+            if (toggleBtn) {
+                toggleBtn.innerHTML = '<i data-lucide="sun"></i>';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
         } else {
             document.body.removeAttribute('data-theme');
-            if (toggleBtn) toggleBtn.textContent = '🌙';
+            if (toggleBtn) {
+                toggleBtn.innerHTML = '<i data-lucide="moon"></i>';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
         }
     }
 

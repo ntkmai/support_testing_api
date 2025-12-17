@@ -6,20 +6,25 @@ export class UIComponents {
         if (!container) return;
 
         const icons = {
-            success: '✅',
-            error: '❌',
-            warning: '⚠️',
-            info: 'ℹ️'
+            success: 'check-circle',
+            error: 'x-circle',
+            warning: 'alert-triangle',
+            info: 'info'
         };
 
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.innerHTML = `
-            <span class="notification-icon">${icons[type] || icons.info}</span>
+            <span class="notification-icon"><i data-lucide="${icons[type] || icons.info}"></i></span>
             <span class="notification-message">${message}</span>
         `;
 
         container.appendChild(notification);
+
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
         // Auto remove after 3 seconds
         setTimeout(() => {
@@ -42,17 +47,22 @@ export class UIComponents {
     }
 
     // Create empty state
-    static showEmptyState(containerId, title, message, icon = '📭') {
+    static showEmptyState(containerId, title, message, icon = 'inbox') {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">${icon}</div>
+                <div class="empty-state-icon"><i data-lucide="${icon}" style="width: 48px; height: 48px;"></i></div>
                 <h3>${title}</h3>
                 <p>${message}</p>
             </div>
         `;
+
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
     // Create error state
@@ -62,12 +72,17 @@ export class UIComponents {
 
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">⚠️</div>
+                <div class="empty-state-icon"><i data-lucide="alert-triangle" style="width: 48px; height: 48px;"></i></div>
                 <h3>${title}</h3>
                 <p>${message}</p>
                 ${suggestion ? `<p style="margin-top: 10px; color: var(--text-secondary); font-size: 14px;">${suggestion}</p>` : ''}
             </div>
         `;
+
+        // Initialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
     // Format JSON with syntax highlighting
@@ -129,10 +144,10 @@ export class UIComponents {
     static async copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            this.showNotification('📋 Đã copy vào clipboard', 'success');
+            this.showNotification('Đã copy vào clipboard', 'success');
             return true;
         } catch (error) {
-            this.showNotification('❌ Không thể copy: ' + error.message, 'error');
+            this.showNotification('Không thể copy: ' + error.message, 'error');
             return false;
         }
     }

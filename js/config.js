@@ -189,12 +189,12 @@ export class ConfigManager {
         if (this.config.useProxy) {
             const proxyUrl = this.config.proxyUrl;
             const proxiedUrl = `${proxyUrl}${fullUrl}`;
-            console.log('🔄 Proxy URL:', proxiedUrl);
-            console.log('📍 Target:', fullUrl);
+            console.log('⟳ Proxy URL:', proxiedUrl);
+            console.log('⊙ Target:', fullUrl);
             return proxiedUrl;
         }
-        
-        console.log('📡 Direct URL:', fullUrl);
+
+        console.log('⚡ Direct URL:', fullUrl);
         return fullUrl;
     }
 

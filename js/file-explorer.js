@@ -36,20 +36,20 @@ export class FileExplorer {
                 
                 // Create file objects for each file in the folder
                 for (const fileName of folderConfig.files) {
-                    let icon = '📄';
+                    let icon = 'file';
                     let type = 'file';
-                    
+
                     if (fileName.endsWith('.md')) {
-                        icon = fileName.includes('README') ? '📖' : '📝';
+                        icon = fileName.includes('README') ? 'book-open' : 'file-text';
                         type = 'md';
                     } else if (fileName.endsWith('.json')) {
-                        icon = '📊';
+                        icon = 'file-json';
                         type = 'json';
                     } else if (fileName.endsWith('.http')) {
-                        icon = '🌐';
+                        icon = 'globe';
                         type = 'http';
                     }
-                    
+
                     files.push({
                         name: fileName,
                         icon: icon,
@@ -75,7 +75,7 @@ export class FileExplorer {
             
         } catch (error) {
             console.error('Error loading file structure:', error);
-            UIComponents.showNotification('❌ Không thể tải danh sách thư mục', 'error');
+            UIComponents.showNotification('Không thể tải danh sách thư mục', 'error');
         }
     }
 
@@ -91,7 +91,7 @@ export class FileExplorer {
             html += `
                 <div class="breadcrumb">
                     <span class="breadcrumb-item" onclick="window.fileExplorer.showAllFolders()">
-                        <span style="font-size: 14px;">⬅</span> Tất cả thư mục
+                        <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Tất cả thư mục
                     </span>
                 </div>
             `;
@@ -103,7 +103,7 @@ export class FileExplorer {
             html += `
                 <div class="folder-content">
                     <div class="folder-info">
-                        <div class="folder-info-icon">📁</div>
+                        <div class="folder-info-icon"><i data-lucide="folder" style="width: 28px; height: 28px;"></i></div>
                         <div class="folder-info-text">
                             <strong>${this.currentFolder}</strong>
                             <p>${folder.files.length} files</p>
@@ -139,7 +139,7 @@ export class FileExplorer {
                                 </span>
                             </div>
                         </div>
-                        <div class="folder-card-arrow">→</div>
+                        <div class="folder-card-arrow"><i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i></div>
                     </div>
                 `;
                 folderIndex++;
@@ -148,6 +148,11 @@ export class FileExplorer {
         }
 
         container.innerHTML = html;
+
+        // Re-initialize Lucide icons after DOM update
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
         // Add click handlers for folder cards
         container.querySelectorAll('.folder-card').forEach(card => {
@@ -169,7 +174,7 @@ export class FileExplorer {
         });
 
         if (!this.currentFolder) {
-            UIComponents.showNotification(`📂 ${this.folders.size} thư mục có sẵn`, 'success');
+            UIComponents.showNotification(`${this.folders.size} thư mục có sẵn`, 'success');
         }
     }
 
@@ -177,9 +182,9 @@ export class FileExplorer {
     selectFolder(folderName) {
         this.currentFolder = folderName;
         this.render();
-        
+
         const folder = this.folders.get(folderName);
-        UIComponents.showNotification(`📂 ${folderName} - ${folder.files.length} files`, 'info');
+        UIComponents.showNotification(`${folderName} - ${folder.files.length} files`, 'info');
         
         // Trigger folder select callback with files
         if (this.onFolderSelectCallback) {
