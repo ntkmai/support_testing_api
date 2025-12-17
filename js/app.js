@@ -445,7 +445,7 @@ class App {
                 state = 'throwing';
                 petImg.src = 'images/pet-drag.png';
                 pet.className = 'pet';
-                UIComponents.showNotification(`🎯 Ném pet! Tốc độ: ${speed.toFixed(1)}`, 'info');
+                UIComponents.showNotification(`😲 OMG cú ném hoang dã!!!`, 'info');
             } else {
                 // Normal drop - just fall straight down
                 state = 'falling';
