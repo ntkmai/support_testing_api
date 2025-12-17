@@ -206,12 +206,13 @@ class App {
     setupPetToggle() {
         const petToggleBtn = document.getElementById('petToggle');
         const pet = document.getElementById('pet');
-        
-        if (!petToggleBtn || !pet) return;
+        const petImg = pet?.querySelector('img');
+
+        if (!petToggleBtn || !pet || !petImg) return;
 
         let petEnabled = localStorage.getItem('petEnabled') === 'true';
         let animationFrame;
-        let state = 'walking-right'; // walking-right, walking-left, climbing, falling
+        let state = 'walking-right'; // walking-right, walking-left, climbing, falling, dragging
         let direction = 'right';
         let posX = -60;
         let posY = 20;
@@ -219,6 +220,11 @@ class App {
         const gravity = 0.5;
         const climbSpeed = 2;
         const walkSpeed = 3;
+
+        // Drag & drop variables
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
 
         const updatePet = () => {
             const screenWidth = window.innerWidth;
@@ -230,7 +236,10 @@ class App {
                 posX = Math.min(posX, screenWidth - 50);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
-                pet.className = 'pet walking-right';
+                // Chỉ set class để flip ảnh, không dùng CSS animation
+                if (!pet.classList.contains('walking-right')) {
+                    pet.className = 'pet walking-right';
+                }
 
                 // Chạm cạnh phải → chạy lên (chân hướng vào tường bên trái)
                 if (posX >= screenWidth - 50) {
@@ -243,7 +252,10 @@ class App {
                 posX = Math.max(posX, 0);
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
-                pet.className = 'pet walking-left';
+                // Chỉ set class để flip ảnh, không dùng CSS animation
+                if (!pet.classList.contains('walking-left')) {
+                    pet.className = 'pet walking-left';
+                }
 
                 // Chạm cạnh trái → chạy lên (chân hướng vào tường bên phải)
                 if (posX <= 0) {
@@ -270,24 +282,24 @@ class App {
                 posX = Math.max(0, Math.min(posX, screenWidth - 50));
                 pet.style.left = posX + 'px';
                 pet.style.bottom = posY + 'px';
-                
+                pet.className = 'pet falling';
+
                 if (posY <= 20) {
                     posY = 20;
                     velocityY = 0;
-                    // Rơi xuống xong → đổi hướng đi ngang
-                    if (direction === 'right') {
-                        direction = 'left';
-                        state = 'walking-left';
-                        posX = screenWidth + 60;
-                    } else {
-                        direction = 'right';
+                    // Rơi xuống xong → đổi về gif chạy và chạy từ vị trí hiện tại
+                    petImg.src = 'images/pet-run.gif';
+                    // Nếu ở nửa trái màn hình thì chạy sang phải, nửa phải thì chạy sang trái
+                    if (posX < screenWidth / 2) {
                         state = 'walking-right';
-                        posX = -60;
+                    } else {
+                        state = 'walking-left';
                     }
                 }
             }
 
-            if (petEnabled) {
+            // Only continue animation if not dragging
+            if (petEnabled && state !== 'dragging') {
                 animationFrame = requestAnimationFrame(updatePet);
             }
         };
@@ -310,6 +322,82 @@ class App {
                 cancelAnimationFrame(animationFrame);
             }
         };
+
+        // Drag & Drop handlers
+        const onMouseDown = (e) => {
+            if (!petEnabled) return;
+
+            isDragging = true;
+            state = 'dragging';
+
+            // Stop animation while dragging
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+
+            // Remove all animation classes
+            pet.className = 'pet';
+
+            // Change to drag image
+            petImg.src = 'images/pet-drag.png';
+
+            // Calculate offset from mouse to current pet position (left, bottom)
+            dragOffsetX = e.clientX - posX;
+            dragOffsetY = e.clientY - (window.innerHeight - posY - pet.offsetHeight);
+
+            // Add dragging cursor
+            pet.style.cursor = 'grabbing';
+            pet.style.pointerEvents = 'auto';
+
+            e.preventDefault();
+        };
+
+        const onMouseMove = (e) => {
+            if (!isDragging) return;
+
+            // Calculate new position from mouse position minus offset
+            posX = e.clientX - dragOffsetX;
+            const mouseBottomY = window.innerHeight - e.clientY + dragOffsetY;
+            posY = mouseBottomY;
+
+            // Clamp positions to screen bounds
+            posX = Math.max(0, Math.min(posX, window.innerWidth - 50));
+            posY = Math.max(20, Math.min(posY, window.innerHeight - 70));
+
+            pet.style.left = posX + 'px';
+            pet.style.bottom = posY + 'px';
+        };
+
+        const onMouseUp = () => {
+            if (!isDragging) return;
+
+            isDragging = false;
+
+            // Change back to running gif
+            petImg.src = 'images/pet-run.gif';
+
+            // Start falling
+            state = 'falling';
+            velocityY = 0;
+            pet.className = 'pet falling';
+
+            pet.style.cursor = 'grab';
+
+            // Restart animation
+            if (petEnabled && !animationFrame) {
+                updatePet();
+            }
+        };
+
+        // Add event listeners for dragging
+        pet.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+
+        // Enable pointer events and cursor
+        pet.style.pointerEvents = 'auto';
+        pet.style.cursor = 'grab';
 
         // Initialize pet state
         if (petEnabled) {

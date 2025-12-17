@@ -1830,12 +1830,18 @@ i[data-lucide] svg {
 
 /* Pet Animation */
 .pet {
-    position: absolute;
+    position: fixed;
     bottom: -10px;
     width: 50px;
     height: 50px;
     z-index: 9999;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+}
+
+.pet:active {
+    cursor: grabbing;
 }
 
 .pet img {
@@ -1863,16 +1869,8 @@ i[data-lucide] svg {
     }
 }
 
-.pet.walking-right {
-    animation: petWalkRight 10s linear forwards;
-}
-
 .pet.walking-right img {
     transform: scaleX(-1);
-}
-
-.pet.walking-left {
-    animation: petWalkLeft 10s linear forwards;
 }
 
 .pet.walking-left img {
