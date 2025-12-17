@@ -246,11 +246,13 @@ class App {
                 pet.style.bottom = posY + 'px';
                 if (!pet.classList.contains('walking-right')) {
                     pet.className = 'pet walking-right';
+                    petImg.style.transform = ''; // Reset transform for walking
                 }
 
                 if (posX >= screenWidth - 50) {
                     state = 'climbing-right';
                     pet.className = 'pet climbing-right';
+                    petImg.style.transform = ''; // Reset to let CSS handle rotation
                 }
             } else if (state === 'walking-left') {
                 posX -= walkSpeed;
@@ -259,11 +261,13 @@ class App {
                 pet.style.bottom = posY + 'px';
                 if (!pet.classList.contains('walking-left')) {
                     pet.className = 'pet walking-left';
+                    petImg.style.transform = ''; // Reset transform for walking
                 }
 
                 if (posX <= 0) {
                     state = 'climbing-left';
                     pet.className = 'pet climbing-left';
+                    petImg.style.transform = ''; // Reset to let CSS handle rotation
                 }
             } else if (state === 'climbing-right' || state === 'climbing-left') {
                 posY += climbSpeed;
@@ -275,6 +279,7 @@ class App {
                     state = 'falling';
                     velocityY = 0;
                     pet.className = 'pet falling';
+                    petImg.style.transform = ''; // Reset transform for falling
                 }
             } else if (state === 'falling') {
                 velocityY += gravity;
