@@ -1,0 +1,743 @@
+{
+  "requests": [
+    {
+      "name": "Login - Trưởng bộ phận Đào Tạo",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Mục đích\nĐăng nhập tài khoản Trưởng bộ phận Đào Tạo để tạo phiếu tạm ứng\n\n## Thông tin\n- Username: 55555\n- Password: 55555",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      },
+      "templates": [
+        {
+          "name": "Người tạo phiếu (55555)",
+          "description": "Login người tạo phiếu - Bước 0",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Trưởng bộ phận (55555)",
+          "description": "Login trưởng bộ phận - Bước 1",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Kế toán tài sản (0025)",
+          "description": "Login KT tài sản - Bước 2 (nếu lọ tài sản)",
+          "body": {
+            "username": "0025",
+            "password": "0001"
+          }
+        },
+        {
+          "name": "Kế toán hàng hóa (0091)",
+          "description": "Login KT hàng hóa - Bước 2 (nếu lọ hàng hóa)",
+          "body": {
+            "username": "0091",
+            "password": "0091"
+          }
+        },
+        {
+          "name": "Kế toán thuế (44444)",
+          "description": "Login KT thuế - Bước 2 (nếu lọ khác) hoặc Bước 3",
+          "body": {
+            "username": "44444",
+            "password": "44444"
+          }
+        },
+        {
+          "name": "Kế toán thanh toán (11111)",
+          "description": "Login KT thanh toán - Bước 4: Tạo hạch toán",
+          "body": {
+            "username": "11111",
+            "password": "11111"
+          }
+        },
+        {
+          "name": "TBP KTTT (22222)",
+          "description": "Login TBP KTTT - Bước 5: Sửa/duyệt hạch toán",
+          "body": {
+            "username": "22222",
+            "password": "22222"
+          }
+        },
+        {
+          "name": "Kế toán trưởng (33333)",
+          "description": "Login KT trưởng - Bước 6: Duyệt cuối",
+          "body": {
+            "username": "33333",
+            "password": "33333"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lấy danh sách phiếu tạm ứng",
+      "method": "GET",
+      "endpoint": "/api/advance-request",
+      "description": "## Mục đích\nLấy danh sách tất cả phiếu đề nghị tạm ứng\n\n## Query Parameters\n- page: Số trang (default: 1)\n- limit: Số bản ghi mỗi trang (default: 10)\n- status: Lọc theo trạng thái\n- jar_id: Lọc theo lọ",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Lấy trang đầu",
+          "description": "Lấy 10 phiếu đầu tiên",
+          "endpoint": "/api/advance-request?page=1&limit=10"
+        },
+        {
+          "name": "Lọc theo trạng thái pending",
+          "description": "Lấy các phiếu đang chờ duyệt",
+          "endpoint": "/api/advance-request?status=pending"
+        },
+        {
+          "name": "Lọc theo trạng thái approved",
+          "description": "Lấy các phiếu đã duyệt",
+          "endpoint": "/api/advance-request?status=approved"
+        },
+        {
+          "name": "Lọc theo trạng thái rejected",
+          "description": "Lấy các phiếu bị từ chối",
+          "endpoint": "/api/advance-request?status=rejected"
+        },
+        {
+          "name": "Lọc theo lọ tài sản",
+          "description": "Lấy phiếu của lọ tài sản",
+          "endpoint": "/api/advance-request?jar_id=a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd"
+        }
+      ]
+    },
+    {
+      "name": "Lấy chi tiết phiếu tạm ứng",
+      "method": "GET",
+      "endpoint": "/api/advance-request/{id}",
+      "description": "## Mục đích\nLấy thông tin chi tiết của một phiếu tạm ứng\n\n## Lưu ý\n- Thay {id} bằng ID thực tế của phiếu\n- Response bao gồm đầy đủ thông tin: workplace, jar, documents, invoices, contracts, accounting",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy lịch sử duyệt phiếu",
+      "method": "GET",
+      "endpoint": "/api/advance-request/{id}/approval-history",
+      "description": "## Mục đích\nLấy lịch sử duyệt của phiếu\n\n## Response\nDanh sách các bước duyệt với thông tin:\n- step: Bước duyệt\n- approver: Người duyệt\n- status: approved/rejected\n- comment: Ghi chú\n- approved_at: Thời gian duyệt",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh mục lọ (jar categories)",
+      "method": "GET",
+      "endpoint": "/api/jars/{jar_id}/categories",
+      "description": "## Mục đích\nLấy danh sách danh mục của một lọ\n\n## Lưu ý\n- Dùng để lấy jar_category_id khi tạo hạch toán\n- Thay {jar_id} bằng ID thực tế",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Danh mục lọ tài sản",
+          "description": "Lấy danh mục của lọ tài sản",
+          "endpoint": "/api/jars/a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd/categories"
+        },
+        {
+          "name": "Danh mục lọ hàng hóa",
+          "description": "Lấy danh mục của lọ hàng hóa",
+          "endpoint": "/api/jars/7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b/categories"
+        },
+        {
+          "name": "Danh mục lọ thường",
+          "description": "Lấy danh mục của lọ thường",
+          "endpoint": "/api/jars/2d3adfdf-2617-42d5-99bd-be98feda7b08/categories"
+        }
+      ]
+    },
+    {
+      "name": "Lấy danh sách công ty",
+      "method": "GET",
+      "endpoint": "/api/companies",
+      "description": "## Mục đích\nLấy danh sách công ty để chọn khi thêm hóa đơn/hợp đồng\n\n## Query Parameters\n- search: Tìm kiếm theo tên công ty\n- page: Số trang\n- limit: Số bản ghi",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Tìm kiếm công ty",
+          "description": "Tìm công ty theo từ khóa",
+          "endpoint": "/api/companies?search=VTCODE"
+        }
+      ]
+    },
+    {
+      "name": "Lấy danh sách đơn vị tính",
+      "method": "GET",
+      "endpoint": "/api/units",
+      "description": "## Mục đích\nLấy danh sách đơn vị tính để chọn khi tạo hạch toán",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh sách tài khoản kế toán",
+      "method": "GET",
+      "endpoint": "/api/accounts",
+      "description": "## Mục đích\nLấy danh sách tài khoản kế toán (debit/credit account)\n\n## Query Parameters\n- type: Loại tài khoản (debit/credit)\n- search: Tìm kiếm",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Lấy danh sách người chi/TK ngân hàng",
+      "method": "GET",
+      "endpoint": "/api/disbursers",
+      "description": "## Mục đích\nLấy danh sách người chi hoặc tài khoản ngân hàng\n\n## Query Parameters\n- type: employee/bank_account",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Lấy danh sách nhân viên",
+          "description": "Lấy danh sách người chi là nhân viên",
+          "endpoint": "/api/disbursers?type=employee"
+        },
+        {
+          "name": "Lấy danh sách TK ngân hàng",
+          "description": "Lấy danh sách tài khoản ngân hàng",
+          "endpoint": "/api/disbursers?type=bank_account"
+        }
+      ]
+    },
+    {
+      "name": "Tạo phiếu đề nghị tạm ứng",
+      "method": "POST",
+      "endpoint": "/api/advance-request",
+      "description": "## Mục đích\nTạo mới phiếu đề nghị tạm ứng\n\n## Yêu cầu\n- Phải chọn đúng phòng ban Đào Tạo\n- Cần đính kèm tài liệu\n- Chọn jar_id phù hợp",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "amount": 5000000,
+        "description": "Tạm ứng mua thiết bị văn phòng",
+        "documents": [
+          {
+            "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+            "ref_id": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222"
+            ],
+            "ref_code": ["REF001", "REF002"]
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Lọ Tài Sản",
+          "description": "Tạo phiếu tạm ứng cho lọ tài sản",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+            "amount": 10000000,
+            "description": "Tạm ứng mua tài sản cố định",
+            "documents": [
+              {
+                "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+                "ref_id": [
+                  "11111111-1111-1111-1111-111111111111",
+                  "22222222-2222-2222-2222-222222222222",
+                  "33333333-3333-3333-3333-333333333333"
+                ],
+                "ref_code": ["REF001", "REF002", "REF003"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Lọ Hàng Hóa",
+          "description": "Tạo phiếu tạm ứng cho lọ hàng hóa",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b",
+            "amount": 8000000,
+            "description": "Tạm ứng mua hàng hóa",
+            "documents": [
+              {
+                "type_document_id": "8beec112-1aaf-4bbd-82b5-62c53639f228",
+                "ref_id": [
+                  "44444444-4444-4444-4444-444444444444",
+                  "55555555-5555-5555-5555-555555555555"
+                ],
+                "ref_code": ["REF004", "REF005"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Lọ Thường Khác",
+          "description": "Tạo phiếu tạm ứng cho lọ thường (kế toán thuế duyệt)",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "2d3adfdf-2617-42d5-99bd-be98feda7b08",
+            "amount": 6000000,
+            "description": "Tạm ứng chi phí văn phòng",
+            "documents": [
+              {
+                "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+                "ref_id": ["11111111-1111-1111-1111-111111111111"],
+                "ref_code": ["REF001"]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sửa phiếu đề nghị tạm ứng",
+      "method": "PUT",
+      "endpoint": "/api/advance-request/{id}",
+      "description": "## Mục đích\nCập nhật thông tin phiếu đề nghị tạm ứng\n\n## Lưu ý\n- Thay {id} bằng ID thực tế của phiếu\n- DTO kế thừa từ DTO tạo, có thể cập nhật tất cả các field\n- Khi sửa sau khi bị từ chối, có thể chọn người hỗ trợ (approved_id)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "workplace_type": 1,
+        "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+        "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+        "amount": 7000000,
+        "description": "Cập nhật số tiền tạm ứng",
+        "documents": [
+          {
+            "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+            "ref_id": [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222"
+            ],
+            "ref_code": ["REF001", "REF002"]
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Sửa một vài field",
+          "description": "Chỉ cập nhật amount và description",
+          "body": {
+            "amount": 8000000,
+            "description": "Tăng số tiền tạm ứng"
+          }
+        },
+        {
+          "name": "Sửa đầy đủ thông tin",
+          "description": "Cập nhật toàn bộ thông tin phiếu",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b",
+            "amount": 12000000,
+            "description": "Thay đổi sang lọ hàng hóa và tăng số tiền",
+            "documents": [
+              {
+                "type_document_id": "8beec112-1aaf-4bbd-82b5-62c53639f228",
+                "ref_id": [
+                  "44444444-4444-4444-4444-444444444444",
+                  "55555555-5555-5555-5555-555555555555"
+                ],
+                "ref_code": ["REF004", "REF005"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Sửa sau khi từ chối - Có người hỗ trợ",
+          "description": "Sửa phiếu sau khi bị từ chối và chọn người hỗ trợ duyệt",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd",
+            "amount": 9000000,
+            "description": "Đã bổ sung đầy đủ chứng từ theo yêu cầu",
+            "approved_id": "d24f5b81-61f0-e711-80da-00155d0a0504",
+            "documents": [
+              {
+                "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+                "ref_id": [
+                  "11111111-1111-1111-1111-111111111111",
+                  "22222222-2222-2222-2222-222222222222",
+                  "33333333-3333-3333-3333-333333333333"
+                ],
+                "ref_code": ["REF001", "REF002", "REF003"]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Sửa sau khi từ chối - Không người hỗ trợ",
+          "description": "Sửa phiếu sau khi bị từ chối, tự xử lý",
+          "body": {
+            "workplace_type": 1,
+            "workplace_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+            "jar_id": "2d3adfdf-2617-42d5-99bd-be98feda7b08",
+            "amount": 5500000,
+            "description": "Đã sửa lại theo góp ý của kế toán",
+            "documents": [
+              {
+                "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+                "ref_id": ["11111111-1111-1111-1111-111111111111"],
+                "ref_code": ["REF001"]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kế toán tài sản - Sửa tài liệu đính kèm",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/documents/{id}",
+      "description": "## Mục đích\nKế toán tài sản (0025/0001) sửa tài liệu đính kèm trước khi duyệt\n\n## Yêu cầu\n- Đăng nhập: 0025/0001\n- Thay {id} bằng ID của phiếu tạm ứng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "ids": [
+            "f595aed4-29d4-4074-8684-aac1f073330f",
+            "ee34fa3e-ad39-4ca2-8e05-3c81ddf46155"
+          ],
+          "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+          "ref_id": [
+            "11111111-1111-1111-1111-111111111111",
+            "22222222-2222-2222-2222-222222222222"
+          ],
+          "ref_code": ["REF001", "REF002"]
+        }
+      ],
+      "templates": [
+        {
+          "name": "Cập nhật 2 loại tài liệu",
+          "description": "Sửa nhiều loại tài liệu đính kèm",
+          "body": [
+            {
+              "ids": [
+                "f595aed4-29d4-4074-8684-aac1f073330f",
+                "ee34fa3e-ad39-4ca2-8e05-3c81ddf46155",
+                "c3a645f5-5c69-4a78-b01e-90966f91192d"
+              ],
+              "type_document_id": "893721b5-f83a-4b20-8a41-215c99d2cef5",
+              "ref_id": [
+                "11111111-1111-1111-1111-111111111111",
+                "22222222-2222-2222-2222-222222222222",
+                "33333333-3333-3333-3333-333333333333"
+              ],
+              "ref_code": ["REF001", "REF002", "REF003"]
+            },
+            {
+              "ids": [
+                "49bac044-3502-422d-b951-3f59d0224ac0",
+                "f3791360-73ae-43ee-b1e6-5cda731569c0"
+              ],
+              "type_document_id": "8beec112-1aaf-4bbd-82b5-62c53639f228",
+              "ref_id": [
+                "44444444-4444-4444-4444-444444444444",
+                "55555555-5555-5555-5555-555555555555"
+              ],
+              "ref_code": ["REF004", "REF005"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kế toán thuế - Thêm hóa đơn",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/invoices/{id}",
+      "description": "## Mục đích\nKế toán thuế (44444/44444) thêm hóa đơn trước khi duyệt\n\n## Yêu cầu\n- Đăng nhập: 44444/44444\n- Thay {id} bằng ID của phiếu tạm ứng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HD-001",
+          "date": "2025-01-11",
+          "company_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+          "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+          "place": "Công ty VTCODE",
+          "amount": "200000"
+        }
+      ],
+      "templates": [
+        {
+          "name": "Hóa đơn công ty A",
+          "description": "Thêm hóa đơn từ công ty A",
+          "body": [
+            {
+              "code": "HD-A-001",
+              "date": "2025-01-15",
+              "company_id": "e41e24c6-215e-43d5-83bf-94cba481daa2",
+              "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+              "place": "Công ty A",
+              "amount": "500000"
+            }
+          ]
+        },
+        {
+          "name": "Nhiều hóa đơn",
+          "description": "Thêm nhiều hóa đơn cùng lúc",
+          "body": [
+            {
+              "code": "HD-002",
+              "date": "2025-01-12",
+              "company_id": "23b5c8b4-12f5-4189-94ed-101a43b16ba5",
+              "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+              "place": "Công ty B",
+              "amount": "300000"
+            },
+            {
+              "code": "HD-003",
+              "date": "2025-01-13",
+              "company_id": "46077b44-248a-4dc6-8bcd-4e5594adb92f",
+              "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+              "place": "Công ty C",
+              "amount": "150000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kế toán thuế - Thêm hợp đồng",
+      "method": "PUT",
+      "endpoint": "/api/payment-request/contracts/{id}",
+      "description": "## Mục đích\nKế toán thuế (44444/44444) thêm hợp đồng trước khi duyệt\n\n## Yêu cầu\n- Đăng nhập: 44444/44444\n- Thay {id} bằng ID của phiếu tạm ứng\n- Format giống như hóa đơn",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": [
+        {
+          "code": "HĐ-001",
+          "date": "2025-01-10",
+          "company_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+          "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+          "place": "Công ty VTCODE",
+          "amount": "10000000"
+        }
+      ],
+      "templates": [
+        {
+          "name": "Hợp đồng mua sắm",
+          "description": "Hợp đồng mua sắm thiết bị",
+          "body": [
+            {
+              "code": "HĐ-MS-001",
+              "date": "2025-01-05",
+              "company_id": "50acf336-e414-42bd-aba0-ec0ed13eb71a",
+              "file_id": "f267fb77-f8bc-452b-be6a-7177adf87174",
+              "place": "Công ty Thiết Bị",
+              "amount": "15000000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kế toán thanh toán - Tạo hạch toán",
+      "method": "POST",
+      "endpoint": "/api/payment-request/accounting/{id}",
+      "description": "## Mục đích\nKế toán thanh toán (11111/11111) tạo hạch toán\n\n## Yêu cầu\n- Đăng nhập: 11111/11111\n- Thay {id} bằng ID của phiếu tạm ứng\n- Chọn jar_category_id phù hợp với jar_id",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "jar_category_id": "69f31527-ba0d-499e-838d-f775c3f37690",
+        "items": [
+          {
+            "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+            "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+            "debit_disburser_type": "employee",
+            "credit_disburser_type": "bank_account",
+            "debit_disburser_id": "d24f5b81-61f0-e711-80da-00155d0a0504",
+            "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+            "unit_id": "4ccc730d-3dd2-441a-b6b6-0eff23d9c16b",
+            "quantity": 10,
+            "price": 5000000,
+            "tax": 10,
+            "description": "Thanh toán tiền mua thiết bị",
+            "expense_code": "BTRIIT"
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Hạch toán Lọ Tài Sản",
+          "description": "Tạo hạch toán cho lọ tài sản (jar_id: a9656a3d-c43a-4fe9-8fe6-bcfc060de6cd)",
+          "body": {
+            "jar_category_id": "69f31527-ba0d-499e-838d-f775c3f37690",
+            "items": [
+              {
+                "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+                "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+                "debit_disburser_type": "employee",
+                "credit_disburser_type": "bank_account",
+                "debit_disburser_id": "d24f5b81-61f0-e711-80da-00155d0a0504",
+                "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+                "unit_id": "79f97729-fbe2-4492-bacf-68a0809321b5",
+                "quantity": 5,
+                "price": 10000000,
+                "tax": 10,
+                "description": "Mua tài sản cố định",
+                "expense_code": "BTMAYIN"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Hạch toán Lọ Hàng Hóa",
+          "description": "Tạo hạch toán cho lọ hàng hóa (jar_id: 7ce3b31a-ba53-4fd3-a565-3ddbce1bb03b)",
+          "body": {
+            "jar_category_id": "8e8c4e1a-6605-4652-b81c-945feab01392",
+            "items": [
+              {
+                "debit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+                "credit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+                "debit_disburser_type": "bank_account",
+                "credit_disburser_type": "bank_account",
+                "debit_disburser_id": "8c367d7a-229e-4a8d-918e-c1975650e160",
+                "credit_disburser_id": "0f43bbe8-c264-405e-a8a7-d05fb88865c3",
+                "unit_id": "c3061db2-a12c-46bb-9cf4-7413d5695e96",
+                "quantity": 20,
+                "price": 400000,
+                "tax": 8,
+                "description": "Mua hàng hóa",
+                "expense_code": "CDC"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Hạch toán Lọ Thường",
+          "description": "Tạo hạch toán cho lọ thường (jar_id: 2d3adfdf-2617-42d5-99bd-be98feda7b08)",
+          "body": {
+            "jar_category_id": "72e8b13a-d21a-4770-b50e-0bb9771df48d",
+            "items": [
+              {
+                "debit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+                "credit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+                "debit_disburser_type": "bank_account",
+                "credit_disburser_type": "bank_account",
+                "debit_disburser_id": "4aa7a8be-48de-473b-9953-f16372f70459",
+                "credit_disburser_id": "a8eb8907-17bb-460a-9380-2f9982212540",
+                "unit_id": "5c970aad-63d2-4032-beb9-84a723dc89a7",
+                "quantity": 15,
+                "price": 300000,
+                "tax": 5,
+                "description": "Chi phí văn phòng",
+                "expense_code": "DIEN"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Nhiều khoản hạch toán",
+          "description": "Tạo nhiều khoản hạch toán trong một phiếu",
+          "body": {
+            "jar_category_id": "69f31527-ba0d-499e-838d-f775c3f37690",
+            "items": [
+              {
+                "debit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+                "credit_account_id": "f8424813-7e8d-42e9-98cc-bdf183b7ae9d",
+                "debit_disburser_type": "employee",
+                "credit_disburser_type": "bank_account",
+                "debit_disburser_id": "d24f5b81-61f0-e711-80da-00155d0a0504",
+                "credit_disburser_id": "c3a51ba7-7095-4d2d-9781-f8431bc11d96",
+                "unit_id": "5e97508e-24ed-44a4-b967-7869135043cc",
+                "quantity": 8,
+                "price": 600000,
+                "tax": 10,
+                "description": "Bảo trì thiết bị",
+                "expense_code": "BAOTRI"
+              },
+              {
+                "debit_account_id": "0024a211-1a7c-4386-a60a-34c2cdc6bf58",
+                "credit_account_id": "4514387d-26c9-4ee4-8402-f0e77a095132",
+                "debit_disburser_type": "bank_account",
+                "credit_disburser_type": "bank_account",
+                "debit_disburser_id": "89a735f5-a6fb-4d9c-9d86-1c2fd7b5a1be",
+                "credit_disburser_id": "08fe1c29-4b17-4764-b5c5-68394836f73a",
+                "unit_id": "2dd7ec30-d91a-4e46-be32-fef7dc412533",
+                "quantity": 12,
+                "price": 250000,
+                "tax": 8,
+                "description": "Bảo vệ",
+                "expense_code": "BAOVE"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Duyệt phiếu",
+      "method": "PUT",
+      "endpoint": "/api/advance-request/{id}/approve",
+      "description": "## Mục đích\nDuyệt phiếu đề nghị tạm ứng\n\n## Quy trình duyệt\n1. Trưởng bộ phận (55555/55555)\n2. Kế toán (tùy loại lọ):\n   - Lọ tài sản: 0025/0001\n   - Lọ hàng hóa: 0091/0091\n   - Lọ khác: 44444/44444\n3. Kế toán thanh toán: 11111/11111\n4. Trưởng bộ phận kế toán thanh toán: 22222/22222\n5. Kế toán trưởng: 33333/33333",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {}
+    },
+    {
+      "name": "Từ chối phiếu",
+      "method": "PUT",
+      "endpoint": "/api/advance-request/{id}/reject",
+      "description": "## Mục đích\nTừ chối phiếu đề nghị tạm ứng\n\n## Yêu cầu\n- Cần cung cấp lý do từ chối",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "reason": "Thiếu chứng từ đính kèm"
+      },
+      "templates": [
+        {
+          "name": "Từ chối - Sai thông tin",
+          "description": "Từ chối do thông tin không chính xác",
+          "body": {
+            "reason": "Thông tin công ty không chính xác, cần cập nhật lại"
+          }
+        },
+        {
+          "name": "Từ chối - Thiếu tài liệu",
+          "description": "Từ chối do thiếu tài liệu",
+          "body": {
+            "reason": "Thiếu hóa đơn và hợp đồng đính kèm"
+          }
+        }
+      ]
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Advance Request API Test Collection",
+    "version": "1.0.0",
+    "description": "Template test cho API Phiếu đề nghị tạm ứng - Hệ thống kế toán",
+    "created": "2025-12-17",
+    "module_path": "D:\\vtcode-projects\\accountant-app\\accounting-system\\apps\\api-gateway\\src\\modules\\advance-request"
+  }
+}

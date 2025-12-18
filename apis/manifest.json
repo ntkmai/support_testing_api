@@ -23,6 +23,17 @@
             "payment-request-tests-other-jar.json",
             "payment-request-update-tests.json"
         ]
+    },
+    {
+      "name": "Test phiếu đề nghị tạm ứng",
+      "path": "advance-request-testing",
+      "color": "#48bb78",
+      "description": "Advance Request API",
+      "files":[
+        "ADVANCE-REQUEST-API-DOCS.md",
+        "advance-request-api.json"
+
+      ]
     }
     
 ]
