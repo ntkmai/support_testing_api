@@ -725,7 +725,5 @@ echo "Done! Please test your application."
 - **Owner:** Security Team
 
 ---
-
-**Báo cáo được tạo bởi:** Claude Code Security Audit
 **Version:** 1.0
 **Last Updated:** 26/12/2025
