@@ -34,6 +34,15 @@
         "advance-request-api.json"
 
       ]
+    },
+    {
+      "name": "Báo cáo tình trạng API icool staff",
+      "path": "icool-staff-scan-report",
+      "color": "red",
+      "description": "ICool Staff Scan Report",
+      "files":[
+        "SECURITY_AUDIT_REPORT.md"
+      ]
     }
     
 ]
