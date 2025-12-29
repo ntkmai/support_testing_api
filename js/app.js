@@ -810,7 +810,7 @@ class App {
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         } else {
-            document.body.removeAttribute('data-theme');
+            document.body.setAttribute('data-theme', 'dark');
             if (toggleBtn) {
                 toggleBtn.innerHTML = '<i data-lucide="moon"></i>';
                 if (typeof lucide !== 'undefined') lucide.createIcons();
