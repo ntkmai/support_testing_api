@@ -171,13 +171,13 @@ class App {
         const toggleBtn = document.getElementById('themeToggle');
         if (!toggleBtn) return;
 
-        // Load saved theme or default to dark
-        const savedTheme = localStorage.getItem('theme') || 'dark';
+        // Load saved theme or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
         this.setTheme(savedTheme);
 
         // Toggle button handler
         toggleBtn.addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+            const currentTheme = document.body.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             this.setTheme(newTheme);
             localStorage.setItem('theme', newTheme);
@@ -361,12 +361,19 @@ class App {
         const startPetAnimation = () => {
             petEnabled = true;
             pet.style.display = 'block';
-            state = 'walking-right';
-            direction = 'right';
-            posX = -60;
-            posY = 20;
+
+            // Get button position to drop from there
+            const btnRect = petToggleBtn.getBoundingClientRect();
+            posX = btnRect.left + btnRect.width / 2 - 25; // Center pet on button
+            posY = window.innerHeight - btnRect.bottom; // Convert to bottom coordinates
+
+            // Start falling state with drag image
+            state = 'falling';
             velocityY = 0;
             velocityX = 0;
+            pet.className = 'pet falling';
+            petImg.src = 'images/pet-drag.png'; // Use drag image when falling from button
+
             updatePet();
         };
 

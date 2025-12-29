@@ -1,0 +1,173 @@
+{
+  "requests": [
+    {
+      "name": "Danh sách phiếu chi",
+      "method": "GET",
+      "endpoint": "/payment-vouchers/disburser?page=1&limit=20",
+      "description": "## Mục đích\nLấy danh sách phiếu chi (Disbursement Receipt) - Giai đoạn 2\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Lưu ý\n- Phiếu chi được tạo TỰ ĐỘNG sau khi lịch chi được Tổng GĐ duyệt\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"PC-15012025-001-DR\",\n      \"payment_request_code\": \"DNTT-LO.TS01-15012025\",\n      \"disburser_name\": \"Nguyen Van A\",\n      \"amount\": \"48400000.00\",\n      \"payment_date\": \"2025-01-20\",\n      \"source_account\": \"Tài khoản Vietcombank\",\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Ngân quỹ\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 10,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Chi tiết phiếu chi",
+      "method": "GET",
+      "endpoint": "/payment-vouchers/disburser/detail/:id",
+      "description": "## Mục đích\nLấy thông tin chi tiết phiếu chi\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"code\": \"PC-15012025-001-DR\",\n  \"payment_request\": {\n    \"id\": \"uuid\",\n    \"code\": \"DNTT-LO.TS01-15012025\",\n    \"requester_name\": \"Nguyen Van A\",\n    \"workplace_name\": \"Phòng IT\"\n  },\n  \"disburser\": {\n    \"id\": \"uuid\",\n    \"name\": \"Nguyen Van A\",\n    \"bank_account_name\": \"NGUYEN VAN A\",\n    \"bank_account_number\": \"123456789\",\n    \"bank_name\": \"Vietcombank\"\n  },\n  \"amount\": \"48400000.00\",\n  \"payment_date\": \"2025-01-20\",\n  \"source_account\": \"Tài khoản Vietcombank - STK: 0123456789\",\n  \"status\": \"pending\",\n  \"current_step\": 1,\n  \"approvals\": [\n    {\n      \"step\": 1,\n      \"role\": \"treasury\",\n      \"approver_name\": \"Bộ phận Ngân quỹ\",\n      \"status\": \"pending\"\n    },\n    {\n      \"step\": 2,\n      \"role\": \"financial_director\",\n      \"approver_name\": \"Giám đốc tài chính\",\n      \"status\": \"waiting\"\n    },\n    {\n      \"step\": 3,\n      \"role\": \"ceo\",\n      \"approver_name\": \"Tổng giám đốc\",\n      \"status\": \"waiting\"\n    }\n  ],\n  \"created_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Ngân quỹ duyệt (Bước 1)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/disburser/approval/:id",
+      "description": "## Mục đích\nNgân quỹ duyệt phiếu chi (BƯỚC 1)\n\n## Quyền\n- User: 797979/666666 (Ngân quỹ)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 2 (chờ GĐ Tài chính)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Duyệt",
+          "description": "Ngân quỹ duyệt",
+          "body": {
+            "action": "approve",
+            "note": "Xác nhận phiếu chi hợp lệ"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "Ngân quỹ từ chối",
+          "body": {
+            "action": "reject",
+            "note": "Thông tin ngân hàng không chính xác"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GĐ Tài chính duyệt (Bước 2)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/disburser/approval/:id",
+      "description": "## Mục đích\nGĐ Tài chính duyệt phiếu chi (BƯỚC 2)\n\n## Quyền\n- User: 55555/55555 (GĐ Tài chính)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 3 (chờ Tổng GĐ)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Duyệt",
+          "description": "GĐ Tài chính duyệt",
+          "body": {
+            "action": "approve",
+            "note": "Đã xem xét và phê duyệt"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "GĐ Tài chính từ chối",
+          "body": {
+            "action": "reject",
+            "note": "Cần xem xét lại"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tổng GĐ duyệt (Bước 3)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/disburser/approval/:id",
+      "description": "## Mục đích\nTổng GĐ duyệt phiếu chi - Bước cuối (BƯỚC 3)\n\n## Quyền\n- User: 0018/0018 (Tổng GĐ)\n\n## Kết quả\nSau khi duyệt:\n- Phiếu chi chuyển sang 'approved'\n- Ngân quỹ có thể hoàn thành (đã chi tiền)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Duyệt",
+          "description": "Tổng GĐ duyệt",
+          "body": {
+            "action": "approve",
+            "note": "Đồng ý chi tiền"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "Tổng GĐ từ chối",
+          "body": {
+            "action": "reject",
+            "note": "Cần xem xét lại"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ngân quỹ hoàn thành",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/disburser/complete/:id",
+      "description": "## Mục đích\nNgân quỹ cập nhật đã chi tiền thành công\n\n## Quyền\n- User: 797979/666666 (Ngân quỹ)\n\n## Điều kiện\n- Đã duyệt xong 3 bước\n\n## Request Body\n- statistic_code: Mã thống kê (optional)\n- file_ids: Danh sách file đính kèm (optional)\n\n## Kết quả\nPhiếu chi chuyển sang 'completed'",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "statistic_code": "",
+        "file_ids": []
+      },
+      "templates": [
+        {
+          "name": "Hoàn thành - Tiền mặt",
+          "description": "Đã chi tiền mặt",
+          "body": {
+            "statistic_code": "TM-2025",
+            "file_ids": []
+          }
+        },
+        {
+          "name": "Hoàn thành - Chuyển khoản",
+          "description": "Đã chuyển khoản",
+          "body": {
+            "statistic_code": "CK-2025",
+            "file_ids": []
+          }
+        }
+      ]
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Phiếu chi API (Giai đoạn 2)",
+    "version": "1.0.0",
+    "description": "API quản lý phiếu chi - Giai đoạn 2\n\nWorkflow: 3 bước + hoàn thành\n1. Ngân quỹ duyệt\n2. GĐ Tài chính duyệt\n3. Tổng GĐ duyệt\n4. Ngân quỹ hoàn thành (đã chi tiền)\n\nLưu ý: Phiếu chi tự động tạo sau khi lịch chi được duyệt",
+    "test_accounts": [
+      {
+        "role": "Ngân quỹ",
+        "username": "797979",
+        "password": "666666"
+      },
+      {
+        "role": "GĐ Tài chính",
+        "username": "55555",
+        "password": "55555"
+      },
+      {
+        "role": "Tổng GĐ",
+        "username": "0018",
+        "password": "0018"
+      }
+    ]
+  }
+}

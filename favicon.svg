@@ -1,32 +1,81 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="#667eea" opacity="0.2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="flameGradient1" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#4A148C;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#7B1FA2;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#9C27B0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E1BEE7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="flameGradient2" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#6A1B9A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#AB47BC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F3E5F5;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="60%" r="40%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#F3E5F5;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#CE93D8;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Main flame body -->
+  <path d="M 50 90 
+           C 42 90, 35 85, 33 78
+           C 31 71, 32 65, 35 58
+           C 37 53, 40 48, 42 42
+           C 44 36, 45 30, 46 24
+           C 46.5 20, 47 15, 48 10
+           L 50 5
+           L 52 10
+           C 53 15, 53.5 20, 54 24
+           C 55 30, 56 36, 58 42
+           C 60 48, 63 53, 65 58
+           C 68 65, 69 71, 67 78
+           C 65 85, 58 90, 50 90 Z"
+        fill="url(#flameGradient1)"/>
+
+  <!-- Left flame lick -->
+  <path d="M 38 60
+           C 36 58, 34 54, 33 50
+           C 32 46, 33 42, 35 38
+           C 36 35, 38 32, 39 28
+           L 41 20
+           L 42 25
+           C 43 29, 44 33, 45 37
+           C 46 42, 46 46, 45 50
+           C 44 54, 42 58, 40 60
+           Z"
+        fill="url(#flameGradient2)"
+        opacity="0.8"/>
+
+  <!-- Right flame lick -->
+  <path d="M 62 60
+           C 64 58, 66 54, 67 50
+           C 68 46, 67 42, 65 38
+           C 64 35, 62 32, 61 28
+           L 59 20
+           L 58 25
+           C 57 29, 56 33, 55 37
+           C 54 42, 54 46, 55 50
+           C 56 54, 58 58, 60 60
+           Z"
+        fill="url(#flameGradient2)"
+        opacity="0.8"/>
+
+  <!-- Top flame tip -->
+  <path d="M 50 5
+           C 48 8, 47 12, 47 16
+           C 47 19, 48 22, 50 25
+           C 52 22, 53 19, 53 16
+           C 53 12, 52 8, 50 5 Z"
+        fill="#F3E5F5"
+        opacity="0.9"/>
+
+  <!-- Inner glow -->
+  <ellipse cx="50" cy="65" rx="12" ry="18" fill="url(#innerGlow)"/>
   
-  <!-- Flask body -->
-  <path d="M 25 15 L 25 25 L 18 40 Q 15 48 18 52 Q 20 55 26 56 L 38 56 Q 44 55 46 52 Q 49 48 46 40 L 39 25 L 39 15 Z" 
-        fill="#667eea" stroke="#4c51bf" stroke-width="2"/>
-  
-  <!-- Flask neck -->
-  <rect x="27" y="10" width="10" height="8" rx="1" fill="#667eea" stroke="#4c51bf" stroke-width="2"/>
-  
-  <!-- Flask opening -->
-  <ellipse cx="32" cy="10" rx="5" ry="2" fill="#8b5cf6" stroke="#4c51bf" stroke-width="1"/>
-  
-  <!-- Liquid inside -->
-  <path d="M 20 45 Q 18 48 20 50 Q 22 52 26 52.5 L 38 52.5 Q 42 52 44 50 Q 46 48 44 45 L 39 32 L 25 32 Z" 
-        fill="#60a5fa" opacity="0.7"/>
-  
-  <!-- Bubbles -->
-  <circle cx="28" cy="42" r="2" fill="#ffffff" opacity="0.6"/>
-  <circle cx="35" cy="38" r="1.5" fill="#ffffff" opacity="0.6"/>
-  <circle cx="30" cy="48" r="1.8" fill="#ffffff" opacity="0.6"/>
-  <circle cx="36" cy="45" r="1.3" fill="#ffffff" opacity="0.6"/>
-  
-  <!-- Measurement marks on flask -->
-  <line x1="22" y1="35" x2="26" y2="35" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
-  <line x1="22" y1="40" x2="26" y2="40" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
-  <line x1="22" y1="45" x2="26" y2="45" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
-  
-  <!-- Shine effect -->
-  <ellipse cx="27" cy="20" rx="3" ry="6" fill="#ffffff" opacity="0.3"/>
+  <!-- Hot spots -->
+  <ellipse cx="48" cy="55" rx="3" ry="7" fill="#FFFFFF" opacity="0.6"/>
+  <ellipse cx="52" cy="60" rx="2.5" ry="6" fill="#FFFFFF" opacity="0.5"/>
+  <ellipse cx="50" cy="15" rx="2" ry="5" fill="#FFFFFF" opacity="0.7"/>
 </svg>

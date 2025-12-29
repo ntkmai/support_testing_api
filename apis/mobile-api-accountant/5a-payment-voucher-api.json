@@ -1,0 +1,145 @@
+{
+  "requests": [
+    {
+      "name": "Danh sách lịch chi",
+      "method": "GET",
+      "endpoint": "/payment-vouchers?page=1&limit=20",
+      "description": "## Mục đích\nLấy danh sách lịch chi (Payment Voucher) - Giai đoạn 1\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"PC-15012025-001\",\n      \"payment_request_code\": \"DNTT-LO.TS01-15012025\",\n      \"disburser_name\": \"Nguyen Van A\",\n      \"amount\": \"48400000.00\",\n      \"payment_date\": null,\n      \"source_account\": null,\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Ngân quỹ\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 15,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Chi tiết lịch chi",
+      "method": "GET",
+      "endpoint": "/payment-vouchers/detail/:id",
+      "description": "## Mục đích\nLấy thông tin chi tiết lịch chi\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"code\": \"PC-15012025-001\",\n  \"payment_request\": {\n    \"id\": \"uuid\",\n    \"code\": \"DNTT-LO.TS01-15012025\",\n    \"requester_name\": \"Nguyen Van A\",\n    \"workplace_name\": \"Phòng IT\"\n  },\n  \"disburser\": {\n    \"id\": \"uuid\",\n    \"name\": \"Nguyen Van A\",\n    \"bank_account_name\": \"NGUYEN VAN A\",\n    \"bank_account_number\": \"123456789\",\n    \"bank_name\": \"Vietcombank\"\n  },\n  \"amount\": \"48400000.00\",\n  \"payment_date\": \"2025-01-20\",\n  \"source_account\": \"Tài khoản Vietcombank\",\n  \"status\": \"pending\",\n  \"current_step\": 1,\n  \"approvals\": [\n    {\n      \"step\": 1,\n      \"role\": \"treasury\",\n      \"approver_name\": \"Bộ phận Ngân quỹ\",\n      \"status\": \"pending\",\n      \"action\": \"select_date_and_account\"\n    },\n    {\n      \"step\": 2,\n      \"role\": \"financial_director\",\n      \"approver_name\": \"Giám đốc tài chính\",\n      \"status\": \"waiting\"\n    },\n    {\n      \"step\": 3,\n      \"role\": \"ceo\",\n      \"approver_name\": \"Tổng giám đốc\",\n      \"status\": \"waiting\"\n    }\n  ],\n  \"created_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Ngân quỹ chọn ngày chi (Bước 1)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/status/:id",
+      "description": "## Mục đích\nNgân quỹ chọn ngày chi + tài khoản nguồn (BƯỚC 1)\n\n## Quyền\n- User: 797979/666666 (Ngân quỹ)\n\n## Request Body\n- action: 'approve'\n- payment_date: Ngày chi (YYYY-MM-DD)\n- source_account: Tài khoản nguồn\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 2 (chờ GĐ Tài chính)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "payment_date": "2025-01-20",
+        "source_account": "Tài khoản Vietcombank - STK: 0123456789",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Chọn TK Vietcombank",
+          "description": "Chọn tài khoản Vietcombank",
+          "body": {
+            "action": "approve",
+            "payment_date": "2025-01-20",
+            "source_account": "Tài khoản Vietcombank - STK: 0123456789"
+          }
+        },
+        {
+          "name": "Chi tiền mặt",
+          "description": "Chi bằng tiền mặt",
+          "body": {
+            "action": "approve",
+            "payment_date": "2025-01-20",
+            "source_account": "Quỹ tiền mặt"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GĐ Tài chính duyệt (Bước 2)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/status/:id",
+      "description": "## Mục đích\nGiám đốc Tài chính duyệt lịch chi (BƯỚC 2)\n\n## Quyền\n- User: 55555/55555 (GĐ Tài chính)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 3 (chờ Tổng GĐ)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Duyệt",
+          "description": "GĐ Tài chính duyệt",
+          "body": {
+            "action": "approve",
+            "note": "Đã xem xét và phê duyệt"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "GĐ Tài chính từ chối",
+          "body": {
+            "action": "reject",
+            "note": "Thời điểm chi chưa phù hợp"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tổng GĐ duyệt (Bước 3)",
+      "method": "PUT",
+      "endpoint": "/payment-vouchers/status/:id",
+      "description": "## Mục đích\nTổng GĐ duyệt lịch chi - Bước cuối (BƯỚC 3)\n\n## Quyền\n- User: 0018/0018 (Tổng GĐ)\n\n## Kết quả\nSau khi duyệt:\n1. Hệ thống TỰ ĐỘNG tạo Phiếu chi\n2. Phiếu chi có workflow duyệt riêng (3 bước)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "action": "approve",
+        "note": ""
+      },
+      "templates": [
+        {
+          "name": "Duyệt",
+          "description": "Tổng GĐ duyệt",
+          "body": {
+            "action": "approve",
+            "note": "Đồng ý chi tiền"
+          }
+        },
+        {
+          "name": "Từ chối",
+          "description": "Tổng GĐ từ chối",
+          "body": {
+            "action": "reject",
+            "note": "Cần xem xét lại"
+          }
+        }
+      ]
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Lịch chi API (Giai đoạn 1)",
+    "version": "1.0.0",
+    "description": "API quản lý lịch chi - Giai đoạn 1\n\nWorkflow: 3 bước\n1. Ngân quỹ chọn ngày chi + TK nguồn\n2. GĐ Tài chính duyệt\n3. Tổng GĐ duyệt → Tự động tạo Phiếu chi",
+    "test_accounts": [
+      {
+        "role": "Ngân quỹ",
+        "username": "797979",
+        "password": "666666"
+      },
+      {
+        "role": "GĐ Tài chính",
+        "username": "55555",
+        "password": "55555"
+      },
+      {
+        "role": "Tổng GĐ",
+        "username": "0018",
+        "password": "0018"
+      }
+    ]
+  }
+}

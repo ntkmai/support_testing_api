@@ -1,0 +1,133 @@
+{
+  "requests": [
+    {
+      "name": "Danh sách đối tượng chi",
+      "method": "GET",
+      "endpoint": "/disburser?page=1&limit=20&search=",
+      "description": "## Mục đích\nLấy danh sách đối tượng chi (có phân trang và tìm kiếm)\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n- search: Tìm kiếm theo tên, số TK, mã số thuế (optional)\n\n## Quyền\n- Tất cả user đã login\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"name\": \"Nguyen Van A\",\n      \"bank_account_name\": \"NGUYEN VAN A\",\n      \"bank_account_number\": \"123456789\",\n      \"bank_name\": \"Vietcombank\",\n      \"tax_code\": \"0123456789\",\n      \"phone\": \"0901234567\",\n      \"address\": \"123 Street, Hanoi\",\n      \"created_at\": \"2025-01-15T10:00:00Z\",\n      \"updated_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 50,\n  \"page\": 1,\n  \"limit\": 20,\n  \"totalPages\": 3\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Chi tiết đối tượng chi",
+      "method": "GET",
+      "endpoint": "/disburser/:id",
+      "description": "## Mục đích\nLấy thông tin chi tiết đối tượng chi\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"name\": \"Nguyen Van A\",\n  \"bank_account_name\": \"NGUYEN VAN A\",\n  \"bank_account_number\": \"123456789\",\n  \"bank_name\": \"Vietcombank\",\n  \"tax_code\": \"0123456789\",\n  \"phone\": \"0901234567\",\n  \"email\": \"nguyenvana@example.com\",\n  \"address\": \"123 Street, Hanoi\",\n  \"note\": \"Nhà cung cấp thiết bị IT\",\n  \"created_at\": \"2025-01-15T10:00:00Z\",\n  \"updated_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Tạo đối tượng chi",
+      "method": "POST",
+      "endpoint": "/disburser",
+      "description": "## Mục đích\nTạo mới đối tượng chi\n\n## Quyền\n- ✅ Có thể tạo trên Mobile\n\n## Request Body\n- name: Tên đối tượng chi (bắt buộc)\n- bank_account_name: Tên tài khoản (optional)\n- bank_account_number: Số tài khoản (optional)\n- bank_name: Tên ngân hàng (optional)\n- tax_code: Mã số thuế (optional)\n- phone: Số điện thoại (optional)\n- email: Email (optional)\n- address: Địa chỉ (optional)\n- note: Ghi chú (optional)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Nguyen Van A",
+        "bank_account_name": "NGUYEN VAN A",
+        "bank_account_number": "123456789",
+        "bank_name": "Vietcombank",
+        "tax_code": "0123456789",
+        "phone": "0901234567",
+        "email": "nguyenvana@example.com",
+        "address": "123 Street, Hanoi"
+      },
+      "templates": [
+        {
+          "name": "Tạo - Đầy đủ",
+          "description": "Tạo đối tượng chi với đầy đủ thông tin",
+          "body": {
+            "name": "Công ty TNHH ABC",
+            "bank_account_name": "CONG TY TNHH ABC",
+            "bank_account_number": "9876543210",
+            "bank_name": "Techcombank",
+            "tax_code": "0123456789",
+            "phone": "0987654321",
+            "email": "info@abc.com",
+            "address": "456 Street, Ho Chi Minh City",
+            "note": "Nhà cung cấp văn phòng phẩm"
+          }
+        },
+        {
+          "name": "Tạo - Tối thiểu",
+          "description": "Tạo đối tượng chi với thông tin tối thiểu",
+          "body": {
+            "name": "Nguyen Thi B"
+          }
+        },
+        {
+          "name": "Tạo - Cá nhân",
+          "description": "Tạo đối tượng chi cá nhân",
+          "body": {
+            "name": "Tran Van C",
+            "bank_account_name": "TRAN VAN C",
+            "bank_account_number": "1122334455",
+            "bank_name": "VietinBank",
+            "phone": "0912345678"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sửa đối tượng chi",
+      "method": "PUT",
+      "endpoint": "/disburser/:id",
+      "description": "## Mục đích\nCập nhật thông tin đối tượng chi\n\n## Quyền\n- ✅ Có thể sửa trên Mobile\n\n## Request Body\nGiống như Create, tất cả field đều optional",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Nguyen Van A (Updated)",
+        "phone": "0909999999"
+      },
+      "templates": [
+        {
+          "name": "Sửa - Tên",
+          "description": "Chỉ cập nhật tên",
+          "body": {
+            "name": "Công ty TNHH ABC (Updated)"
+          }
+        },
+        {
+          "name": "Sửa - TK ngân hàng",
+          "description": "Cập nhật thông tin ngân hàng",
+          "body": {
+            "bank_account_name": "NGUYEN VAN A",
+            "bank_account_number": "9999888877",
+            "bank_name": "ACB"
+          }
+        },
+        {
+          "name": "Sửa - Liên hệ",
+          "description": "Cập nhật thông tin liên hệ",
+          "body": {
+            "phone": "0912121212",
+            "email": "newemail@example.com",
+            "address": "789 New Street, Hanoi"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Xóa đối tượng chi",
+      "method": "DELETE",
+      "endpoint": "/disburser/:id",
+      "description": "## Mục đích\nXóa đối tượng chi\n\n## Quyền\n- ✅ Có thể xóa trên Mobile\n\n## Lưu ý\n- Không thể xóa đối tượng chi đã được sử dụng trong phiếu đề nghị thanh toán/tạm ứng\n- API sẽ trả về lỗi nếu đối tượng chi đang được sử dụng\n\n## Response mẫu - Success\n```json\n{\n  \"success\": true,\n  \"message\": \"Xóa đối tượng chi thành công\"\n}\n```\n\n## Response mẫu - Error (đang được sử dụng)\n```json\n{\n  \"success\": false,\n  \"error\": \"Không thể xóa đối tượng chi đang được sử dụng\",\n  \"code\": \"DISBURSER_IN_USE\",\n  \"details\": {\n    \"used_in\": [\n      \"DNTT-LO.TS01-15012025\",\n      \"DNTU-LO.HD02-16012025\"\n    ]\n  }\n}\n```",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Disburser API - Đối tượng chi",
+    "version": "1.0.0",
+    "description": "API quản lý đối tượng chi (CRUD đầy đủ trên Mobile)\n\n⚠️ Đây là MODULE DUY NHẤT có CRUD đầy đủ trên Mobile:\n- ✅ Tạo mới\n- ✅ Xem danh sách (có phân trang)\n- ✅ Tìm kiếm\n- ✅ Xem chi tiết\n- ✅ Sửa\n- ✅ Xóa (nếu chưa sử dụng)\n\nLưu ý:\n- Đối tượng chi đang được sử dụng KHÔNG thể xóa\n- Tất cả user đã login đều có quyền thao tác"
+  }
+}

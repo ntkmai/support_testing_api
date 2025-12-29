@@ -9,20 +9,22 @@ export class MarkdownViewer {
 
     // Load and render markdown file
     async loadFile(filePath, fileName) {
-        this.currentFile = { path: filePath, name: fileName };
+        // Clean path by removing query string before storing
+        const cleanPath = filePath.split('?')[0];
+        this.currentFile = { path: cleanPath, name: fileName };
 
         const contentDiv = document.getElementById('markdownContent');
         if (!contentDiv) return;
 
         // Clear previous content first
         contentDiv.innerHTML = '';
-        
+
         UIComponents.showLoading('markdownContent');
 
         try {
             // Add cache-busting to prevent stale markdown content
-            const cacheBuster = filePath.includes('?') ? `&t=${Date.now()}` : `?t=${Date.now()}`;
-            const response = await fetch(filePath + cacheBuster);
+            const cacheBuster = cleanPath.includes('?') ? `&t=${Date.now()}` : `?t=${Date.now()}`;
+            const response = await fetch(cleanPath + cacheBuster);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -36,6 +38,9 @@ export class MarkdownViewer {
 
             // Add copy buttons to code blocks
             this.addCopyButtons();
+
+            // Handle markdown links to load files in viewer
+            this.handleMarkdownLinks();
 
             // UIComponents.showNotification(`📖 Đã tải: ${fileName}`, 'success');
 
@@ -129,6 +134,73 @@ export class MarkdownViewer {
         URL.revokeObjectURL(url);
 
         UIComponents.showNotification('💾 Đã xuất file HTML', 'success');
+    }
+
+    // Handle markdown links to load files in viewer
+    handleMarkdownLinks() {
+        const contentDiv = document.getElementById('markdownContent');
+        if (!contentDiv) return;
+
+        const links = contentDiv.querySelectorAll('a');
+
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            // Check if link is a .md file
+            if (href.endsWith('.md')) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    // Resolve full path
+                    let fullPath;
+                    if (href.startsWith('http://') || href.startsWith('https://')) {
+                        // Absolute URL
+                        fullPath = href;
+                    } else {
+                        // Relative path - resolve based on current file path
+                        const currentPath = this.currentFile.path;
+                        const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+
+                        // Combine and normalize path
+                        let combinedPath = basePath + '/' + href;
+
+                        // Remove ./ and normalize path
+                        combinedPath = combinedPath.replace(/\/\.\//g, '/'); // Remove /./
+                        combinedPath = combinedPath.replace(/\/\//g, '/'); // Remove double slashes
+
+                        fullPath = combinedPath;
+                    }
+
+                    // Extract file name
+                    const fileName = href.split('/').pop();
+
+                    // Switch to markdown tab if not already there
+                    if (window.app && typeof window.app.switchTab === 'function') {
+                        window.app.switchTab('markdown');
+                    }
+
+                    // Load the linked file
+                    setTimeout(() => {
+                        this.loadFile(fullPath, fileName).then(() => {
+                            // Scroll to top after loading
+                            contentDiv.scrollTop = 0;
+
+                            // Highlight the file in explorer after file is loaded
+                            setTimeout(() => {
+                                if (window.fileExplorer && typeof window.fileExplorer.setActiveFileByPath === 'function') {
+                                    window.fileExplorer.setActiveFileByPath(fullPath);
+                                }
+                            }, 200);
+                        }).catch(error => {
+                            console.error('Error loading linked markdown file:', error);
+                        });
+                    }, 100);
+
+                    UIComponents.showNotification(`📖 Đang tải: ${fileName}`, 'info');
+                });
+            }
+        });
     }
 
     // Search in current document

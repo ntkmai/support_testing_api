@@ -64,7 +64,7 @@ cp api-json-template.json ../your-api/your-api-tests.json
 }
 ```
 
-### 5. Thêm vào manifest
+### 5. Thêm vào manifest phần này developer tự thêm
 
 Edit `apis/manifest.json`:
 

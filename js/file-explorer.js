@@ -199,18 +199,25 @@ export class FileExplorer {
     }
 
     // Select a file
-    selectFile(path, name, type) {
+    selectFile(path, name, type, skipCallback = false) {
+        console.log('selectFile called:', path, 'skipCallback:', skipCallback);
+
         // Update active state
         document.querySelectorAll('.file-item').forEach(item => {
             item.classList.remove('active');
         });
-        
-        document.querySelector(`[data-path="${path}"]`)?.classList.add('active');
+
+        const targetElement = document.querySelector(`[data-path="${path}"]`);
+        console.log('Target element found:', targetElement);
+
+        if (targetElement) {
+            targetElement.classList.add('active');
+        }
 
         this.currentFile = { path, name, type };
 
-        // Trigger callback
-        if (this.onFileSelectCallback) {
+        // Trigger callback only if not skipped
+        if (!skipCallback && this.onFileSelectCallback) {
             this.onFileSelectCallback(this.currentFile);
         }
     }
@@ -238,9 +245,50 @@ export class FileExplorer {
     // Search files
     searchFiles(query) {
         query = query.toLowerCase();
-        return this.files.filter(file => 
+        return this.files.filter(file =>
             file.name.toLowerCase().includes(query) ||
             file.path.toLowerCase().includes(query)
         );
+    }
+
+    // Set active file by path (used when loading file from markdown links)
+    setActiveFileByPath(filePath) {
+        console.log('setActiveFileByPath called with:', filePath);
+
+        // Clean path by removing query string
+        const cleanPath = filePath.split('?')[0];
+
+        // Find the file in our structure
+        let foundFile = null;
+        let foundFolderName = null;
+
+        this.folders.forEach((folder, folderName) => {
+            const file = folder.files.find(f => f.path === cleanPath);
+            if (file) {
+                foundFile = file;
+                foundFolderName = folderName;
+            }
+        });
+
+        if (!foundFile) {
+            console.warn('File not found in explorer:', cleanPath);
+            console.log('Available files:', Array.from(this.folders.values()).flatMap(f => f.files.map(file => file.path)));
+            return;
+        }
+
+        console.log('Found file:', foundFile.name, 'in folder:', foundFolderName);
+
+        // If the folder is not currently open, open it first
+        if (this.currentFolder !== foundFolderName) {
+            console.log('Switching from folder', this.currentFolder, 'to', foundFolderName);
+            this.currentFolder = foundFolderName;
+            this.render();
+        }
+
+        // Then highlight the file (skip callback to avoid re-loading)
+        setTimeout(() => {
+            console.log('Highlighting file:', foundFile.path);
+            this.selectFile(foundFile.path, foundFile.name, foundFile.type, true);
+        }, 150);
     }
 }
