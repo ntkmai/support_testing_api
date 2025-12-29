@@ -1366,7 +1366,7 @@ textarea.form-control {
 
 /* JSON Syntax Highlighting */
 .json-key { color: #0451a5; }
-.json-string { color: #a31515; }
+.json-string { color: #fe2f01; }
 .json-number { color: #098658; }
 .json-boolean { color: #0000ff; }
 .json-null { color: #808080; }
