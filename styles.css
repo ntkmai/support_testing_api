@@ -1431,6 +1431,34 @@ body:not([data-theme="light"]) .content-area {
     white-space: pre-wrap;
 }
 
+/* Override for markdown content in sections */
+.section-content.markdown-body p {
+    margin: 12px 0;
+    white-space: normal;
+}
+
+.section-content.markdown-body h1,
+.section-content.markdown-body h2,
+.section-content.markdown-body h3 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.section-content.markdown-body h1:first-child,
+.section-content.markdown-body h2:first-child,
+.section-content.markdown-body h3:first-child {
+    margin-top: 0;
+}
+
+.section-content.markdown-body ul,
+.section-content.markdown-body ol {
+    margin: 12px 0;
+}
+
+.section-content.markdown-body code {
+    font-size: 0.85em;
+}
+
 .form-control {
     padding: 10px 14px;
     border: 2px solid var(--border-color);

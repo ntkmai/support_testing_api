@@ -413,34 +413,46 @@ export class APITester {
 
         // Parse description into sections (split by double line breaks or section markers)
         const sections = this.parseDescriptionSections(description);
-        
+
         if (sections.length <= 1) {
             // Simple description without sections
+            // Render markdown if marked is available
+            const renderedContent = typeof marked !== 'undefined'
+                ? marked.parse(description)
+                : `<p>${description}</p>`;
+
             return `
                 <div class="detail-section collapsible-section">
                     <div class="section-header" onclick="window.apiTester.toggleSection(this)">
                         <span class="toggle-icon">▼</span>
                         <label>Mô tả</label>
                     </div>
-                    <div class="section-content">
-                        <p>${description}</p>
+                    <div class="section-content markdown-body">
+                        ${renderedContent}
                     </div>
                 </div>
             `;
         }
 
         // Multiple sections
-        return sections.map((section, index) => `
-            <div class="detail-section collapsible-section">
-                <div class="section-header" onclick="window.apiTester.toggleSection(this)">
-                    <span class="toggle-icon">▼</span>
-                    <label>${section.title || 'Mô tả ' + (index + 1)}</label>
+        return sections.map((section, index) => {
+            // Render markdown if marked is available
+            const renderedContent = typeof marked !== 'undefined'
+                ? marked.parse(section.content)
+                : `<p>${section.content}</p>`;
+
+            return `
+                <div class="detail-section collapsible-section">
+                    <div class="section-header" onclick="window.apiTester.toggleSection(this)">
+                        <span class="toggle-icon">▼</span>
+                        <label>${section.title || 'Mô tả ' + (index + 1)}</label>
+                    </div>
+                    <div class="section-content markdown-body">
+                        ${renderedContent}
+                    </div>
                 </div>
-                <div class="section-content">
-                    <p>${section.content}</p>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     // Parse description into sections

@@ -16,12 +16,30 @@
       "color": "#f6ad55",
       "description": "Payment Request API",
       "files": [
-        { "name": "PAYMENT-REQUEST-API-DOCUMENT.md", "name_alias": "📄 Tài liệu API" },
-        { "name": "payment-request-tests.json", "name_alias": "🧪 Tests cơ bản" },
-        { "name": "payment-request-tests-goods-jar.json", "name_alias": "🧪 Tests lọ hàng hóa" },
-        { "name": "payment-request-tests-asset-jar.json", "name_alias": "🧪 Tests lọ tài sản" },
-        { "name": "payment-request-tests-other-jar.json", "name_alias": "🧪 Tests lọ khác" },
-        { "name": "payment-request-update-tests.json", "name_alias": "🧪 Tests cập nhật" }
+        {
+          "name": "PAYMENT-REQUEST-API-DOCUMENT.md",
+          "name_alias": "📄 Tài liệu API"
+        },
+        {
+          "name": "payment-request-tests.json",
+          "name_alias": "🧪 Tests cơ bản"
+        },
+        {
+          "name": "payment-request-tests-goods-jar.json",
+          "name_alias": "🧪 Tests lọ hàng hóa"
+        },
+        {
+          "name": "payment-request-tests-asset-jar.json",
+          "name_alias": "🧪 Tests lọ tài sản"
+        },
+        {
+          "name": "payment-request-tests-other-jar.json",
+          "name_alias": "🧪 Tests lọ khác"
+        },
+        {
+          "name": "payment-request-update-tests.json",
+          "name_alias": "🧪 Tests cập nhật"
+        }
       ]
     },
     {
@@ -30,7 +48,10 @@
       "color": "#48bb78",
       "description": "Advance Request API",
       "files": [
-        { "name": "ADVANCE-REQUEST-API-DOCS.md", "name_alias": "📄 Tài liệu API" },
+        {
+          "name": "ADVANCE-REQUEST-API-DOCS.md",
+          "name_alias": "📄 Tài liệu API"
+        },
         { "name": "advance-request-api.json", "name_alias": "🧪 API Tests" }
       ]
     },
@@ -40,6 +61,7 @@
       "color": "aqua",
       "description": "Mobile API Documentation",
       "files": [
+        { "name": "MOBILE-README.md", "name_alias": "Cấu trúc" },
         { "name": "README.md", "name_alias": "📖 Giới thiệu" },
         { "name": "OVERVIEW.md", "name_alias": "📋 Tổng quan" },
         { "name": "COMMON-INTERFACES.md", "name_alias": "🔗 Interface chung" },
@@ -47,17 +69,37 @@
         { "name": "1-jar-ratio-api.json", "name_alias": "API Tỷ lệ lọ" },
         { "name": "2-DISBURSER-GUIDE.md", "name_alias": "Đối tượng chi" },
         { "name": "2-disburser-api.json", "name_alias": "API đối tượng chi" },
-        { "name": "3-PAYMENT-REQUEST-GUIDE.md", "name_alias": "HD Đề nghị thanh toán" },
-        { "name": "3-payment-request-api.json", "name_alias": "API Đề nghị TT" },
-        { "name": "4-ADVANCE-REQUEST-GUIDE.md", "name_alias": "HD Đề nghị tạm ứng" },
-        { "name": "4-advance-request-api.json", "name_alias": "API Đề nghị TU" },
-        { "name": "5a-PAYMENT-VOUCHER-GUIDE.md", "name_alias": "HD lịch chi (từ đề nghị TT, TU)" },
+        {
+          "name": "3-PAYMENT-REQUEST-GUIDE.md",
+          "name_alias": "HD Đề nghị thanh toán"
+        },
+        {
+          "name": "3-payment-request-api.json",
+          "name_alias": "API Đề nghị TT"
+        },
+        {
+          "name": "4-ADVANCE-REQUEST-GUIDE.md",
+          "name_alias": "HD Đề nghị tạm ứng"
+        },
+        {
+          "name": "4-advance-request-api.json",
+          "name_alias": "API Đề nghị TU"
+        },
+        {
+          "name": "5a-PAYMENT-VOUCHER-GUIDE.md",
+          "name_alias": "HD lịch chi (từ đề nghị TT, TU)"
+        },
         { "name": "5a-payment-voucher-api.json", "name_alias": "API lịch chi" },
-        { "name": "5b-DISBURSEMENT-RECEIPT-GUIDE.md", "name_alias": "HD Phiếu chi" },
-        { "name": "5b-disbursement-receipt-api.json", "name_alias": "API Phiếu chi" },
+        {
+          "name": "5b-DISBURSEMENT-RECEIPT-GUIDE.md",
+          "name_alias": "HD Phiếu chi"
+        },
+        {
+          "name": "5b-disbursement-receipt-api.json",
+          "name_alias": "API Phiếu chi"
+        },
         { "name": "5c-REVENUE-RECEIPT-GUIDE.md", "name_alias": "HD Phiếu thu" },
-        { "name": "5c-revenue-receipt-api.json", "name_alias": "API Phiếu thu" },
-        { "name": "MOBILE-README.md", "name_alias": "Cấu trúc" }
+        { "name": "5c-revenue-receipt-api.json", "name_alias": "API Phiếu thu" }
       ]
     }
   ]
