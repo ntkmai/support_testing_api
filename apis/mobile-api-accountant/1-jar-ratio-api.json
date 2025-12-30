@@ -1,10 +1,49 @@
 {
   "requests": [
     {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/auth/login",
+      "description": "## Mục đích\nĐăng nhập để lấy access token\n\n## Request Body\n- username: Tên đăng nhập (bắt buộc)\n- password: Mật khẩu (bắt buộc)\n\n## Response mẫu\n```json\n{\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"employee\": {\n      \"id\": \"uuid\",\n      \"code\": \"55555\",\n      \"name\": \"Mai Thanh Thuận\",\n      \"role\": \"Trưởng bộ phận\"\n    }\n  }\n}\n```\n\n## Lưu ý\nSau khi login, copy access_token và thay thế vào header Authorization của các API khác",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      },
+      "templates": [
+        {
+          "name": "Trưởng bộ phận",
+          "description": "Login với tài khoản Trưởng bộ phận (Bước 1)",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "TBP KTTT",
+          "description": "Login với tài khoản TBP Kế toán thanh toán (Bước 5)",
+          "body": {
+            "username": "22222",
+            "password": "22222"
+          }
+        },
+        {
+          "name": "Kế toán trưởng",
+          "description": "Login với tài khoản Kế toán trưởng (Bước 6)",
+          "body": {
+            "username": "33333",
+            "password": "33333"
+          }
+        }
+      ]
+    },
+    {
       "name": "Get Jar Ratio List by Month",
       "method": "GET",
-      "endpoint": "/api/jar-ratio?year=2025&month=1&page=1&limit=20",
-      "description": "## Mục đích\nLấy danh sách tỷ lệ lọ theo tháng/năm\n\n## Yêu cầu\n- year: Năm (bắt buộc)\n- month: Tháng (bắt buộc)\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n\n## Quyền\n- Tất cả user đã login\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"jar_id\": \"uuid\",\n      \"jar_name\": \"Lọ Tài sản\",\n      \"month\": 1,\n      \"year\": 2025,\n      \"ratio\": 15.5,\n      \"status\": \"pending\",\n      \"step\": 1,\n      \"current_approver\": \"Trưởng bộ phận\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 10,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
+      "endpoint": "/jar-ratios/mobile?from_date=2025-01-01&to_date=2025-01-31&page=1&size=20",
+      "description": "## Mục đích\nLấy danh sách tỷ lệ lọ theo khoảng thời gian\n\n## Query Parameters (theo DTO)\n- from_date: Từ ngày (optional, format: YYYY-MM-DD)\n- to_date: Đến ngày (optional, format: YYYY-MM-DD)\n- jar_id: ID lọ (optional)\n- jar_code: Mã lọ (optional)\n- status: Trạng thái (optional)\n- creator_id: ID người tạo (optional)\n- page: Trang hiện tại (mặc định: 1)\n- size: Số bản ghi/trang (mặc định: 10)\n\n## Quyền\n- Tất cả user đã login\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"jar_id\": \"uuid\",\n      \"jar_name\": \"Lọ Tài sản\",\n      \"month\": 1,\n      \"year\": 2025,\n      \"ratio\": 15.5,\n      \"status\": \"pending\",\n      \"step\": 1,\n      \"current_approver\": \"Trưởng bộ phận\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 10,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
@@ -12,7 +51,7 @@
     {
       "name": "Get Jar Ratio Detail",
       "method": "GET",
-      "endpoint": "/api/jar-ratio/:id",
+      "endpoint": "/jar-ratios/{id}",
       "description": "## Mục đích\nLấy thông tin chi tiết tỷ lệ lọ\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"jar_id\": \"uuid\",\n  \"jar_name\": \"Lọ Tài sản\",\n  \"month\": 1,\n  \"year\": 2025,\n  \"ratio\": 15.5,\n  \"status\": \"pending\",\n  \"step\": 1,\n  \"approvals\": [\n    {\n      \"step\": 1,\n      \"approver_name\": \"Mai Thanh Thuận\",\n      \"status\": \"pending\",\n      \"approved_at\": null,\n      \"note\": null\n    },\n    {\n      \"step\": 2,\n      \"approver_name\": null,\n      \"status\": \"waiting\",\n      \"approved_at\": null,\n      \"note\": null\n    },\n    {\n      \"step\": 3,\n      \"approver_name\": null,\n      \"status\": \"waiting\",\n      \"approved_at\": null,\n      \"note\": null\n    }\n  ],\n  \"created_at\": \"2025-01-15T10:00:00Z\",\n  \"updated_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
@@ -20,32 +59,32 @@
     },
     {
       "name": "Approve/Reject Jar Ratio",
-      "method": "POST",
-      "endpoint": "/api/jar-ratio/:id/approve",
+      "method": "PUT",
+      "endpoint": "/jar-ratios/{id}/approve",
       "description": "## Mục đích\nDuyệt hoặc từ chối tỷ lệ lọ\n\n## Quyền duyệt trên Mobile\n- ✅ Bước 1: Trưởng bộ phận (55555/55555)\n- ❌ Bước 2: Kế toán Tài sản/Hàng hóa (Web only)\n- ❌ Bước 3: Kế toán thuế (Web only)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (bắt buộc khi reject)",
       "headers": {
         "Content-Type": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       },
       "body": {
-        "action": "approve",
-        "note": ""
+        "status": "approve",
+        "content": ""
       },
       "templates": [
         {
           "name": "Approve",
           "description": "Duyệt tỷ lệ lọ",
           "body": {
-            "action": "approve",
-            "note": "Đã kiểm tra và đồng ý"
+            "status": "approve",
+            "content": "Đã kiểm tra và đồng ý"
           }
         },
         {
           "name": "Reject",
           "description": "Từ chối tỷ lệ lọ",
           "body": {
-            "action": "reject",
-            "note": "Tỷ lệ không phù hợp, vui lòng xem lại"
+            "status": "reject",
+            "content": "Tỷ lệ không phù hợp, vui lòng xem lại"
           }
         }
       ]
@@ -53,7 +92,7 @@
     {
       "name": "Get Jar Ratio Report",
       "method": "GET",
-      "endpoint": "/api/jar-ratio/report?year=2025&month=1",
+      "endpoint": "/jar-ratios/report?year=2025&month=1",
       "description": "## Mục đích\nXem báo cáo trích lọ theo tháng/năm (Chỉ xem, không chỉnh sửa)\n\n## Yêu cầu\n- year: Năm (bắt buộc)\n- month: Tháng (bắt buộc)\n\n## Response mẫu\n```json\n{\n  \"month\": 1,\n  \"year\": 2025,\n  \"jars\": [\n    {\n      \"jar_id\": \"uuid\",\n      \"jar_name\": \"Lọ Tài sản\",\n      \"ratio\": 15.5,\n      \"total_amount\": 50000000,\n      \"extracted_amount\": 7750000,\n      \"status\": \"approved\"\n    },\n    {\n      \"jar_id\": \"uuid\",\n      \"jar_name\": \"Lọ Hàng hóa\",\n      \"ratio\": 12.3,\n      \"total_amount\": 30000000,\n      \"extracted_amount\": 3690000,\n      \"status\": \"pending\"\n    }\n  ],\n  \"total_extracted\": 11440000,\n  \"generated_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"

@@ -1,10 +1,49 @@
 {
   "requests": [
     {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/auth/login",
+      "description": "## Mục đích\nĐăng nhập để lấy access token\n\n## Request Body\n- username: Tên đăng nhập (bắt buộc)\n- password: Mật khẩu (bắt buộc)\n\n## Response mẫu\n```json\n{\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"employee\": {\n      \"id\": \"uuid\",\n      \"code\": \"797979\",\n      \"name\": \"Ngân quỹ\"\n    }\n  }\n}\n```\n\n## Lưu ý\nSau khi login, copy access_token và thay thế vào header Authorization của các API khác",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "797979",
+        "password": "666666"
+      },
+      "templates": [
+        {
+          "name": "Ngân quỹ",
+          "description": "Login Ngân quỹ (Bước 1)",
+          "body": {
+            "username": "797979",
+            "password": "666666"
+          }
+        },
+        {
+          "name": "GĐ Tài chính",
+          "description": "Login GĐ Tài chính (Bước 2)",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "Tổng GĐ",
+          "description": "Login Tổng GĐ (Bước 3)",
+          "body": {
+            "username": "0018",
+            "password": "0018"
+          }
+        }
+      ]
+    },
+    {
       "name": "Danh sách phiếu thu",
       "method": "GET",
-      "endpoint": "/payment-vouchers/collect?page=1&limit=20",
-      "description": "## Mục đích\nLấy danh sách phiếu thu (Revenue Receipt)\n\n## ⚠️ ENDPOINT MỚI\n- Endpoint cũ: ~~`/revenue-receipt`~~ (deprecated)\n- Endpoint mới: `/payment-vouchers/collect`\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"PT-15012025-001\",\n      \"customer_name\": \"Công ty ABC\",\n      \"amount\": \"100000000.00\",\n      \"payment_date\": \"2025-01-20\",\n      \"source_account\": \"Tài khoản Vietcombank\",\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Ngân quỹ\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 8,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
+      "endpoint": "/payment-vouchers/collect?page=1&size=20",
+      "description": "## Mục đích\nLấy danh sách phiếu thu (Revenue Receipt)\n\n## ⚠️ ENDPOINT MỚI\n- Endpoint cũ: ~~`/revenue-receipt`~~ (deprecated)\n- Endpoint mới: `/payment-vouchers/collect`\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- size: Số bản ghi/trang (mặc định: 10)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"PT-15012025-001\",\n      \"customer_name\": \"Công ty ABC\",\n      \"amount\": \"100000000.00\",\n      \"payment_date\": \"2025-01-20\",\n      \"source_account\": \"Tài khoản Vietcombank\",\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Ngân quỹ\",\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"total\": 8,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
@@ -12,7 +51,7 @@
     {
       "name": "Chi tiết phiếu thu",
       "method": "GET",
-      "endpoint": "/payment-vouchers/collect/detail/:id",
+      "endpoint": "/payment-vouchers/collect/detail/{id}",
       "description": "## Mục đích\nLấy thông tin chi tiết phiếu thu\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"code\": \"PT-15012025-001\",\n  \"customer_name\": \"Công ty ABC\",\n  \"customer_info\": {\n    \"tax_code\": \"0123456789\",\n    \"address\": \"123 Street, Hanoi\",\n    \"phone\": \"0901234567\"\n  },\n  \"amount\": \"100000000.00\",\n  \"payment_date\": \"2025-01-20\",\n  \"source_account\": \"Tài khoản Vietcombank - STK: 0123456789\",\n  \"payment_method\": \"bank_transfer\",\n  \"content\": \"Thu tiền bán hàng\",\n  \"status\": \"pending\",\n  \"current_step\": 1,\n  \"approvals\": [\n    {\n      \"step\": 1,\n      \"role\": \"treasury\",\n      \"approver_name\": \"Bộ phận Ngân quỹ\",\n      \"status\": \"pending\"\n    },\n    {\n      \"step\": 2,\n      \"role\": \"financial_director\",\n      \"approver_name\": \"Giám đốc tài chính\",\n      \"status\": \"waiting\"\n    },\n    {\n      \"step\": 3,\n      \"role\": \"ceo\",\n      \"approver_name\": \"Tổng giám đốc\",\n      \"status\": \"waiting\"\n    }\n  ],\n  \"created_at\": \"2025-01-15T10:00:00Z\"\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
@@ -21,7 +60,7 @@
     {
       "name": "Ngân quỹ duyệt (Bước 1)",
       "method": "PUT",
-      "endpoint": "/payment-vouchers/collect/approval/:id",
+      "endpoint": "/payment-vouchers/collect/approval/{id}",
       "description": "## Mục đích\nNgân quỹ duyệt phiếu thu (BƯỚC 1)\n\n## Quyền\n- User: 797979/666666 (Ngân quỹ)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 2 (chờ GĐ Tài chính)",
       "headers": {
         "Content-Type": "application/json",
@@ -53,7 +92,7 @@
     {
       "name": "GĐ Tài chính duyệt (Bước 2)",
       "method": "PUT",
-      "endpoint": "/payment-vouchers/collect/approval/:id",
+      "endpoint": "/payment-vouchers/collect/approval/{id}",
       "description": "## Mục đích\nGĐ Tài chính duyệt phiếu thu (BƯỚC 2)\n\n## Quyền\n- User: 55555/55555 (GĐ Tài chính)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (optional)\n\n## Kết quả\nChuyển sang bước 3 (chờ Tổng GĐ) hoặc hoàn thành nếu chỉ có 2 bước",
       "headers": {
         "Content-Type": "application/json",
@@ -85,7 +124,7 @@
     {
       "name": "Tổng GĐ duyệt (Bước 3)",
       "method": "PUT",
-      "endpoint": "/payment-vouchers/collect/approval/:id",
+      "endpoint": "/payment-vouchers/collect/approval/{id}",
       "description": "## Mục đích\nTổng GĐ duyệt phiếu thu - Bước cuối (BƯỚC 3)\n\n## Quyền\n- User: 0018/0018 (Tổng GĐ)\n\n## Lưu ý\n- Một số phiếu thu có thể chỉ cần 2 bước (không cần Tổng GĐ)\n\n## Kết quả\nPhiếu thu chuyển sang 'approved' hoặc 'completed'",
       "headers": {
         "Content-Type": "application/json",
@@ -117,7 +156,7 @@
     {
       "name": "Ngân quỹ hoàn thành",
       "method": "PUT",
-      "endpoint": "/payment-vouchers/collect/complete/:id",
+      "endpoint": "/payment-vouchers/collect/complete/{id}",
       "description": "## Mục đích\nNgân quỹ cập nhật đã thu tiền thành công\n\n## Quyền\n- User: 797979/666666 (Ngân quỹ)\n\n## Điều kiện\n- Đã duyệt xong tất cả các bước\n\n## Request Body\n- statistic_code: Mã thống kê (optional)\n- file_ids: Danh sách file đính kèm (optional)\n\n## Kết quả\nPhiếu thu chuyển sang 'completed'",
       "headers": {
         "Content-Type": "application/json",

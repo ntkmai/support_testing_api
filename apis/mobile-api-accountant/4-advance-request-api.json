@@ -1,10 +1,49 @@
 {
   "requests": [
     {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/auth/login",
+      "description": "## Mục đích\nĐăng nhập để lấy access token\n\n## Request Body\n- username: Tên đăng nhập (bắt buộc)\n- password: Mật khẩu (bắt buộc)\n\n## Response mẫu\n```json\n{\n  \"data\": {\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"employee\": {\n      \"id\": \"uuid\",\n      \"code\": \"55555\",\n      \"name\": \"Mai Thanh Thuận\"\n    }\n  }\n}\n```\n\n## Lưu ý\nSau khi login, copy access_token và thay thế vào header Authorization của các API khác",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "55555",
+        "password": "55555"
+      },
+      "templates": [
+        {
+          "name": "Trưởng bộ phận",
+          "description": "Login Trưởng bộ phận (Bước 1)",
+          "body": {
+            "username": "55555",
+            "password": "55555"
+          }
+        },
+        {
+          "name": "TBP KTTT",
+          "description": "Login TBP Kế toán thanh toán (Bước 5)",
+          "body": {
+            "username": "22222",
+            "password": "22222"
+          }
+        },
+        {
+          "name": "Kế toán trưởng",
+          "description": "Login Kế toán trưởng (Bước 6)",
+          "body": {
+            "username": "33333",
+            "password": "33333"
+          }
+        }
+      ]
+    },
+    {
       "name": "Danh sách phiếu tạm ứng",
       "method": "GET",
-      "endpoint": "/advance-request?page=1&limit=20",
-      "description": "## Mục đích\nLấy danh sách phiếu đề nghị tạm ứng\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- limit: Số bản ghi/trang (mặc định: 20)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"DNTU-LO.HD02-16012025\",\n      \"jar_name\": \"Lọ Hàng hóa\",\n      \"requester_name\": \"Nguyen Van B\",\n      \"workplace_name\": \"Phòng Kinh doanh\",\n      \"total_amount\": 30000000,\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Trưởng bộ phận\",\n      \"created_at\": \"2025-01-16T10:00:00Z\"\n    }\n  ],\n  \"total\": 15,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
+      "endpoint": "/advance-request?page=1&size=20",
+      "description": "## Mục đích\nLấy danh sách phiếu đề nghị tạm ứng\n\n## Query Parameters\n- page: Trang hiện tại (mặc định: 1)\n- size: Số bản ghi/trang (mặc định: 10)\n- status: Filter theo trạng thái (optional)\n- only_my_turn: true = chỉ lấy phiếu chờ mình duyệt (optional)\n\n## Response mẫu\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"code\": \"DNTU-LO.HD02-16012025\",\n      \"jar_name\": \"Lọ Hàng hóa\",\n      \"requester_name\": \"Nguyen Van B\",\n      \"workplace_name\": \"Phòng Kinh doanh\",\n      \"total_amount\": 30000000,\n      \"status\": \"pending\",\n      \"current_step\": 1,\n      \"current_approver\": \"Trưởng bộ phận\",\n      \"created_at\": \"2025-01-16T10:00:00Z\"\n    }\n  ],\n  \"total\": 15,\n  \"page\": 1,\n  \"limit\": 20\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
       }
@@ -12,7 +51,7 @@
     {
       "name": "Danh sách chờ duyệt",
       "method": "GET",
-      "endpoint": "/advance-request?only_my_turn=true&page=1&limit=20",
+      "endpoint": "/advance-request?only_my_turn=true&page=1&size=20",
       "description": "## Mục đích\nLấy danh sách phiếu tạm ứng chờ duyệt của mình\n\n## Query Parameters\n- only_my_turn: true (chỉ lấy phiếu đến lượt mình)\n\n## Lưu ý\nAPI tự động lọc theo role của user",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
@@ -21,7 +60,7 @@
     {
       "name": "Chi tiết phiếu tạm ứng",
       "method": "GET",
-      "endpoint": "/advance-request/detail/:id",
+      "endpoint": "/advance-request/detail/{id}",
       "description": "## Mục đích\nLấy thông tin chi tiết phiếu tạm ứng\n\n## Lưu ý\nPhiếu tạm ứng KHÔNG có hóa đơn/hợp đồng\n\n## Response mẫu\n```json\n{\n  \"id\": \"uuid\",\n  \"code\": \"DNTU-LO.HD02-16012025\",\n  \"jar\": {\n    \"id\": \"uuid\",\n    \"name\": \"Lọ Hàng hóa\"\n  },\n  \"jar_category\": {\n    \"id\": \"uuid\",\n    \"code\": \"HD02\",\n    \"name\": \"Mua hàng hóa\"\n  },\n  \"requester\": {\n    \"id\": \"uuid\",\n    \"name\": \"Nguyen Van B\"\n  },\n  \"workplace\": {\n    \"id\": \"uuid\",\n    \"name\": \"Phòng Kinh doanh\"\n  },\n  \"disburser\": {\n    \"id\": \"uuid\",\n    \"name\": \"Nguyen Van B\",\n    \"bank_account_name\": \"NGUYEN VAN B\",\n    \"bank_account_number\": \"987654321\",\n    \"bank_name\": \"Techcombank\"\n  },\n  \"payment_details\": [\n    {\n      \"id\": \"uuid\",\n      \"content\": \"Tạm ứng mua hàng\",\n      \"unit_name\": \"Lần\",\n      \"quantity\": 1,\n      \"price\": \"30000000.00\",\n      \"total_after_tax\": \"30000000.00\"\n    }\n  ],\n  \"total_final\": \"30000000.00\",\n  \"status\": \"pending\",\n  \"current_step\": 1,\n  \"approvals\": [\n    {\n      \"step\": 1,\n      \"role\": \"department_manager\",\n      \"approver_name\": \"Tran Van C\",\n      \"status\": \"pending\",\n      \"can_approve_on_mobile\": true\n    },\n    {\n      \"step\": 2,\n      \"role\": \"payment_accountant\",\n      \"status\": \"waiting\",\n      \"can_approve_on_mobile\": false\n    }\n  ]\n}\n```",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
@@ -30,7 +69,7 @@
     {
       "name": "Trưởng bộ phận duyệt (Bước 1)",
       "method": "PUT",
-      "endpoint": "/advance-request/status/:id",
+      "endpoint": "/advance-request/status/{id}",
       "description": "## Mục đích\nTrưởng bộ phận duyệt/từ chối phiếu tạm ứng (BƯỚC 1)\n\n## Quyền\n- User: 55555/55555 (Trưởng bộ phận)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (bắt buộc khi reject)\n\n## Kết quả\nChuyển sang bước 2 (KT Thanh toán)",
       "headers": {
         "Content-Type": "application/json",
@@ -62,7 +101,7 @@
     {
       "name": "TBP KTTT duyệt (Bước 5)",
       "method": "PUT",
-      "endpoint": "/advance-request/status/:id",
+      "endpoint": "/advance-request/status/{id}",
       "description": "## Mục đích\nTrưởng bộ phận KT Thanh toán duyệt (BƯỚC 5)\n\n## Quyền\n- User: 22222/22222 (TBP KTTT)\n\n## ⚠️ CẢNH BÁO\nCần hiển thị popup cảnh báo:\n\n\"⚠️ BẠN ĐANG DUYỆT TRÊN MOBILE\n\nKhông thể sửa hạch toán trên mobile.\nVui lòng kiểm tra kỹ trước khi duyệt.\n\n[Hủy]  [Tiếp tục duyệt]\"\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú",
       "headers": {
         "Content-Type": "application/json",
@@ -94,7 +133,7 @@
     {
       "name": "Kế toán trưởng duyệt (Bước 6)",
       "method": "PUT",
-      "endpoint": "/advance-request/status/:id",
+      "endpoint": "/advance-request/status/{id}",
       "description": "## Mục đích\nKế toán trưởng duyệt - Bước cuối (BƯỚC 6)\n\n## Quyền\n- User: 33333/33333 (Kế toán trưởng)\n\n## ⚠️ CẢNH BÁO\nCần hiển thị popup cảnh báo tương tự bước 5\n\n## Kết quả\nSau khi duyệt xong:\n- Hệ thống TỰ ĐỘNG tạo Lịch chi",
       "headers": {
         "Content-Type": "application/json",

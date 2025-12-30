@@ -448,7 +448,7 @@ body:not([data-theme="light"]) .sidebar {
     align-items: center;
     gap: 10px;
     padding: 12px;
-    background: linear-gradient(135deg, #f54009 0%, #e9af1c 100%);
+    background: linear-gradient(135deg, #ff2509 0%, #e9fc16 100%);
     border-radius: 8px;
     margin-bottom: 12px;
     color: white;
@@ -548,7 +548,7 @@ body:not([data-theme="light"]) .sidebar {
     border-left: 3px solid transparent;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 11px;
 }
 
@@ -565,8 +565,66 @@ body:not([data-theme="light"]) .sidebar {
     font-weight: 600;
 }
 
+/* File type specific styles */
+.file-item.json {
+    border-left-color: #fbbf24;
+}
+
+.file-item.json:hover {
+    border-left-color: #f59e0b;
+}
+
+.file-item.md {
+    border-left-color: #60a5fa;
+}
+
+.file-item.md:hover {
+    border-left-color: #3b82f6;
+}
+
 .file-icon {
     font-size: 14px;
+}
+
+.file-type-icon {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+}
+
+.json-icon {
+    color: #fbbf24;
+    font-family: 'Courier New', monospace;
+}
+
+.md-icon {
+    font-size: 16px;
+}
+
+.file-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.json-badge {
+    background: #fbbf24;
+    color: #1e293b;
+}
+
+.md-badge {
+    background: #60a5fa;
+    color: #ffffff;
+}
+
+.file-item.active .json-badge,
+.file-item.active .md-badge {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
 .file-name {

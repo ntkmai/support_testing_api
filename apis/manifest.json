@@ -5,7 +5,10 @@
       "path": "jar-ratio-testing",
       "color": "#667eea",
       "description": "JAR Ratio API",
-      "files": ["README.md", "jar-ratio-api-tests.json"]
+      "files": [
+        { "name": "README.md", "name_alias": "📖 Hướng dẫn" },
+        { "name": "jar-ratio-api-tests.json", "name_alias": "🧪 API Tests" }
+      ]
     },
     {
       "name": "Test phiếu đề nghị thanh toán",
@@ -13,12 +16,12 @@
       "color": "#f6ad55",
       "description": "Payment Request API",
       "files": [
-        "PAYMENT-REQUEST-API-DOCUMENT.md",
-        "payment-request-tests.json",
-        "payment-request-tests-goods-jar.json",
-        "payment-request-tests-asset-jar.json",
-        "payment-request-tests-other-jar.json",
-        "payment-request-update-tests.json"
+        { "name": "PAYMENT-REQUEST-API-DOCUMENT.md", "name_alias": "📄 Tài liệu API" },
+        { "name": "payment-request-tests.json", "name_alias": "🧪 Tests cơ bản" },
+        { "name": "payment-request-tests-goods-jar.json", "name_alias": "🧪 Tests lọ hàng hóa" },
+        { "name": "payment-request-tests-asset-jar.json", "name_alias": "🧪 Tests lọ tài sản" },
+        { "name": "payment-request-tests-other-jar.json", "name_alias": "🧪 Tests lọ khác" },
+        { "name": "payment-request-update-tests.json", "name_alias": "🧪 Tests cập nhật" }
       ]
     },
     {
@@ -26,7 +29,10 @@
       "path": "advance-request-testing",
       "color": "#48bb78",
       "description": "Advance Request API",
-      "files": ["ADVANCE-REQUEST-API-DOCS.md", "advance-request-api.json"]
+      "files": [
+        { "name": "ADVANCE-REQUEST-API-DOCS.md", "name_alias": "📄 Tài liệu API" },
+        { "name": "advance-request-api.json", "name_alias": "🧪 API Tests" }
+      ]
     },
     {
       "name": "API kế toán mobile",
@@ -34,24 +40,24 @@
       "color": "aqua",
       "description": "Mobile API Documentation",
       "files": [
-        "README.md",
-        "OVERVIEW.md",
-        "COMMON-INTERFACES.md",
-        "1-JAR-RATIO-GUIDE.md",
-        "1-jar-ratio-api.json",
-        "2-DISBURSER-GUIDE.md",
-        "2-disburser-api.json",
-        "3-PAYMENT-REQUEST-GUIDE.md",
-        "3-payment-request-api.json",
-        "4-ADVANCE-REQUEST-GUIDE.md",
-        "4-advance-request-api.json",
-        "5a-PAYMENT-VOUCHER-GUIDE.md",
-        "5a-payment-voucher-api.json",
-        "5b-DISBURSEMENT-RECEIPT-GUIDE.md",
-        "5b-disbursement-receipt-api.json",
-        "5c-REVENUE-RECEIPT-GUIDE.md",
-        "5c-revenue-receipt-api.json",
-        "MOBILE-README.md"
+        { "name": "README.md", "name_alias": "📖 Giới thiệu" },
+        { "name": "OVERVIEW.md", "name_alias": "📋 Tổng quan" },
+        { "name": "COMMON-INTERFACES.md", "name_alias": "🔗 Interface chung" },
+        { "name": "1-JAR-RATIO-GUIDE.md", "name_alias": "Tài liệu tỷ lệ lọ" },
+        { "name": "1-jar-ratio-api.json", "name_alias": "API Tỷ lệ lọ" },
+        { "name": "2-DISBURSER-GUIDE.md", "name_alias": "Đối tượng chi" },
+        { "name": "2-disburser-api.json", "name_alias": "API đối tượng chi" },
+        { "name": "3-PAYMENT-REQUEST-GUIDE.md", "name_alias": "HD Đề nghị thanh toán" },
+        { "name": "3-payment-request-api.json", "name_alias": "API Đề nghị TT" },
+        { "name": "4-ADVANCE-REQUEST-GUIDE.md", "name_alias": "HD Đề nghị tạm ứng" },
+        { "name": "4-advance-request-api.json", "name_alias": "API Đề nghị TU" },
+        { "name": "5a-PAYMENT-VOUCHER-GUIDE.md", "name_alias": "HD lịch chi (từ đề nghị TT, TU)" },
+        { "name": "5a-payment-voucher-api.json", "name_alias": "API lịch chi" },
+        { "name": "5b-DISBURSEMENT-RECEIPT-GUIDE.md", "name_alias": "HD Phiếu chi" },
+        { "name": "5b-disbursement-receipt-api.json", "name_alias": "API Phiếu chi" },
+        { "name": "5c-REVENUE-RECEIPT-GUIDE.md", "name_alias": "HD Phiếu thu" },
+        { "name": "5c-revenue-receipt-api.json", "name_alias": "API Phiếu thu" },
+        { "name": "MOBILE-README.md", "name_alias": "Cấu trúc" }
       ]
     }
   ]

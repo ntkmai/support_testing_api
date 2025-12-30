@@ -827,9 +827,14 @@ export class APITester {
             }
         }
 
-        // Show loading
+        // Show loading with rocket animation
         responseContainer.style.display = 'block';
-        responseContainer.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Đang gửi request...</p></div>';
+        responseContainer.innerHTML = `
+            <div class="loading-spinner">
+                <img src="images/rocket-loading.gif" alt="Loading..." style="width: 120px; height: 120px; margin-bottom: 20px;">
+                <p style="font-size: 16px; color: var(--text-primary); font-weight: 500;">🚀 Đang gửi request...</p>
+            </div>
+        `;
 
         const startTime = Date.now();
 

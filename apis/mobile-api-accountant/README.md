@@ -19,7 +19,7 @@ Tương tự như hệ thống icool-staff.
 
 ```
 Development: http://localhost:3000
-TEST: http://ketoan.vtcode.vn:3006
+Production: https://your-domain.com
 ```
 
 ---

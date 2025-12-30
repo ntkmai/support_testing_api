@@ -1,0 +1,16 @@
+KAIZEN - Hệ thống Quản lý Tài liệu & Test API
+==============================================
+
+1. HIỆN TRẠNG
+
+Hiện tại team đang gặp khó khăn trong việc quản lý tài liệu API và onboarding thành viên mới. Tài liệu API thường được viết rời rạc trên Notion, Google Docs hoặc comment trong code, không có chuẩn chung và khó tìm kiếm. Khi có developer mới tham gia, việc bàn giao thường mất 2-3 ngày để giải thích luồng nghiệp vụ, API endpoints và cách test. Việc test API phụ thuộc nhiều vào Postman cá nhân, mỗi người setup collection riêng, không có template chuẩn và khó đồng bộ. Điều này dẫn đến nhiều vấn đề: dễ hiểu sai requirement (khoảng 20% bug từ nguyên nhân này), mất thời gian training lặp đi lặp lại, và kiến thức tập trung vào 1-2 người chủ chốt. Khi Backend thay đổi API, Frontend thường không được thông báo kịp thời vì thiếu một source of truth chung.
+
+
+2. GIẢI PHÁP ĐỀ XUẤT
+
+Triển khai Test Tool Viewer - một hệ thống đơn giản chạy trên browser để quản lý tài liệu và test API tại chỗ. Mỗi module/feature sẽ có 2 loại file: file Markdown (.md) để viết tài liệu luồng nghiệp vụ với flowchart, business rules, use cases và file JSON (.json) chứa test collection với endpoint, headers, body mẫu sẵn. Tất cả được tổ chức trong thư mục "apis/" theo từng module riêng biệt. Developer chỉ cần chạy một HTTP server đơn giản (npx http-server), mở browser và có thể đọc docs, execute API test ngay lập tức mà không cần setup phức tạp. Hệ thống hỗ trợ environment variables (dev/staging/prod), auth token management, và test templates cho nhiều scenarios. Toàn bộ tài liệu được version control qua Git, dễ dàng review và collaborate. Chi phí triển khai thấp: 0đ software, khoảng 4 giờ để setup và viết docs cho 1 module.
+
+
+3. HIỆU QUẢ MONG ĐỢI
+
+Giải pháp này giúp giảm 80% thời gian onboarding (từ 2-3 ngày xuống còn 4-6 giờ tự học), giảm 90% thời gian test API (từ 30-60 phút setup Postman xuống còn 2-5 phút click-and-run), và giảm 93% thời gian tìm kiếm tài liệu API. Chất lượng sản phẩm được cải thiện đáng kể: giảm 80% bug do hiểu sai requirement vì có tài liệu rõ ràng, test coverage tăng 100% nhờ có template chuẩn, và collaboration giữa Backend-Frontend mượt mà hơn khi cùng nhìn vào một API contract. ROI rất cao: với đầu tư ban đầu chỉ 4 giờ cho 1 module, sau 1 tháng sử dụng có thể tiết kiệm được 60-80 giờ làm việc (tương đương 5-10 triệu VNĐ giá trị tạo ra). Đặc biệt hữu ích khi team đang scale up, có nhiều module/microservices, hoặc muốn cải thiện quy trình development. Kiến thức không còn phụ thuộc vào cá nhân mà được lưu trữ có hệ thống, giúp team linh hoạt hơn trong việc rotate nhân sự và mở rộng quy mô.

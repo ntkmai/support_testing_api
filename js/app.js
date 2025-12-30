@@ -682,19 +682,24 @@ class App {
         }
     }
 
-    // Setup general settings (Base URL)
+    // Setup general settings (Base URL & API Prefix)
     setupGeneralSettings() {
         const baseUrlInput = document.getElementById('settingsBaseUrl');
+        const apiPrefixInput = document.getElementById('settingsApiPrefix');
         const saveSettingsBtn = document.getElementById('saveSettings');
 
         if (!baseUrlInput || !saveSettingsBtn) return;
 
         // Load saved settings
         baseUrlInput.value = config.getBaseUrl();
+        if (apiPrefixInput) {
+            apiPrefixInput.value = config.getApiPrefix();
+        }
 
         // Save settings
         saveSettingsBtn.addEventListener('click', () => {
             const baseUrl = baseUrlInput.value.trim();
+            const apiPrefix = apiPrefixInput ? apiPrefixInput.value.trim() : '';
 
             if (!baseUrl) {
                 UIComponents.showNotification('⚠️ Vui lòng nhập Base URL', 'warning');
@@ -702,6 +707,7 @@ class App {
             }
 
             config.saveBaseUrl(baseUrl);
+            config.saveApiPrefix(apiPrefix);
             UIComponents.showNotification('✅ Đã lưu cấu hình', 'success');
         });
 
@@ -711,6 +717,14 @@ class App {
                 saveSettingsBtn.click();
             }
         });
+
+        if (apiPrefixInput) {
+            apiPrefixInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveSettingsBtn.click();
+                }
+            });
+        }
     }
 
     // Setup environment variables UI
@@ -905,11 +919,13 @@ document.addEventListener('DOMContentLoaded', () => {
     app.init();
 
     // Add event listener for Execute button in API tab
-    const apiTab = document.getElementById('apiTab');
-    if (apiTab) {
-        apiTab.addEventListener('click', (e) => {
-            if (e.target && e.target.id === 'executeRequestBtn') {
-                if (window.apiTester) window.apiTester.executeRequest();
+    const executeBtn = document.getElementById('executeRequestBtn');
+    if (executeBtn) {
+        executeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (window.apiTester) {
+                window.apiTester.executeRequest();
             }
         });
     }

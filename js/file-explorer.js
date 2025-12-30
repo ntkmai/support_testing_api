@@ -35,7 +35,17 @@ export class FileExplorer {
                 const files = [];
                 
                 // Create file objects for each file in the folder
-                for (const fileName of folderConfig.files) {
+                for (const fileItem of folderConfig.files) {
+                    // Support both string format and object format with name_alias
+                    let fileName, nameAlias;
+                    if (typeof fileItem === 'string') {
+                        fileName = fileItem;
+                        nameAlias = null;
+                    } else {
+                        fileName = fileItem.name;
+                        nameAlias = fileItem.name_alias || null;
+                    }
+
                     let icon = 'file';
                     let type = 'file';
 
@@ -52,6 +62,8 @@ export class FileExplorer {
 
                     files.push({
                         name: fileName,
+                        nameAlias: nameAlias,
+                        displayName: nameAlias || fileName,
                         icon: icon,
                         path: `${folderPath}/${fileName}`,
                         type: type
@@ -110,12 +122,28 @@ export class FileExplorer {
                         </div>
                     </div>
                     <ul class="folder-files">
-                        ${folder.files.map((file, index) => `
-                            <li class="file-item" data-path="${file.path}" data-type="${file.type}">
-                                <span class="file-icon">${index + 1}</span>
-                                <span class="file-name">${file.name}</span>
-                            </li>
-                        `).join('')}
+                        ${folder.files.map((file, index) => {
+                            let iconHtml = '';
+                            let badgeHtml = '';
+
+                            if (file.type === 'json') {
+                                iconHtml = '<span class="file-type-icon json-icon">{ }</span>';
+                                badgeHtml = '<span class="file-badge json-badge">JSON</span>';
+                            } else if (file.type === 'md') {
+                                iconHtml = '<span class="file-type-icon md-icon">📄</span>';
+                                badgeHtml = '<span class="file-badge md-badge">DOC</span>';
+                            } else {
+                                iconHtml = `<span class="file-icon">${index + 1}</span>`;
+                            }
+
+                            return `
+                                <li class="file-item ${file.type}" data-path="${file.path}" data-type="${file.type}">
+                                    ${iconHtml}
+                                    <span class="file-name">${file.displayName}</span>
+                                    ${badgeHtml}
+                                </li>
+                            `;
+                        }).join('')}
                     </ul>
                 </div>
             `;

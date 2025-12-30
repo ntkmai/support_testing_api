@@ -3,6 +3,7 @@ export class ConfigManager {
     constructor() {
         this.config = {
             baseUrl: this.loadBaseUrl(),
+            apiPrefix: this.loadApiPrefix(),
             apiTimeout: 30000,
             maxRetries: 3,
             useProxy: this.loadProxyEnabled(),
@@ -11,7 +12,7 @@ export class ConfigManager {
             tokenPath: this.loadTokenPath(),
             customHeaders: this.loadCustomHeaders()
         };
-        
+
         this.listeners = [];
         this.environmentVars = this.loadEnvironmentVars();
     }
@@ -133,6 +134,11 @@ export class ConfigManager {
         return localStorage.getItem('baseUrl') || 'http://localhost:3000';
     }
 
+    // Load API prefix from localStorage (e.g., /api)
+    loadApiPrefix() {
+        return localStorage.getItem('apiPrefix') || '';
+    }
+
     // Load proxy enabled state
     loadProxyEnabled() {
         return localStorage.getItem('useProxy') === 'true';
@@ -150,6 +156,23 @@ export class ConfigManager {
         this.config.baseUrl = url;
         localStorage.setItem('baseUrl', url);
         this.notifyListeners('baseUrl', url);
+    }
+
+    // Save API prefix to localStorage
+    saveApiPrefix(prefix) {
+        // Normalize prefix: ensure it starts with / and no trailing slash
+        if (prefix && !prefix.startsWith('/')) {
+            prefix = '/' + prefix;
+        }
+        prefix = prefix.replace(/\/$/, '');
+        this.config.apiPrefix = prefix;
+        localStorage.setItem('apiPrefix', prefix);
+        this.notifyListeners('apiPrefix', prefix);
+    }
+
+    // Get API prefix
+    getApiPrefix() {
+        return this.config.apiPrefix;
     }
 
     // Save proxy settings
@@ -178,13 +201,33 @@ export class ConfigManager {
 
     // Get full API URL
     getApiUrl(endpoint) {
-        // Remove leading and trailing slashes
+        // Remove leading and trailing slashes from endpoint
         endpoint = endpoint.replace(/^\/+|\/+$/g, '');
         let baseUrl = this.config.baseUrl.replace(/\/+$/, '');
-        
-        // Build full URL
-        let fullUrl = `${baseUrl}/${endpoint}`;
-        
+        let apiPrefix = this.config.apiPrefix || '';
+
+        // Build full URL with optional API prefix
+        let fullUrl;
+        if (apiPrefix) {
+            // Remove leading slash from apiPrefix for comparison
+            const prefixWithoutSlash = apiPrefix.replace(/^\/+/, '');
+
+            // Check if endpoint already starts with the prefix
+            if (endpoint.startsWith(prefixWithoutSlash + '/') || endpoint === prefixWithoutSlash) {
+                // Endpoint already has the prefix, don't add it again
+                // Example: endpoint = "api/payment-request/detail/xxx" and prefix = "/api"
+                console.log('⚠️ Endpoint already contains prefix, skipping duplicate');
+                fullUrl = `${baseUrl}/${endpoint}`;
+            } else {
+                // baseUrl + apiPrefix + endpoint
+                // Example: http://localhost:3000 + /api + /auth/login
+                fullUrl = `${baseUrl}${apiPrefix}/${endpoint}`;
+            }
+        } else {
+            // baseUrl + endpoint (no prefix)
+            fullUrl = `${baseUrl}/${endpoint}`;
+        }
+
         // If proxy is enabled, prepend proxy URL
         if (this.config.useProxy) {
             const proxyUrl = this.config.proxyUrl;

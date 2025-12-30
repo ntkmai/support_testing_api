@@ -6,11 +6,10 @@ Thư mục này chứa tài liệu API và test collection cho **Ứng dụng K�
 
 ```
 mobile-api-accountant/
-├── 📚 Tài liệu chính (docs/)
+├── 📚 Tài liệu chính
 │   ├── README.md                           # Tổng quan tài liệu
 │   ├── OVERVIEW.md                         # Giới thiệu hệ thống
 │   ├── COMMON-INTERFACES.md                # Interface TypeScript
-│   ├── TEST-ACCOUNTS.md                    # Tài khoản test
 │   ├── 1-JAR-RATIO-GUIDE.md               # Hướng dẫn Tỷ lệ lọ
 │   ├── 2-DISBURSER-GUIDE.md               # Hướng dẫn Đối tượng chi
 │   ├── 3-PAYMENT-REQUEST-GUIDE.md         # Hướng dẫn Phiếu thanh toán
@@ -18,23 +17,26 @@ mobile-api-accountant/
 │   ├── 5a-PAYMENT-VOUCHER-GUIDE.md        # Hướng dẫn Lịch chi
 │   ├── 5b-DISBURSEMENT-RECEIPT-GUIDE.md   # Hướng dẫn Phiếu chi
 │   └── 5c-REVENUE-RECEIPT-GUIDE.md        # Hướng dẫn Phiếu thu
+│
 ├── 🧪 Test Collections (JSON)
 │   ├── 1-jar-ratio-api.json               # API test Tỷ lệ lọ
 │   ├── 2-disburser-api.json               # API test Đối tượng chi
 │   ├── 3-payment-request-api.json         # API test Phiếu thanh toán
 │   ├── 4-advance-request-api.json         # API test Phiếu tạm ứng
-│   └── 5-payment-voucher-api.json         # API test Lịch chi & Phiếu chi
-├── MOBILE-README.md                        # File này
-└── manifest.json                           # Metadata và cấu hình
+│   ├── 5a-payment-voucher-api.json        # API test Lịch chi
+│   ├── 5b-disbursement-receipt-api.json   # API test Phiếu chi
+│   └── 5c-revenue-receipt-api.json        # API test Phiếu thu
+│
+└── MOBILE-README.md                        # File này
 ```
 
 ## 🚀 Quick Start
 
 ### 1. Đọc tài liệu API
 
-**Bắt đầu tại đây**: [`README.md`](./README.md) (trong folder này)
+**Bắt đầu tại đây**: [README.md](README.md)
 
-Hoặc xem tổng quan: [`OVERVIEW.md`](./OVERVIEW.md)
+Hoặc xem tổng quan: [OVERVIEW.md](OVERVIEW.md)
 
 Tài liệu bao gồm:
 - ✅ Hướng dẫn chi tiết từng module (7 files guide riêng)
@@ -75,13 +77,13 @@ Sử dụng các file JSON để test API:
 
 | Module | Guide | Test JSON | Tính năng Mobile | Duyệt |
 |--------|-------|-----------|------------------|-------|
-| 1. Tỷ lệ lọ | [1-JAR-RATIO-GUIDE.md](./1-JAR-RATIO-GUIDE.md) | `1-jar-ratio-api.json` | Xem, Duyệt, Báo cáo | Bước 1 |
-| 2. Đối tượng chi | [2-DISBURSER-GUIDE.md](./2-DISBURSER-GUIDE.md) | `2-disburser-api.json` | **CRUD đầy đủ** | N/A |
-| 3. Phiếu thanh toán | [3-PAYMENT-REQUEST-GUIDE.md](./3-PAYMENT-REQUEST-GUIDE.md) | `3-payment-request-api.json` | Xem, Duyệt | Bước 1, 5-6 |
-| 4. Phiếu tạm ứng | [4-ADVANCE-REQUEST-GUIDE.md](./4-ADVANCE-REQUEST-GUIDE.md) | `4-advance-request-api.json` | Xem, Duyệt | Bước 1, 5-6 |
-| 5a. Lịch chi | [5a-PAYMENT-VOUCHER-GUIDE.md](./5a-PAYMENT-VOUCHER-GUIDE.md) | `5a-payment-voucher-api.json` | Xem, Duyệt (3 bước) | Tất cả |
-| 5b. Phiếu chi | [5b-DISBURSEMENT-RECEIPT-GUIDE.md](./5b-DISBURSEMENT-RECEIPT-GUIDE.md) | `5b-disbursement-receipt-api.json` | Xem, Duyệt, Hoàn thành | Tất cả |
-| 5c. Phiếu thu | [5c-REVENUE-RECEIPT-GUIDE.md](./5c-REVENUE-RECEIPT-GUIDE.md) | `5c-revenue-receipt-api.json` | Xem, Duyệt | Tất cả |
+| 1. Tỷ lệ lọ | [1-JAR-RATIO-GUIDE.md](1-JAR-RATIO-GUIDE.md) | `1-jar-ratio-api.json` | Xem, Duyệt, Báo cáo | Bước 1 |
+| 2. Đối tượng chi | [2-DISBURSER-GUIDE.md](2-DISBURSER-GUIDE.md) | `2-disburser-api.json` | **CRUD đầy đủ** | N/A |
+| 3. Phiếu thanh toán | [3-PAYMENT-REQUEST-GUIDE.md](3-PAYMENT-REQUEST-GUIDE.md) | `3-payment-request-api.json` | Xem, Duyệt | Bước 1, 5-6 |
+| 4. Phiếu tạm ứng | [4-ADVANCE-REQUEST-GUIDE.md](4-ADVANCE-REQUEST-GUIDE.md) | `4-advance-request-api.json` | Xem, Duyệt | Bước 1, 5-6 |
+| 5a. Lịch chi | [5a-PAYMENT-VOUCHER-GUIDE.md](5a-PAYMENT-VOUCHER-GUIDE.md) | `5a-payment-voucher-api.json` | Xem, Duyệt (3 bước) | Tất cả |
+| 5b. Phiếu chi | [5b-DISBURSEMENT-RECEIPT-GUIDE.md](5b-DISBURSEMENT-RECEIPT-GUIDE.md) | `5b-disbursement-receipt-api.json` | Xem, Duyệt, Hoàn thành | Tất cả |
+| 5c. Phiếu thu | [5c-REVENUE-RECEIPT-GUIDE.md](5c-REVENUE-RECEIPT-GUIDE.md) | `5c-revenue-receipt-api.json` | Xem, Duyệt | Tất cả |
 
 ## 🎯 Tính năng chính
 
@@ -210,10 +212,10 @@ Vui lòng kiểm tra kỹ trước khi duyệt.
 ## 📖 Workflow hoàn chỉnh
 
 Xem chi tiết workflow tại:
-- [`README.md`](./README.md) - Tổng quan
-- [`3-PAYMENT-REQUEST-GUIDE.md`](./3-PAYMENT-REQUEST-GUIDE.md) - Workflow phiếu thanh toán
-- [`5a-PAYMENT-VOUCHER-GUIDE.md`](./5a-PAYMENT-VOUCHER-GUIDE.md) - Workflow lịch chi
-- [`5b-DISBURSEMENT-RECEIPT-GUIDE.md`](./5b-DISBURSEMENT-RECEIPT-GUIDE.md) - Workflow phiếu chi
+- [README.md](README.md) - Tổng quan
+- [3-PAYMENT-REQUEST-GUIDE.md](3-PAYMENT-REQUEST-GUIDE.md) - Workflow phiếu thanh toán
+- [5a-PAYMENT-VOUCHER-GUIDE.md](5a-PAYMENT-VOUCHER-GUIDE.md) - Workflow lịch chi
+- [5b-DISBURSEMENT-RECEIPT-GUIDE.md](5b-DISBURSEMENT-RECEIPT-GUIDE.md) - Workflow phiếu chi
 
 ### Flow tóm tắt: Từ tạo phiếu đến chi tiền
 
@@ -225,7 +227,7 @@ Xem chi tiết workflow tại:
 3-5. [WEB] KT Tài sản/Thuế/Thanh toán duyệt
    ↓
 6-7. [MOBILE ⚠️] TBP KTTT + Kế toán trưởng duyệt
-   → Tạo Lịch chi tự động
+   → Tạo Lịch chi thao tác trên web
    ↓
 8. [MOBILE] Ngân quỹ chọn ngày chi
    ↓
@@ -287,12 +289,6 @@ Xem chi tiết workflow tại:
 9. POST /payment-voucher/:id/complete
    → Hoàn thành!
 ```
-
-## 📞 Support
-
-- **API Documentation**: [`MOBILE-API-DOCUMENT.md`](./MOBILE-API-DOCUMENT.md)
-- **Template Reference**: [`api-json-template.json`](./api-json-template.json)
-- **Issues**: Liên hệ team Backend
 
 ---
 

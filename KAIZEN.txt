@@ -1,0 +1,291 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                          KAIZEN - CẢI TIẾN LIÊN TỤC                       ║
+║              Hệ thống Quản lý Tài liệu & Test API - Test Tool Viewer      ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+Ngày tạo: 2025-12-30
+Người đề xuất: Development Team
+Phạm vi: Quản lý tài liệu API, Test flow, Bàn giao dự án
+
+
+═══════════════════════════════════════════════════════════════════════════
+│                          PHẦN 1: HIỆN TRẠNG                               │
+═══════════════════════════════════════════════════════════════════════════
+
+1. VẤN ĐỀ CHÍNH
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ • Tài liệu API phân tán, không có chuẩn thống nhất                 │
+   │ • Khó theo dõi luồng xử lý nghiệp vụ giữa Backend và Frontend      │
+   │ • Test API thủ công qua Postman, không có template chuẩn           │
+   │ • Bàn giao dự án cho người mới rất khó khăn và tốn thời gian       │
+   │ • Dễ xảy ra sai sót về luồng/rule khi triển khai                   │
+   └────────────────────────────────────────────────────────────────────┘
+
+2. TÁC ĐỘNG TIÊU CỰC
+
+   ★ Về Thời gian:
+   - Mất 2-3 ngày để người mới hiểu được luồng dự án
+   - Phải giải thích đi giải thích lại nhiều lần cho từng người
+   - Test API mất 30-60 phút cho mỗi endpoint (nhập thủ công)
+
+   ★ Về Chất lượng:
+   - Thiếu tài liệu → Developer tự hiểu theo cách riêng
+   - Không có template test → Mỗi người test khác nhau
+   - Dễ sót case, dễ nhầm lẫn rule nghiệp vụ
+
+   ★ Về Giao tiếp:
+   - BE và FE khó đồng bộ về API contract
+   - Thay đổi API không được cập nhật kịp thời
+   - Nhiều hiểu lầm về request/response format
+
+   ★ Về Bàn giao:
+   - Không có tài liệu chuẩn → Khó onboarding
+   - Kiến thức tập trung vào 1-2 người → Rủi ro cao
+   - Người mới dễ làm sai luồng → Tăng bug production
+
+3. DỮ LIỆU THỰC TẾ (ƯỚC LƯỢNG)
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ Thời gian onboarding người mới:        2-3 ngày/người             │
+   │ Thời gian test 1 API endpoint:         30-60 phút                 │
+   │ Số lần giải thích lại luồng:           5-10 lần/dự án             │
+   │ Tỷ lệ bug do hiểu sai requirement:     ~20%                        │
+   │ Thời gian tìm kiếm tài liệu API:       15-30 phút/lần             │
+   └────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+│                      PHẦN 2: GIẢI PHÁP ĐỀ XUẤT                           │
+═══════════════════════════════════════════════════════════════════════════
+
+1. TRIỂN KHAI TEST TOOL VIEWER - Hệ thống quản lý tài liệu API tích hợp
+
+   ┌─────────────────────────────────────────────────────────────────────┐
+   │                    KIẾN TRÚC HỆ THỐNG                               │
+   ├─────────────────────────────────────────────────────────────────────┤
+   │                                                                     │
+   │  ┌───────────┐      ┌──────────────┐      ┌─────────────┐         │
+   │  │           │      │              │      │             │         │
+   │  │ Markdown  │─────▶│  Test Tool   │◀─────│   JSON      │         │
+   │  │  (.md)    │      │    Viewer    │      │  (.json)    │         │
+   │  │           │      │              │      │             │         │
+   │  └───────────┘      └──────┬───────┘      └─────────────┘         │
+   │                            │                                       │
+   │  Tài liệu luồng       Web Viewer        Test Collection          │
+   │  + Flow charts          + Render            + Templates          │
+   │  + Rules                + Execute           + Headers/Body       │
+   │  + Examples             + History           + Auth config        │
+   │                                                                     │
+   └─────────────────────────────────────────────────────────────────────┘
+
+2. CÁC TÍNH NĂNG CHÍNH
+
+   A. Quản lý Tài liệu (Markdown)
+      ┌──────────────────────────────────────────────────────────────┐
+      │ ✓ File .md cho mỗi module/feature                            │
+      │ ✓ Hỗ trợ syntax highlighting, diagrams, tables               │
+      │ ✓ Link nội bộ giữa các tài liệu                              │
+      │ ✓ Version control qua Git                                    │
+      │ ✓ Preview real-time trong web viewer                         │
+      └──────────────────────────────────────────────────────────────┘
+
+   B. Test API Collection (JSON)
+      ┌──────────────────────────────────────────────────────────────┐
+      │ ✓ Template chuẩn cho mỗi endpoint                            │
+      │ ✓ Pre-configured headers, auth, body                         │
+      │ ✓ Test variations (success/error cases)                      │
+      │ ✓ Environment variables (dev/staging/prod)                   │
+      │ ✓ One-click execute ngay trên web                            │
+      └──────────────────────────────────────────────────────────────┘
+
+   C. Tổ chức Dự án
+      ┌──────────────────────────────────────────────────────────────┐
+      │ apis/                                                         │
+      │ ├── mobile-api-accountant/      ← Module 1                   │
+      │ │   ├── README.md               (Overview)                   │
+      │ │   ├── 1-JAR-RATIO-GUIDE.md    (Feature 1)                  │
+      │ │   ├── 1-jar-ratio-api.json    (Test collection)            │
+      │ │   ├── 2-DISBURSER-GUIDE.md    (Feature 2)                  │
+      │ │   └── 2-disburser-api.json                                 │
+      │ │                                                             │
+      │ ├── payment-gateway/             ← Module 2                  │
+      │ │   ├── README.md                                            │
+      │ │   └── payment-api.json                                     │
+      │ │                                                             │
+      │ └── manifest.json               (Danh sách modules)          │
+      └──────────────────────────────────────────────────────────────┘
+
+3. QUY TRÌNH LÀM VIỆC MỚI
+
+   Bước 1: Tạo tài liệu cho module/feature
+   ────────────────────────────────────────────────────────────────────
+   - Developer tạo file .md mô tả luồng nghiệp vụ
+   - Bao gồm: Flow chart, Business rules, Use cases, Examples
+   - Link đến các tài liệu liên quan
+
+   Bước 2: Tạo test collection (.json)
+   ────────────────────────────────────────────────────────────────────
+   - Copy từ template chuẩn
+   - Cấu hình endpoint, headers, body mẫu
+   - Thêm test cases (success, validation errors, edge cases)
+
+   Bước 3: Test & Validate
+   ────────────────────────────────────────────────────────────────────
+   - Mở Test Tool Viewer trên browser
+   - Chọn module → Chọn request → Click Execute
+   - Xem response ngay lập tức
+   - Điều chỉnh template nếu cần
+
+   Bước 4: Bàn giao cho team
+   ────────────────────────────────────────────────────────────────────
+   - Người mới mở Test Tool Viewer
+   - Đọc tài liệu .md → Hiểu luồng
+   - Chạy test .json → Hiểu API contract
+   - Tự học mà không cần hỏi nhiều
+
+4. CÁC CÔNG CỤ HỖ TRỢ
+
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ • Local HTTP Server:  npx http-server -p 8000                      │
+   │ • Web Interface:      http://localhost:8000                        │
+   │ • Template Generator: init-template/api-json-template.json         │
+   │ • Documentation:      init-template/API-DOCUMENT.md                │
+   └────────────────────────────────────────────────────────────────────┘
+
+5. CHI PHÍ TRIỂN KHAI
+
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ Thời gian setup tool:              30 phút                         │
+   │ Thời gian viết docs cho 1 module:  2-3 giờ                         │
+   │ Thời gian tạo test collection:     1-2 giờ                         │
+   │ Chi phí phần mềm:                  0đ (Open source)                │
+   │                                                                     │
+   │ → Tổng đầu tư ban đầu: ~4 giờ/module                               │
+   └────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+│                         PHẦN 3: HIỆU QUẢ MONG ĐỢI                        │
+═══════════════════════════════════════════════════════════════════════════
+
+1. HIỆU QUẢ TRỰC TIẾP (Đo lường được)
+
+   A. Tiết kiệm Thời gian
+   ┌────────────────────────────────────────────────────────────────────┐
+   │                    Trước          →        Sau         │  Cải thiện │
+   ├────────────────────────────────────────────────────────────────────┤
+   │ Onboarding 1 người   2-3 ngày    →    4-6 giờ         │    -80%    │
+   │ Test 1 API           30-60 phút  →    2-5 phút        │    -90%    │
+   │ Tìm tài liệu API     15-30 phút  →    1-2 phút        │    -93%    │
+   │ Giải thích luồng     2-3 giờ     →    0 giờ (tự đọc)  │    -100%   │
+   └────────────────────────────────────────────────────────────────────┘
+
+   B. Nâng cao Chất lượng
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ • Giảm 80% bug do hiểu sai requirement                             │
+   │ • Tăng 100% coverage của test cases (có template chuẩn)            │
+   │ • Giảm 90% thời gian fix bug do API contract không rõ ràng        │
+   │ • Tăng 70% tốc độ phát triển feature mới (có reference)           │
+   └────────────────────────────────────────────────────────────────────┘
+
+2. HIỆU QUẢ GIÁN TIẾP
+
+   ★ Về Tổ chức & Quản lý
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ ✓ Kiến thức được lưu trữ có hệ thống, không mất khi người nghỉ    │
+   │ ✓ Dễ dàng scale team (thuê người mới, rotate nhân sự)             │
+   │ ✓ Code review hiệu quả hơn (reviewer có tài liệu tham khảo)       │
+   │ ✓ Stakeholder có thể tự xem API docs mà không cần hỏi dev         │
+   └────────────────────────────────────────────────────────────────────┘
+
+   ★ Về Giao tiếp BE-FE
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ ✓ API contract rõ ràng, minh bạch                                  │
+   │ ✓ Cả 2 team cùng nhìn 1 source of truth                           │
+   │ ✓ Phát hiện sớm breaking changes                                   │
+   │ ✓ FE có thể mock data chính xác từ JSON template                  │
+   └────────────────────────────────────────────────────────────────────┘
+
+   ★ Về Chất lượng Sản phẩm
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ ✓ Ít bug production do test kỹ hơn                                 │
+   │ ✓ API design tốt hơn (có document → suy nghĩ kỹ hơn)              │
+   │ ✓ Dễ maintain & refactor (có docs để tham khảo)                   │
+   │ ✓ Compliance & audit dễ dàng (có đầy đủ tài liệu)                 │
+   └────────────────────────────────────────────────────────────────────┘
+
+3. ROI (Return on Investment)
+
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ Đầu tư:  4 giờ setup + document cho 1 module                       │
+   │                                                                     │
+   │ Lợi ích (mỗi tháng):                                               │
+   │   • Tiết kiệm 2 ngày onboarding × 2 người = 4 ngày                 │
+   │   • Tiết kiệm 25 phút test × 20 lần = ~8 giờ                       │
+   │   • Giảm 10 giờ fix bug do hiểu sai                                │
+   │                                                                     │
+   │ → Hoàn vốn sau: ~1 tuần sử dụng                                    │
+   │ → Lợi nhuận thuần: 400-500% sau 1 tháng                            │
+   └────────────────────────────────────────────────────────────────────┘
+
+4. CASE STUDY DỰ KIẾN
+
+   Scenario: Team có 5 developers, 2 modules lớn
+   ────────────────────────────────────────────────────────────────────
+   • Tháng 1: Setup tool + document 2 modules = 16 giờ
+   • Tháng 2: Onboard 1 người mới
+      - Trước: 3 ngày × 8 giờ = 24 giờ
+      - Sau:  6 giờ tự học
+      - Tiết kiệm: 18 giờ
+
+   • Tháng 3-12: Phát triển 8 features mới
+      - Mỗi feature test 15 lần
+      - Tiết kiệm mỗi lần: 30 phút
+      - Tổng: 8 × 15 × 0.5 = 60 giờ
+
+   → Tổng tiết kiệm năm đầu: 18 + 60 = 78 giờ (~10 ngày làm việc)
+   → Giá trị tạo ra: 10 ngày × 500k/ngày = 5,000,000 VNĐ
+
+5. KẾT LUẬN
+
+   ┌────────────────────────────────────────────────────────────────────┐
+   │                                                                     │
+   │  Giải pháp Test Tool Viewer là một QUICK WIN:                      │
+   │                                                                     │
+   │  • Chi phí thấp: 0đ software + 4 giờ setup                         │
+   │  • Hiệu quả cao: ROI 400-500% sau 1 tháng                          │
+   │  • Dễ triển khai: Không cần training phức tạp                      │
+   │  • Scale tốt: Càng nhiều module → Càng hiệu quả                    │
+   │                                                                     │
+   │  Đặc biệt phù hợp với:                                             │
+   │  ✓ Team đang scale up (tuyển người mới)                            │
+   │  ✓ Nhiều module/microservices                                      │
+   │  ✓ Cần improve quality & reduce bug                                │
+   │  ✓ Muốn tăng tốc độ development                                    │
+   │                                                                     │
+   └────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════
+│                         HÀNH ĐỘNG TIẾP THEO                              │
+═══════════════════════════════════════════════════════════════════════════
+
+   [ ] Tuần 1: Pilot test với 1 module
+       └─ Setup tool, viết docs, collect feedback
+
+   [ ] Tuần 2-3: Rollout 2-3 modules tiếp theo
+       └─ Refine template, chuẩn hóa format
+
+   [ ] Tuần 4: Training cho toàn team
+       └─ Onboard everyone, answer questions
+
+   [ ] Tháng 2+: Expand toàn bộ project
+       └─ Cover all modules, maintain & update
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+Người phê duyệt: ___________________________  Ngày: ______________
+
+Ghi chú: ________________________________________________________________
+
+_________________________________________________________________________

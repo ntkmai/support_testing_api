@@ -143,11 +143,39 @@ export class UIComponents {
     // Copy to clipboard
     static async copyToClipboard(text) {
         try {
-            await navigator.clipboard.writeText(text);
-            this.showNotification('Đã copy vào clipboard', 'success');
-            return true;
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                this.showNotification('✅ Đã copy vào clipboard', 'success');
+                return true;
+            }
+
+            // Fallback method for older browsers or HTTP
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                if (successful) {
+                    this.showNotification('✅ Đã copy vào clipboard', 'success');
+                    return true;
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } catch (err) {
+                document.body.removeChild(textArea);
+                throw err;
+            }
         } catch (error) {
-            this.showNotification('Không thể copy: ' + error.message, 'error');
+            this.showNotification('❌ Không thể copy: ' + error.message, 'error');
             return false;
         }
     }

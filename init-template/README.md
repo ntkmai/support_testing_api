@@ -4,7 +4,7 @@ Thư mục này chứa file template mẫu để tạo test collection cho API T
 
 ## Files
 
-- **api-json-template.json** - Template JSON với đầy đủ thuộc tính
+- **api-json-template.json** - Template JSON với đầy đủ thuộc tính mỗi json phải có đăng nhập ở đầu và có template cho 1 số tài khoản trong luồng
 - **API-DOCUMENT.md** - Mẫu viết flow và test case cho dự án
 
 ## Cách sử dụng
@@ -34,6 +34,8 @@ cp api-json-template.json ../your-api/your-api-tests.json
   "baseUrl": "http://localhost:3000",
   "metadata": { /* thông tin collection */ }
 }
+Nếu có biến ví dụ employee/:id thì trong json là employee/{id}
+Cần xem xét dto và query bám sát controller
 ```
 
 ### 3. Request Properties
@@ -51,6 +53,7 @@ cp api-json-template.json ../your-api/your-api-tests.json
 ### 4. Templates
 
 **Lưu ý**: Templates là feature của tool, không gửi lên API.
+
 
 ```json
 {
