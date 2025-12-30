@@ -10,7 +10,8 @@ export class ConfigManager {
             proxyUrl: this.loadProxyUrl(),
             authType: this.loadAuthType(),
             tokenPath: this.loadTokenPath(),
-            customHeaders: this.loadCustomHeaders()
+            customHeaders: this.loadCustomHeaders(),
+            loadingDelay: this.loadLoadingDelay()
         };
 
         this.listeners = [];
@@ -194,6 +195,26 @@ export class ConfigManager {
         return this.config.proxyUrl;
     }
 
+    // Load loading delay from localStorage
+    loadLoadingDelay() {
+        const saved = localStorage.getItem('loadingDelay');
+        return saved ? parseInt(saved, 10) : 800; // Default 800ms
+    }
+
+    // Save loading delay to localStorage
+    saveLoadingDelay(delay) {
+        // Ensure delay is within valid range (0-5000ms)
+        delay = Math.max(0, Math.min(5000, parseInt(delay, 10)));
+        this.config.loadingDelay = delay;
+        localStorage.setItem('loadingDelay', delay.toString());
+        this.notifyListeners('loadingDelay', delay);
+    }
+
+    // Get loading delay
+    getLoadingDelay() {
+        return this.config.loadingDelay;
+    }
+
     // Get current base URL
     getBaseUrl() {
         return this.config.baseUrl;
@@ -216,7 +237,6 @@ export class ConfigManager {
             if (endpoint.startsWith(prefixWithoutSlash + '/') || endpoint === prefixWithoutSlash) {
                 // Endpoint already has the prefix, don't add it again
                 // Example: endpoint = "api/payment-request/detail/xxx" and prefix = "/api"
-                console.log('⚠️ Endpoint already contains prefix, skipping duplicate');
                 fullUrl = `${baseUrl}/${endpoint}`;
             } else {
                 // baseUrl + apiPrefix + endpoint
@@ -232,12 +252,8 @@ export class ConfigManager {
         if (this.config.useProxy) {
             const proxyUrl = this.config.proxyUrl;
             const proxiedUrl = `${proxyUrl}${fullUrl}`;
-            console.log('⟳ Proxy URL:', proxiedUrl);
-            console.log('⊙ Target:', fullUrl);
             return proxiedUrl;
         }
-
-        console.log('⚡ Direct URL:', fullUrl);
         return fullUrl;
     }
 

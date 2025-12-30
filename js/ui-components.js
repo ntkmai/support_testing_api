@@ -34,16 +34,29 @@ export class UIComponents {
     }
 
     // Create loading spinner
-    static showLoading(containerId) {
+    static showLoading(containerId, options = {}) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        container.innerHTML = `
-            <div class="loading-spinner">
-                <div class="spinner"></div>
-                <p>Đang tải...</p>
-            </div>
-        `;
+        const { image = null, message = 'Đang tải...' } = options;
+
+        if (image) {
+            // Use custom image (e.g., rocket-loading-view.gif)
+            container.innerHTML = `
+                <div class="loading-spinner">
+                    <img src="${image}" alt="Loading..." style="width: 120px; height: 120px; margin-bottom: 20px;">
+                    <p style="font-size: 16px; color: var(--text-primary); font-weight: 500;">${message}</p>
+                </div>
+            `;
+        } else {
+            // Use default spinner
+            container.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
     }
 
     // Create empty state

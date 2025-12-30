@@ -456,7 +456,6 @@ class App {
             // Check if we have enough velocity to throw
             const speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
             
-            console.log('Throw speed:', speed, 'vX:', velocityX, 'vY:', velocityY); // Debug
             
             if (speed > 2) { // Lower threshold from 3 to 2
                 // Throwing mode - pet will bounce around
@@ -689,6 +688,7 @@ class App {
     setupGeneralSettings() {
         const baseUrlInput = document.getElementById('settingsBaseUrl');
         const apiPrefixInput = document.getElementById('settingsApiPrefix');
+        const loadingDelayInput = document.getElementById('settingsLoadingDelay');
         const saveSettingsBtn = document.getElementById('saveSettings');
 
         if (!baseUrlInput || !saveSettingsBtn) return;
@@ -698,19 +698,32 @@ class App {
         if (apiPrefixInput) {
             apiPrefixInput.value = config.getApiPrefix();
         }
+        if (loadingDelayInput) {
+            loadingDelayInput.value = config.getLoadingDelay();
+        }
 
         // Save settings
         saveSettingsBtn.addEventListener('click', () => {
             const baseUrl = baseUrlInput.value.trim();
             const apiPrefix = apiPrefixInput ? apiPrefixInput.value.trim() : '';
+            const loadingDelay = loadingDelayInput ? parseInt(loadingDelayInput.value, 10) : 800;
 
             if (!baseUrl) {
                 UIComponents.showNotification('⚠️ Vui lòng nhập Base URL', 'warning');
                 return;
             }
 
+            // Validate loading delay
+            if (loadingDelayInput && (isNaN(loadingDelay) || loadingDelay < 0 || loadingDelay > 5000)) {
+                UIComponents.showNotification('⚠️ Loading Delay phải từ 0-5000ms', 'warning');
+                return;
+            }
+
             config.saveBaseUrl(baseUrl);
             config.saveApiPrefix(apiPrefix);
+            if (loadingDelayInput) {
+                config.saveLoadingDelay(loadingDelay);
+            }
             UIComponents.showNotification('✅ Đã lưu cấu hình', 'success');
         });
 
@@ -723,6 +736,14 @@ class App {
 
         if (apiPrefixInput) {
             apiPrefixInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveSettingsBtn.click();
+                }
+            });
+        }
+
+        if (loadingDelayInput) {
+            loadingDelayInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     saveSettingsBtn.click();
                 }

@@ -1,5 +1,6 @@
 // Markdown Viewer Module
 import { UIComponents } from './ui-components.js';
+import { config } from './config.js';
 
 export class MarkdownViewer {
     constructor() {
@@ -19,7 +20,10 @@ export class MarkdownViewer {
         // Clear previous content first
         contentDiv.innerHTML = '';
 
-        UIComponents.showLoading('markdownContent');
+        UIComponents.showLoading('markdownContent', {
+            image: 'images/rocket-loading-view.gif',
+            message: '📖 Đang tải tài liệu...'
+        });
 
         try {
             // Add cache-busting to prevent stale markdown content
@@ -31,6 +35,10 @@ export class MarkdownViewer {
 
             const markdownText = await response.text();
             this.currentContent = markdownText;
+
+            // Add delay to show loading animation (configurable)
+            const delay = config.getLoadingDelay();
+            await new Promise(resolve => setTimeout(resolve, delay));
 
             // Render using marked.js
             const htmlContent = marked.parse(markdownText);
