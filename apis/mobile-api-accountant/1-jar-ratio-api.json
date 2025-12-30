@@ -22,19 +22,27 @@
           }
         },
         {
-          "name": "TBP KTTT",
-          "description": "Login với tài khoản TBP Kế toán thanh toán (Bước 5)",
+          "name": "Giám đốc",
+          "description": "Login với tài khoản Giám đốc (Bước 1 duyệt tỷ lệ lọ)",
           "body": {
-            "username": "22222",
-            "password": "22222"
+            "username": "0018",
+            "password": "0018"
           }
         },
         {
-          "name": "Kế toán trưởng",
-          "description": "Login với tài khoản Kế toán trưởng (Bước 6)",
+          "name": "Chủ tịch",
+          "description": "Login với tài khoản Chủ tịch (Bước 2 duyệt tỷ lệ lọ)",
           "body": {
-            "username": "33333",
-            "password": "33333"
+            "username": "0025",
+            "password": "0001"
+          }
+        },
+        {
+          "name": "Chủ tịch hội đồng",
+          "description": "Login với tài khoản Chủ tịch hội đồng (Bước 3 duyệt tỷ lệ lọ)",
+          "body": {
+            "username": "0025",
+            "password": "0001"
           }
         }
       ]
@@ -61,7 +69,7 @@
       "name": "Approve/Reject Jar Ratio",
       "method": "PUT",
       "endpoint": "/jar-ratios/{id}/approve",
-      "description": "## Mục đích\nDuyệt hoặc từ chối tỷ lệ lọ\n\n## Quyền duyệt trên Mobile\n- ✅ Bước 1: Trưởng bộ phận (55555/55555)\n- ❌ Bước 2: Kế toán Tài sản/Hàng hóa (Web only)\n- ❌ Bước 3: Kế toán thuế (Web only)\n\n## Request Body\n- action: 'approve' | 'reject'\n- note: Ghi chú (bắt buộc khi reject)",
+      "description": "## Mục đích\nDuyệt hoặc từ chối tỷ lệ lọ\n\n## Quyền duyệt trên Mobile\n- ✅ Bước 1: Giám đốc (0018/0018)\n- ✅ Bước 2: Chủ tịch (0025/0001)\n- ✅ Bước 3: Chủ tịch hội đồng (0025/0001)\n\n## Request Body\n- status: 'approve' | 'reject'\n- content: Ghi chú (bắt buộc khi reject)",
       "headers": {
         "Content-Type": "application/json",
         "Authorization": "Bearer YOUR_TOKEN_HERE"

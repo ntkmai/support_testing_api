@@ -3,7 +3,7 @@
 
 ## Base Response Interfaces
 
-### DataResponse (Thực tế từ @shared)
+### DataResponse
 
 ```typescript
 interface DataResponse<T> {
@@ -21,7 +21,7 @@ interface DataResponse<T> {
 }
 ```
 
-### CreatedResponse (Thực tế từ @shared)
+### CreatedResponse
 
 ```typescript
 interface CreatedResponse<T> {
@@ -36,8 +36,8 @@ interface PaginatedResponse<T> {
   data: T[];
   total: number;
   page: number;
-  size: number;        // ← KHÔNG phải limit!
-  totalPages?: number; // Optional - có thể không có
+  size: number;     
+  totalPages?: number;
 }
 ```
 
@@ -55,7 +55,7 @@ interface PaginatedResponse<T> {
 
 ```typescript
 interface ErrorResponse {
-  message: string | string[]; // Validation errors có thể là array
+  message: string | string[]; 
   error: string;
   statusCode: number;
 }
@@ -65,18 +65,6 @@ interface ErrorResponse {
 ```json
 {
   "message": "Validation failed",
-  "error": "Bad Request",
-  "statusCode": 400
-}
-```
-
-**Example - Multiple errors:**
-```json
-{
-  "message": [
-    "property limit should not exist",
-    "Tên đối tượng chi phải là một chuỗi kí tự"
-  ],
   "error": "Bad Request",
   "statusCode": 400
 }

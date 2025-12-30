@@ -19,7 +19,7 @@ Tương tự như hệ thống icool-staff.
 
 ```
 Development: http://localhost:3000
-Production: https://your-domain.com
+Build: http://ketoan.vtcode.vn:3006
 ```
 
 ---
@@ -63,7 +63,7 @@ Các file JSON để import vào API testing tools (Postman, Insomnia, etc.):
 
 | Module | Xem | Tạo | Sửa | Xóa | Duyệt |
 |--------|-----|-----|-----|-----|-------|
-| Tỷ lệ lọ | ✅ | ❌ | ❌ | ❌ | ✅ Bước 1 |
+| Tỷ lệ lọ | ✅ | ❌ | ❌ | ❌ | ✅ Bước 1, 2, 3 |
 | Đối tượng chi | ✅ | ✅ | ✅ | ✅ | N/A |
 | Phiếu thanh toán | ✅ | ❌ | ❌ | ❌ | ✅ Bước 1, 5-6 |
 | Phiếu tạm ứng | ✅ | ❌ | ❌ | ❌ | ✅ Bước 1, 5-6 |

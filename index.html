@@ -26,8 +26,12 @@
                     <h1 style="margin-bottom: 2px;">MASTER BACK-END API</h1>
                 </div>
             </div>
+            <div id="dancingFrogContainer" style="display: none;">
+                <img id="dancingFrog" src="images/dance-frog.gif" alt="Dancing Frog">
+            </div>
             <div class="header-config">
                 <button id="petToggle" class="btn-theme-toggle" title="Bật/Tắt Pet"><i data-lucide="paw-print"></i></button>
+                <button id="musicToggle" class="btn-theme-toggle" title="Bật/Tắt Nhạc"><i data-lucide="play"></i></button>
                 <button id="themeToggle" class="btn-theme-toggle" title="Chuyển giao diện"><i data-lucide="moon"></i></button>
                 <input type="text" id="baseUrlInput" class="config-input" placeholder="http://localhost:3000">
             </div>
@@ -273,6 +277,14 @@
     <div id="pet" class="pet" style="display: none;">
         <img src="images/pet-run.gif" alt="Pet">
     </div>
+
+    <!-- Music Player -->
+    <audio id="backgroundMusic" loop>
+        <source src="audios/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Musical Notes Container -->
+    <div id="musicalNotesContainer" class="musical-notes-container"></div>
 
     <!-- Main App Module -->
     <script type="module" src="js/app.js"></script>

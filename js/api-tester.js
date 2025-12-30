@@ -742,7 +742,7 @@ export class APITester {
             UIComponents.showNotification('⚠️ Chưa chọn request', 'warning');
             return;
         }
-        
+
         // Prevent execution of multipart requests
         if (this.isMultipartRequest()) {
             UIComponents.showNotification('⚠️ Không thể test API multipart/form-data trong tool này', 'warning');
@@ -751,19 +751,22 @@ export class APITester {
         }
 
         const responseContainer = document.getElementById('responseContainer');
-        if (!responseContainer) return;
-        
+        if (!responseContainer) {
+            return;
+        }
+
         const executeBtn = document.getElementById('executeRequestBtn');
 
         // Get updated values
         let endpoint = document.getElementById('requestEndpoint')?.value || this.currentRequest.endpoint;
-        
+
         // Validate path parameters before executing
         const validation = this.validatePathParameters(endpoint);
+
         if (!validation.valid) {
             const paramList = validation.missingParams.map(p => `{${p}}`).join(', ');
             UIComponents.showNotification(
-                `⚠️ Vui lòng điền đầy đủ path parameters: ${paramList}`, 
+                `⚠️ Vui lòng điền đầy đủ path parameters: ${paramList}`,
                 'warning'
             );
             // Auto switch to Request tab to show the missing fields
@@ -779,31 +782,24 @@ export class APITester {
             }
             return;
         }
-        
+
         // Switch to Response tab immediately
         this.switchApiSubTab('response');
-        
+
         // Show loading in button
         if (executeBtn) {
             executeBtn.disabled = true;
             executeBtn.innerHTML = '<span class="btn-spinner"></span> Loading...';
         }
-        
+
         // Replace path parameters if any
         endpoint = this.replacePathParameters(endpoint);
-        if (executeBtn) {
-            executeBtn.disabled = true;
-            executeBtn.innerHTML = '<span class="btn-spinner"></span> Loading...';
-        }
-        
-        // Replace path parameters if any
-        endpoint = this.replacePathParameters(endpoint);
-        
+
         const url = config.getApiUrl(endpoint);
 
         // Prepare request options
         const allHeaders = config.getAllHeaders();
-        
+
         const options = {
             method: this.currentRequest.method,
             headers: {
@@ -812,7 +808,6 @@ export class APITester {
                 ...allHeaders  // Global auth headers override request headers
             }
         };
-        
 
         // Add body for POST/PUT/PATCH
         if (['POST', 'PUT', 'PATCH'].includes(this.currentRequest.method)) {
@@ -894,7 +889,7 @@ export class APITester {
             const duration = Date.now() - startTime;
             this.renderError(error, duration, url);
             UIComponents.showNotification(`❌ Request failed: ${error.message}`, 'error');
-            
+
             // Reset button state
             if (executeBtn) {
                 executeBtn.disabled = false;

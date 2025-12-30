@@ -44,6 +44,9 @@ class App {
         // Setup Christmas snowfall effect (December only)
         this.setupChristmasSnowfall();
 
+        // Setup music player and musical notes
+        this.setupMusicPlayer();
+
         // Don't load any file by default - let user choose folder first
         // User will see folder cards on initial load
 
@@ -865,7 +868,7 @@ class App {
     // Setup Christmas snowfall effect (December only)
     setupChristmasSnowfall() {
         const currentMonth = new Date().getMonth(); // 0 = January, 11 = December
-        
+
         // Only show snowfall in December (month 11)
         if (currentMonth !== 11) return;
 
@@ -878,20 +881,20 @@ class App {
             const snowflake = document.createElement('div');
             snowflake.className = 'snowflake';
             snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
-            
+
             // Random horizontal position
             snowflake.style.left = Math.random() * 100 + '%';
-            
+
             // Random animation duration (5-15 seconds)
             const duration = 5 + Math.random() * 10;
             snowflake.style.animationDuration = duration + 's';
-            
+
             // Random delay to stagger the start
             const delay = Math.random() * 5;
             snowflake.style.animationDelay = delay + 's';
-            
+
             container.appendChild(snowflake);
-            
+
             // Remove snowflake after animation completes (once)
             setTimeout(() => {
                 if (snowflake.parentNode) {
@@ -899,6 +902,119 @@ class App {
                 }
             }, (duration + delay) * 1000);
         }
+    }
+
+    // Setup music player and musical notes animation
+    setupMusicPlayer() {
+        const musicToggleBtn = document.getElementById('musicToggle');
+        const audio = document.getElementById('backgroundMusic');
+        const notesContainer = document.getElementById('musicalNotesContainer');
+        const dancingFrogContainer = document.getElementById('dancingFrogContainer');
+
+        if (!musicToggleBtn || !audio || !notesContainer) return;
+
+        // Always start with music disabled (browsers don't allow autoplay)
+        let musicEnabled = false;
+        localStorage.setItem('musicEnabled', 'false');
+        let notesInterval = null;
+
+        const musicalNotes = ['♩', '♪', '♫', '♬'];
+
+        const createMusicalNote = () => {
+            const note = document.createElement('div');
+            note.className = 'musical-note';
+            note.textContent = musicalNotes[Math.floor(Math.random() * musicalNotes.length)];
+
+            // Random horizontal position
+            note.style.left = Math.random() * 100 + '%';
+
+            // Random animation duration (8-12 seconds for slower fall)
+            const duration = 8 + Math.random() * 4;
+            note.style.animationDuration = duration + 's';
+
+            // Random colors
+            const colors = ['#60a5fa', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
+            note.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            notesContainer.appendChild(note);
+
+            // Remove note after animation completes
+            setTimeout(() => {
+                if (note.parentNode) {
+                    note.parentNode.removeChild(note);
+                }
+            }, duration * 1000);
+        };
+
+        const startMusicalNotes = () => {
+            // Create notes every 2 seconds (thưa hơn snowfall)
+            notesInterval = setInterval(createMusicalNote, 2000);
+        };
+
+        const stopMusicalNotes = () => {
+            if (notesInterval) {
+                clearInterval(notesInterval);
+                notesInterval = null;
+            }
+            // Clear all existing notes
+            notesContainer.innerHTML = '';
+        };
+
+        const startMusic = () => {
+            musicEnabled = true;
+            localStorage.setItem('musicEnabled', 'true');
+
+            // Play audio
+            audio.play().catch(err => {
+                console.error('Cannot play audio:', err);
+                UIComponents.showNotification('❌ Không thể phát nhạc', 'error');
+            });
+
+            // Start musical notes animation
+            startMusicalNotes();
+
+            // Show dancing frog
+            if (dancingFrogContainer) {
+                dancingFrogContainer.style.display = 'block';
+            }
+
+            // Change icon to pause
+            musicToggleBtn.innerHTML = '<i data-lucide="pause"></i>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            UIComponents.showNotification('🎵 Đã bật nhạc!', 'success');
+        };
+
+        const stopMusic = () => {
+            musicEnabled = false;
+            localStorage.setItem('musicEnabled', 'false');
+
+            // Pause audio
+            audio.pause();
+
+            // Stop musical notes animation
+            stopMusicalNotes();
+
+            // Hide dancing frog
+            if (dancingFrogContainer) {
+                dancingFrogContainer.style.display = 'none';
+            }
+
+            // Change icon to play
+            musicToggleBtn.innerHTML = '<i data-lucide="play"></i>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            UIComponents.showNotification('🎵 Đã tắt nhạc!', 'info');
+        };
+
+        // Toggle music on button click
+        musicToggleBtn.addEventListener('click', () => {
+            if (musicEnabled) {
+                stopMusic();
+            } else {
+                startMusic();
+            }
+        });
     }
 
     // Export current markdown
@@ -919,13 +1035,15 @@ document.addEventListener('DOMContentLoaded', () => {
     app.init();
 
     // Add event listener for Execute button in API tab
-    const executeBtn = document.getElementById('executeRequestBtn');
-    if (executeBtn) {
-        executeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (window.apiTester) {
-                window.apiTester.executeRequest();
+    const apiTab = document.getElementById('apiTab');
+    if (apiTab) {
+        apiTab.addEventListener('click', (e) => {
+            // Check if clicked element or its parent is the execute button
+            const button = e.target.closest('#executeRequestBtn');
+            if (button) {
+                if (window.apiTester) {
+                    window.apiTester.executeRequest();
+                }
             }
         });
     }

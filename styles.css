@@ -80,6 +80,7 @@ body[data-theme="light"] {
     justify-content: space-between;
     align-items: center;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
 body:not([data-theme="light"]) .header {
@@ -180,6 +181,106 @@ body:not([data-theme="light"]) .header {
     display: flex;
     gap: 10px;
     align-items: center;
+}
+
+/* Dancing frog container with spotlight effects */
+#dancingFrogContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* The dancing frog image */
+#dancingFrog {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    animation: bounce 0.5s infinite alternate;
+    display: block;
+    position: relative;
+}
+
+/* Stage spotlight effect for dancing frog in dark mode */
+body:not([data-theme="light"]) #dancingFrog {
+    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8))
+            drop-shadow(0 0 40px rgba(236, 72, 153, 0.6));
+}
+
+/* Spotlight beam 1 (purple - moves left to right) */
+body:not([data-theme="light"]) #dancingFrogContainer::before {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(139, 92, 246, 0.6) 0%,
+        rgba(139, 92, 246, 0.4) 30%,
+        rgba(139, 92, 246, 0.2) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+    animation: spotlightMove1 3s ease-in-out infinite;
+    top: 50%;
+    left: 50%;
+}
+
+/* Spotlight beam 2 (pink - moves right to left) */
+body:not([data-theme="light"]) #dancingFrogContainer::after {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(236, 72, 153, 0.6) 0%,
+        rgba(236, 72, 153, 0.4) 30%,
+        rgba(236, 72, 153, 0.2) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+    animation: spotlightMove2 3s ease-in-out infinite;
+    top: 50%;
+    left: 50%;
+}
+
+/* Spotlight 1 animation - sweeps from left to right */
+@keyframes spotlightMove1 {
+    0%, 100% {
+        transform: translate(-150%, -50%);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+/* Spotlight 2 animation - sweeps from right to left (delayed) */
+@keyframes spotlightMove2 {
+    0%, 100% {
+        transform: translate(50%, -50%);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-150%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-5px);
+    }
 }
 
 .config-input {
@@ -1429,6 +1530,39 @@ textarea.form-control {
 .json-boolean { color: #0000ff; }
 .json-null { color: #808080; }
 
+/* JSON Syntax Highlighting - Dark Mode */
+body:not([data-theme="light"]) .json-key { color: #9cdcfe; }
+body:not([data-theme="light"]) .json-string { color: #ce9178; }
+body:not([data-theme="light"]) .json-number { color: #b5cea8; }
+body:not([data-theme="light"]) .json-boolean { color: #569cd6; }
+body:not([data-theme="light"]) .json-null { color: #999999; }
+
+/* Form Controls - Dark Mode */
+body:not([data-theme="light"]) .form-control,
+body:not([data-theme="light"]) input[type="text"],
+body:not([data-theme="light"]) input[type="number"],
+body:not([data-theme="light"]) input[type="email"],
+body:not([data-theme="light"]) input[type="password"],
+body:not([data-theme="light"]) input[type="url"],
+body:not([data-theme="light"]) textarea {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+body:not([data-theme="light"]) .form-control:focus,
+body:not([data-theme="light"]) input:focus,
+body:not([data-theme="light"]) textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+body:not([data-theme="light"]) .form-control::placeholder,
+body:not([data-theme="light"]) input::placeholder,
+body:not([data-theme="light"]) textarea::placeholder {
+    color: #888888;
+}
+
 /* Buttons */
 .btn {
     padding: 10px 20px;
@@ -1954,6 +2088,58 @@ i[data-lucide] svg {
 
 .pet.falling img {
     transform: rotate(0deg);
+}
+
+/* Musical Notes Animation */
+.musical-notes-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9997;
+    overflow: hidden;
+}
+
+.musical-note {
+    position: fixed;
+    top: -30px;
+    z-index: 9997;
+    font-size: 24px;
+    user-select: none;
+    pointer-events: none;
+    animation: musicalNoteFall linear forwards;
+    opacity: 0;
+}
+
+@keyframes musicalNoteFall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 0.9;
+    }
+    90% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+
+.musical-note:nth-of-type(2n) {
+    animation-duration: 8s;
+}
+
+.musical-note:nth-of-type(3n) {
+    animation-duration: 10s;
+}
+
+.musical-note:nth-of-type(4n) {
+    animation-duration: 12s;
 }
 
 /* Snowfall Effect - December Only */
