@@ -6,8 +6,8 @@
       "color": "#667eea",
       "description": "JAR Ratio API",
       "files": [
-        { "name": "README.md", "name_alias": "📖 Hướng dẫn" },
-        { "name": "jar-ratio-api-tests.json", "name_alias": "🧪 API Tests" }
+        { "name": "README.md", "name_alias": "Hướng dẫn" },
+        { "name": "jar-ratio-api-tests.json", "name_alias": "API Tests" }
       ]
     },
     {
@@ -18,27 +18,27 @@
       "files": [
         {
           "name": "PAYMENT-REQUEST-API-DOCUMENT.md",
-          "name_alias": "📄 Tài liệu API"
+          "name_alias": "Tài liệu API"
         },
         {
           "name": "payment-request-tests.json",
-          "name_alias": "🧪 Tests cơ bản"
+          "name_alias": "Tests cơ bản"
         },
         {
           "name": "payment-request-tests-goods-jar.json",
-          "name_alias": "🧪 Tests lọ hàng hóa"
+          "name_alias": "Tests lọ hàng hóa"
         },
         {
           "name": "payment-request-tests-asset-jar.json",
-          "name_alias": "🧪 Tests lọ tài sản"
+          "name_alias": "Tests lọ tài sản"
         },
         {
           "name": "payment-request-tests-other-jar.json",
-          "name_alias": "🧪 Tests lọ khác"
+          "name_alias": "Tests lọ khác"
         },
         {
           "name": "payment-request-update-tests.json",
-          "name_alias": "🧪 Tests cập nhật"
+          "name_alias": "Tests cập nhật"
         }
       ]
     },
@@ -50,9 +50,9 @@
       "files": [
         {
           "name": "ADVANCE-REQUEST-API-DOCS.md",
-          "name_alias": "📄 Tài liệu API"
+          "name_alias": "Tài liệu API"
         },
-        { "name": "advance-request-api.json", "name_alias": "🧪 API Tests" }
+        { "name": "advance-request-api.json", "name_alias": "API Tests" }
       ]
     },
     {
@@ -62,9 +62,9 @@
       "description": "Mobile API Documentation",
       "files": [
         { "name": "MOBILE-README.md", "name_alias": "Cấu trúc" },
-        { "name": "README.md", "name_alias": "📖 Giới thiệu" },
-        { "name": "OVERVIEW.md", "name_alias": "📋 Tổng quan" },
-        { "name": "COMMON-INTERFACES.md", "name_alias": "🔗 Interface chung" },
+        { "name": "README.md", "name_alias": "Giới thiệu" },
+        { "name": "OVERVIEW.md", "name_alias": "Tổng quan" },
+        { "name": "COMMON-INTERFACES.md", "name_alias": "Interface chung" },
         { "name": "1-JAR-RATIO-GUIDE.md", "name_alias": "Tài liệu tỷ lệ lọ" },
         { "name": "1-jar-ratio-api.json", "name_alias": "API Tỷ lệ lọ" },
         { "name": "2-DISBURSER-GUIDE.md", "name_alias": "Đối tượng chi" },
