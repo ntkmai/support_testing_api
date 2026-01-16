@@ -1,0 +1,23 @@
+{
+  "name": "test-tool-viewer",
+  "version": "1.0.0",
+  "description": "API Testing Tool with Static Server",
+  "main": "server-static.js",
+  "scripts": {
+    "start": "node server-static.js",
+    "dev": "nodemon server-static.js"
+  },
+  "keywords": [
+    "api",
+    "testing",
+    "static-server"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

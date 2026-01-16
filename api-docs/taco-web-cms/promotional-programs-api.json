@@ -1,0 +1,2012 @@
+{
+  "requests": [
+    {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/api/auth/sign-in",
+      "description": "## Mục đích\nĐăng nhập vào hệ thống CMS\n\n## Yêu cầu\n- username: Tên đăng nhập\n- password: Mật khẩu\n\n## Kết quả\nTrả về access_token và refresh_token",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "boss",
+        "password": "1"
+      },
+      "templates": [
+        {
+          "name": "Boss Account",
+          "description": "Đăng nhập với tài khoản boss (full permission)",
+          "body": {
+            "username": "boss",
+            "password": "1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Promotional Programs List",
+      "method": "GET",
+      "endpoint": "/api/promotional-programs?page=1&size=10",
+      "description": "## Mục đích\nLấy danh sách chương trình khuyến mãi với phân trang\n\n## Query Parameters\n- page: Số trang (default: 1)\n- size: Số items/trang (default: 10)\n- search: Tìm kiếm theo tên\n- promotion_type: Lọc theo loại\n- active: Lọc active (true/false)\n- store_id: Lọc theo cửa hàng\n- product_id: Lọc theo sản phẩm\n- start_date_from, start_date_to: Lọc theo ngày bắt đầu\n- end_date_from, end_date_to: Lọc theo ngày kết thúc",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Get All - Page 1",
+          "description": "Lấy tất cả CTKM - Trang 1",
+          "endpoint": "/api/promotional-programs?page=1&size=10"
+        },
+        {
+          "name": "Filter - Buy X Get Y",
+          "description": "Lọc chỉ CTKM Mua X Tặng X",
+          "endpoint": "/api/promotional-programs?page=1&size=10&promotion_type=buy_x_get_y"
+        },
+        {
+          "name": "Filter - Combo Discount",
+          "description": "Lọc chỉ CTKM Giảm Combo",
+          "endpoint": "/api/promotional-programs?page=1&size=10&promotion_type=combo_discount"
+        },
+        {
+          "name": "Filter - Active Only",
+          "description": "Lọc chỉ CTKM đang hoạt động",
+          "endpoint": "/api/promotional-programs?page=1&size=10&active=true"
+        },
+        {
+          "name": "Filter - By Store",
+          "description": "Lọc CTKM áp dụng cho cửa hàng cụ thể",
+          "endpoint": "/api/promotional-programs?page=1&size=10&store_id=YOUR_STORE_ID"
+        },
+        {
+          "name": "Filter - By Product",
+          "description": "Lọc CTKM có sản phẩm cụ thể",
+          "endpoint": "/api/promotional-programs?page=1&size=10&product_id=YOUR_PRODUCT_ID"
+        },
+        {
+          "name": "Search - By Name",
+          "description": "Tìm kiếm theo tên CTKM",
+          "endpoint": "/api/promotional-programs?page=1&size=10&search=combo"
+        },
+        {
+          "name": "Filter - Date Range",
+          "description": "Lọc theo khoảng thời gian",
+          "endpoint": "/api/promotional-programs?page=1&size=10&start_date_from=2025-01-01T00:00:00Z&end_date_to=2025-12-31T23:59:59Z"
+        },
+        {
+          "name": "Filter - Complex",
+          "description": "Kết hợp nhiều bộ lọc: Buy X Get Y + Active + Store",
+          "endpoint": "/api/promotional-programs?page=1&size=10&promotion_type=buy_x_get_y&active=true&store_id=YOUR_STORE_ID"
+        }
+      ]
+    },
+    {
+      "name": "Get Promotional Program Detail",
+      "method": "GET",
+      "endpoint": "/api/promotional-programs/{id}",
+      "description": "## Mục đích\nLấy thông tin chi tiết chương trình khuyến mãi\n\n## Yêu cầu\n- id: UUID của promotional program",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Tạo CTKM - Mua X Tặng X - Mua Combo Tặng Sản Phẩm",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Mua Combo → Tặng Sản Phẩm\n\n## Loại CTKM\n- promotion_type: buy_x_get_y\n- discount_type: fixed_amount (discount_value = 0)\n\n## Cấu trúc type_data\n- buy_combo_ids: Danh sách combo phải mua\n- reward_product_ids: Danh sách sản phẩm được tặng\n- reward_quantity: Số lượng sản phẩm tặng\n\n## Ứng dụng\n- Khuyến mãi combo bữa sáng/trưa/chiều\n- Tặng đồ uống khi mua combo\n- Chương trình tri ân khách hàng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Mua Combo Sáng - Tặng Cafe Phin",
+        "description": "Mua combo sáng bất kỳ, tặng ngay 1 ly Cafe Phin Sữa Đá. Áp dụng từ 6h-10h sáng.",
+        "promotion_type": "buy_x_get_y",
+        "discount_type": "fixed_amount",
+        "discount_value": 0,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 10,
+        "min_order_amount": 0,
+        "usage_limit": 1000,
+        "products": [],
+        "stores": [],
+        "conditions": [
+          {
+            "condition_type": "time_range",
+            "condition_value": {
+              "start_time": "06:00",
+              "end_time": "10:00",
+              "description": "Chỉ áp dụng từ 6h đến 10h sáng"
+            }
+          }
+        ],
+        "type_data": {
+          "buy_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"],
+          "reward_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+          "reward_quantity": 1,
+          "description": "Mua 1 combo trong danh sách → Tặng 1 sản phẩm"
+        }
+      },
+      "templates": [
+        {
+          "name": "Mua Combo Sáng - Tặng Cafe",
+          "description": "Mua combo sáng bất kỳ tặng 1 ly cafe phin",
+          "body": {
+            "name": "Mua Combo Sáng - Tặng Cafe Phin",
+            "description": "Mua combo sáng bất kỳ, tặng ngay 1 ly Cafe Phin Sữa Đá. Áp dụng từ 6h-10h sáng.",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "min_order_amount": 0,
+            "usage_limit": 1000,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "06:00",
+                  "end_time": "10:00"
+                }
+              }
+            ],
+            "type_data": {
+              "buy_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"],
+              "reward_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua Combo Trưa - Tặng Trà",
+          "description": "Mua combo trưa tặng 1 ly trà",
+          "body": {
+            "name": "Mua Combo Trưa - Tặng Trà Đào",
+            "description": "Mua combo trưa bất kỳ, tặng ngay 1 ly Trà Đào Cam Sả. Áp dụng từ 11h-14h.",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "min_order_amount": 0,
+            "usage_limit": 800,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "11:00",
+                  "end_time": "14:00"
+                }
+              }
+            ],
+            "type_data": {
+              "buy_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"],
+              "reward_product_ids": ["11e3e792-5014-4574-b096-d86f07cab248"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua Combo VIP - Tặng Bánh",
+          "description": "Mua combo VIP tặng bánh ngọt",
+          "body": {
+            "name": "Mua Combo VIP - Tặng Bánh Flan",
+            "description": "Mua combo VIP, tặng ngay 2 chiếc bánh Flan Caramel. Không giới hạn thời gian.",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-03-31T23:59:59Z",
+            "priority": 15,
+            "min_order_amount": 150000,
+            "usage_limit": 500,
+            "type_data": {
+              "buy_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"],
+              "reward_product_ids": ["product-banh-flan-id"],
+              "reward_quantity": 2
+            }
+          }
+        },
+        {
+          "name": "Mua Nhiều Combo - Tặng Nhiều",
+          "description": "Mua bất kỳ combo nào trong danh sách tặng nhiều món",
+          "body": {
+            "name": "Mua Combo - Tặng Đồ Ăn Vặt",
+            "description": "Mua bất kỳ combo nào, nhận combo đồ ăn vặt (gồm snack + yogurt). Áp dụng cả ngày.",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 8,
+            "min_order_amount": 0,
+            "usage_limit": 2000,
+            "type_data": {
+              "buy_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b",
+                "8737843b-ec65-48ba-a3c0-6e266510f38c"
+              ],
+              "reward_product_ids": ["product-snack-id", "product-yogurt-id"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua Combo Giờ Vàng - Tặng Kép",
+          "description": "Khung giờ vàng: Mua 1 combo tặng 2 món",
+          "body": {
+            "name": "Golden Hour - Mua Combo Tặng Kép",
+            "description": "Khung giờ vàng 15h-17h: Mua 1 combo bất kỳ, tặng 2 ly trà sữa size M!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 20,
+            "min_order_amount": 0,
+            "usage_limit": 300,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "15:00",
+                  "end_time": "17:00"
+                }
+              }
+            ],
+            "type_data": {
+              "buy_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b"
+              ],
+              "reward_product_ids": ["product-tra-sua-id"],
+              "reward_quantity": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Mua X Tặng X - Mua Sản Phẩm Tặng Combo",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Mua Sản Phẩm → Tặng Combo\n\n## Loại CTKM\n- promotion_type: buy_x_get_y\n- discount_type: fixed_amount (discount_value = 0)\n\n## Cấu trúc type_data\n- buy_product_ids: Danh sách sản phẩm phải mua\n- buy_product_min_quantity: Số lượng tối thiểu\n- buy_product_min_size: Size tối thiểu (S/M/L)\n- reward_combo_ids: Danh sách combo được tặng\n- reward_quantity: Số lượng combo tặng\n\n## Ứng dụng\n- Mua nhiều đồ uống tặng combo\n- Chương trình khuyến mãi đặc biệt\n- Tăng doanh số sản phẩm",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Mua 2 Đồ Uống - Tặng Combo Trưa",
+        "description": "Mua 2 ly đồ uống bất kỳ size L trong danh sách, tặng ngay 1 combo trưa",
+        "promotion_type": "buy_x_get_y",
+        "discount_type": "fixed_amount",
+        "discount_value": 0,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 12,
+        "min_order_amount": 100000,
+        "usage_limit": 500,
+        "products": [
+          {
+            "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+            "quantity": 1,
+            "is_free_item": false
+          },
+          {
+            "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+            "quantity": 1,
+            "is_free_item": false
+          }
+        ],
+        "type_data": {
+          "buy_product_ids": [
+            "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+            "11e3e792-5014-4574-b096-d86f07cab248"
+          ],
+          "buy_product_min_quantity": 2,
+          "buy_product_min_size": "L",
+          "reward_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"],
+          "reward_quantity": 1
+        }
+      },
+      "templates": [
+        {
+          "name": "Mua 2 Đồ Uống Size L - Tặng Combo",
+          "description": "Mua 2 ly size L tặng combo trưa",
+          "body": {
+            "name": "Mua 2 Đồ Uống Size L - Tặng Combo Trưa",
+            "description": "Mua 2 ly đồ uống bất kỳ size L, tặng ngay 1 combo trưa. Giá trị đơn tối thiểu 100k.",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 12,
+            "min_order_amount": 100000,
+            "usage_limit": 500,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 1,
+                "is_free_item": false
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 1,
+                "is_free_item": false
+              }
+            ],
+            "type_data": {
+              "buy_product_ids": [
+                "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "11e3e792-5014-4574-b096-d86f07cab248"
+              ],
+              "buy_product_min_quantity": 2,
+              "buy_product_min_size": "L",
+              "reward_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua 3 Cafe - Tặng Combo Sáng",
+          "description": "Mua 3 ly cafe tặng combo sáng",
+          "body": {
+            "name": "Mua 3 Cafe - Tặng Combo Sáng",
+            "description": "Mua 3 ly cafe bất kỳ (size M trở lên), tặng ngay 1 combo sáng siêu hấp dẫn!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 12,
+            "min_order_amount": 120000,
+            "usage_limit": 300,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 3,
+                "is_free_item": false
+              }
+            ],
+            "type_data": {
+              "buy_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+              "buy_product_min_quantity": 3,
+              "buy_product_min_size": "M",
+              "reward_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua 4 Trà - Tặng Combo Chiều",
+          "description": "Mua 4 ly trá bất kỳ tặng combo chiều",
+          "body": {
+            "name": "Mua 4 Trà - Tặng Combo Chiều",
+            "description": "Mua 4 ly trà bất kỳ (không giới hạn size), nhận ngay 1 combo chiều đầy đủ!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "min_order_amount": 0,
+            "usage_limit": 600,
+            "products": [
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 4,
+                "is_free_item": false
+              }
+            ],
+            "type_data": {
+              "buy_product_ids": ["11e3e792-5014-4574-b096-d86f07cab248"],
+              "buy_product_min_quantity": 4,
+              "reward_combo_ids": ["8737843b-ec65-48ba-a3c0-6e266510f38c"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua Nhiều Sản Phẩm - Tặng Combo VIP",
+          "description": "Mua 5 sản phẩm bất kỳ tặng combo VIP",
+          "body": {
+            "name": "Mua 5 Món - Tặng Combo VIP",
+            "description": "Mua 5 món bất kỳ trong danh sách (size L), nhận ngay 1 combo VIP cao cấp!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-03-31T23:59:59Z",
+            "priority": 15,
+            "min_order_amount": 200000,
+            "usage_limit": 200,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 2,
+                "is_free_item": false
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 3,
+                "is_free_item": false
+              }
+            ],
+            "type_data": {
+              "buy_product_ids": [
+                "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "11e3e792-5014-4574-b096-d86f07cab248"
+              ],
+              "buy_product_min_quantity": 5,
+              "buy_product_min_size": "L",
+              "reward_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"],
+              "reward_quantity": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Mua X Tặng X - Mua Sản Phẩm Tặng Sản Phẩm",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Mua Sản Phẩm → Tặng Sản Phẩm\n\n## Loại CTKM\n- promotion_type: buy_x_get_y\n- discount_type: fixed_amount (discount_value = 0)\n\n## Cấu trúc type_data\n- buy_product_ids: Danh sách sản phẩm phải mua\n- buy_product_min_quantity: Số lượng tối thiểu\n- reward_product_ids: Danh sách sản phẩm được tặng\n- reward_quantity: Số lượng sản phẩm tặng\n\n## Ứng dụng\n- Mua 2 tặng 1\n- Mua 3 tặng 1\n- Flash sale đặc biệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Mua 2 Tặng 1 - Cafe",
+        "description": "Mua 2 ly Cafe Phin bất kỳ, tặng ngay 1 ly cùng loại",
+        "promotion_type": "buy_x_get_y",
+        "discount_type": "fixed_amount",
+        "discount_value": 0,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 10,
+        "min_order_amount": 0,
+        "usage_limit": 1000,
+        "type_data": {
+          "buy_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+          "buy_product_min_quantity": 2,
+          "reward_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+          "reward_quantity": 1
+        }
+      },
+      "templates": [
+        {
+          "name": "Mua 2 Tặng 1 - Cafe",
+          "description": "Mua 2 ly cafe tặng 1 ly",
+          "body": {
+            "name": "Mua 2 Tặng 1 - Cafe Phin",
+            "description": "Mua 2 ly Cafe Phin bất kỳ, tặng ngay 1 ly cùng loại",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "usage_limit": 1000,
+            "type_data": {
+              "buy_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+              "buy_product_min_quantity": 2,
+              "reward_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua 3 Tặng 1 - Trà",
+          "description": "Mua 3 ly trà tặng 1 ly",
+          "body": {
+            "name": "Mua 3 Tặng 1 - Trà Đào",
+            "description": "Mua 3 ly Trà Đào Cam Sả, tặng ngay 1 ly cùng loại. Áp dụng cả ngày!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "usage_limit": 800,
+            "type_data": {
+              "buy_product_ids": ["11e3e792-5014-4574-b096-d86f07cab248"],
+              "buy_product_min_quantity": 3,
+              "reward_product_ids": ["11e3e792-5014-4574-b096-d86f07cab248"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua 1 Tặng 1 - Flash Sale",
+          "description": "Flash sale: Mua 1 tặng 1 sản phẩm khác",
+          "body": {
+            "name": "Flash Sale - Mua Cafe Tặng Trà",
+            "description": "Flash Sale trong ngày! Mua 1 ly Cafe Phin, tặng ngay 1 ly Trá Đào!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-06T23:59:59Z",
+            "priority": 25,
+            "usage_limit": 100,
+            "type_data": {
+              "buy_product_ids": ["231228ee-e9b7-4bae-8150-f24dfdb067f4"],
+              "buy_product_min_quantity": 1,
+              "reward_product_ids": ["11e3e792-5014-4574-b096-d86f07cab248"],
+              "reward_quantity": 1
+            }
+          }
+        },
+        {
+          "name": "Mua 4 Tặng 2 - Đặc Biệt",
+          "description": "Mua 4 tặng 2 - chương trình đặc biệt",
+          "body": {
+            "name": "Mua 4 Tặng 2 - Đồ Uống Bất Kỳ",
+            "description": "Mua 4 ly đồ uống bất kỳ trong danh sách, tặng ngay 2 ly cùng loại!",
+            "promotion_type": "buy_x_get_y",
+            "discount_type": "fixed_amount",
+            "discount_value": 0,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-03-31T23:59:59Z",
+            "priority": 12,
+            "usage_limit": 500,
+            "type_data": {
+              "buy_product_ids": [
+                "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "11e3e792-5014-4574-b096-d86f07cab248"
+              ],
+              "buy_product_min_quantity": 4,
+              "reward_product_ids": [
+                "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "11e3e792-5014-4574-b096-d86f07cab248"
+              ],
+              "reward_quantity": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Combo - Giảm Phần Trăm",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm Giá % Cho Combo\n\n## Loại CTKM\n- promotion_type: combo_discount\n- discount_type: percentage\n- discount_value: Giá trị % giảm (1-100)\n\n## Cấu trúc type_data\n- discount_combo_ids: Danh sách combo được giảm giá\n- time_restriction: Giới hạn thời gian (optional)\n\n## Ứng dụng\n- Flash sale combo\n- Happy hour\n- Khuyến mãi theo khung giờ\n- Giảm giá mùa lễ hội",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Happy Hour - Giảm 20% Tất Cả Combo",
+        "description": "Khung giờ vàng từ 14h-16h, tất cả combo giảm ngay 20%",
+        "promotion_type": "combo_discount",
+        "discount_type": "percentage",
+        "discount_value": 20,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 7,
+        "max_discount_amount": 50000,
+        "usage_limit": 2000,
+        "conditions": [
+          {
+            "condition_type": "time_range",
+            "condition_value": {
+              "start_time": "14:00",
+              "end_time": "16:00"
+            }
+          }
+        ],
+        "type_data": {
+          "discount_combo_ids": [
+            "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+            "94f7aa14-1b5a-4cad-a030-2d33dd7d451b",
+            "8737843b-ec65-48ba-a3c0-6e266510f38c",
+            "9d7268ed-a135-44cd-8ad6-e59217e0587e",
+            "4eda12cc-7843-4b43-98c3-4889322ff3e9"
+          ],
+          "time_restriction": {
+            "start_time": "14:00",
+            "end_time": "16:00"
+          }
+        }
+      },
+      "templates": [
+        {
+          "name": "Happy Hour - Giảm 20% Combo",
+          "description": "Giảm 20% tất cả combo từ 14h-16h",
+          "body": {
+            "name": "Happy Hour - Giảm 20% Tất Cả Combo",
+            "description": "Khung giờ vàng từ 14h-16h, tất cả combo giảm ngay 20%",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 20,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 7,
+            "max_discount_amount": 50000,
+            "usage_limit": 2000,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "14:00",
+                  "end_time": "16:00"
+                }
+              }
+            ],
+            "type_data": {
+              "discount_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b",
+                "8737843b-ec65-48ba-a3c0-6e266510f38c"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Giảm 30% Combo Sáng",
+          "description": "Giảm 30% combo sáng từ 6h-10h",
+          "body": {
+            "name": "Khuyến Mãi Sáng - Giảm 30% Combo Sáng",
+            "description": "Thức dậy cùng ưu đãi! Combo sáng giảm ngay 30% từ 6h-10h sáng.",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 30,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 40000,
+            "usage_limit": 1500,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "06:00",
+                  "end_time": "10:00"
+                }
+              }
+            ],
+            "type_data": {
+              "discount_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"]
+            }
+          }
+        },
+        {
+          "name": "Flash Sale - Giảm 50% Combo VIP",
+          "description": "Flash sale: Giảm 50% combo VIP trong 1 ngày",
+          "body": {
+            "name": "Flash Sale - Combo VIP Giảm 50%",
+            "description": "FLASH SALE TRONG NGÀY! Combo VIP giảm sốc 50%. Số lượng có hạn!",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 50,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-06T23:59:59Z",
+            "priority": 30,
+            "max_discount_amount": 100000,
+            "usage_limit": 50,
+            "type_data": {
+              "discount_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"]
+            }
+          }
+        },
+        {
+          "name": "Cuối Tuần - Giảm 25% Tất Cả",
+          "description": "Giảm 25% tất cả combo vào cuối tuần",
+          "body": {
+            "name": "Weekend Sale - Giảm 25% Tất Cả Combo",
+            "description": "Cuối tuần vui vẻ! Tất cả combo giảm 25%. Áp dụng thứ 7 & chủ nhật.",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 25,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 8,
+            "max_discount_amount": 60000,
+            "usage_limit": 3000,
+            "conditions": [
+              {
+                "condition_type": "day_of_week",
+                "condition_value": {
+                  "days": ["saturday", "sunday"],
+                  "description": "Chỉ áp dụng thứ 7 và chủ nhật"
+                }
+              }
+            ],
+            "type_data": {
+              "discount_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b",
+                "8737843b-ec65-48ba-a3c0-6e266510f38c",
+                "9d7268ed-a135-44cd-8ad6-e59217e0587e"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Giảm 15% Combo Trưa",
+          "description": "Giảm 15% combo trưa cả tuần",
+          "body": {
+            "name": "Combo Trưa - Giảm 15%",
+            "description": "Bữa trưa tiết kiệm! Combo trưa giảm 15% từ 11h-14h mỗi ngày.",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 15,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 6,
+            "max_discount_amount": 30000,
+            "usage_limit": 2500,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "11:00",
+                  "end_time": "14:00"
+                }
+              }
+            ],
+            "type_data": {
+              "discount_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Combo - Giảm Tiền Cố Định",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm Số Tiền Cố Định Cho Combo\n\n## Loại CTKM\n- promotion_type: combo_discount\n- discount_type: fixed_amount\n- discount_value: Số tiền giảm (VNĐ)\n\n## Cấu trúc type_data\n- discount_combo_ids: Danh sách combo được giảm giá\n\n## Ứng dụng\n- Giảm giá cố định dễ hiểu\n- Flash sale\n- Combo đặc biệt",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Flash Sale Combo VIP - Giảm 30K",
+        "description": "Combo VIP giảm ngay 30,000đ. Số lượng có hạn!",
+        "promotion_type": "combo_discount",
+        "discount_type": "fixed_amount",
+        "discount_value": 30000,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-01-31T23:59:59Z",
+        "priority": 20,
+        "max_discount_amount": 30000,
+        "usage_limit": 100,
+        "type_data": {
+          "discount_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"]
+        }
+      },
+      "templates": [
+        {
+          "name": "Giảm 30K - Combo VIP",
+          "description": "Combo VIP giảm 30,000đ",
+          "body": {
+            "name": "Flash Sale Combo VIP - Giảm 30K",
+            "description": "Combo VIP giảm ngay 30,000đ. Số lượng có hạn!",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 30000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 20,
+            "max_discount_amount": 30000,
+            "usage_limit": 100,
+            "type_data": {
+              "discount_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"]
+            }
+          }
+        },
+        {
+          "name": "Giảm 20K - Combo Sáng",
+          "description": "Combo sáng giảm 20,000đ",
+          "body": {
+            "name": "Combo Sáng - Giảm 20K",
+            "description": "Khởi đầu ngày mới với ưu đãi! Combo sáng giảm ngay 20,000đ.",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 20000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 20000,
+            "usage_limit": 500,
+            "type_data": {
+              "discount_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"]
+            }
+          }
+        },
+        {
+          "name": "Giảm 25K - Combo Trưa",
+          "description": "Combo trưa giảm 25,000đ",
+          "body": {
+            "name": "Combo Trưa - Giảm 25K",
+            "description": "Bữa trưa tiết kiệm! Combo trưa giảm 25,000đ. Áp dụng từ 11h-14h.",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 25000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 25000,
+            "usage_limit": 800,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "11:00",
+                  "end_time": "14:00"
+                }
+              }
+            ],
+            "type_data": {
+              "discount_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"]
+            }
+          }
+        },
+        {
+          "name": "Giảm 15K - Tất Cả Combo",
+          "description": "Tất cả combo giảm 15,000đ",
+          "body": {
+            "name": "Giảm 15K - Tất Cả Combo",
+            "description": "Ưu đãi áp dụng cho tất cả combo! Giảm ngay 15,000đ.",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 15000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "max_discount_amount": 15000,
+            "usage_limit": 2000,
+            "type_data": {
+              "discount_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b",
+                "8737843b-ec65-48ba-a3c0-6e266510f38c",
+                "9d7268ed-a135-44cd-8ad6-e59217e0587e",
+                "4eda12cc-7843-4b43-98c3-4889322ff3e9"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Giảm 50K - Combo Đặc Biệt",
+          "description": "Combo đặc biệt giảm 50,000đ",
+          "body": {
+            "name": "Combo Đặc Biệt - Giảm 50K",
+            "description": "Siêu ưu đãi! Combo chiều đặc biệt giảm tới 50,000đ.",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 50000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 25,
+            "max_discount_amount": 50000,
+            "usage_limit": 200,
+            "type_data": {
+              "discount_combo_ids": ["8737843b-ec65-48ba-a3c0-6e266510f38c"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Combo - Mua Combo Giảm Combo Khác",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Mua Combo A → Giảm Giá Combo B\n\n## Loại CTKM\n- promotion_type: combo_discount\n- discount_type: percentage hoặc fixed_amount\n\n## Cấu trúc type_data\n- buy_combo_ids: Danh sách combo phải mua\n- discount_combo_ids: Danh sách combo được giảm giá\n\n## Ứng dụng\n- Cross-selling combo\n- Tăng doanh số combo ít người mua\n- Khuyến khích mua nhiều combo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Mua Combo Sáng - Giảm 50% Combo Chiều",
+        "description": "Khi mua combo sáng, nhận ngay ưu đãi giảm 50% cho combo chiều",
+        "promotion_type": "combo_discount",
+        "discount_type": "percentage",
+        "discount_value": 50,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 8,
+        "max_discount_amount": 40000,
+        "usage_limit": 300,
+        "type_data": {
+          "buy_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"],
+          "discount_combo_ids": ["8737843b-ec65-48ba-a3c0-6e266510f38c"]
+        }
+      },
+      "templates": [
+        {
+          "name": "Mua Combo Sáng - Giảm 50% Combo Chiều",
+          "description": "Mua combo sáng giảm 50% combo chiều",
+          "body": {
+            "name": "Mua Combo Sáng - Giảm 50% Combo Chiều",
+            "description": "Khi mua combo sáng, nhận ngay ưu đãi giảm 50% cho combo chiều",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 50,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 8,
+            "max_discount_amount": 40000,
+            "usage_limit": 300,
+            "type_data": {
+              "buy_combo_ids": ["ed2236f0-023f-45f2-b5fc-99e81ff44d53"],
+              "discount_combo_ids": ["8737843b-ec65-48ba-a3c0-6e266510f38c"]
+            }
+          }
+        },
+        {
+          "name": "Mua Combo Trưa - Giảm 30K Combo VIP",
+          "description": "Mua combo trưa giảm 30,000đ combo VIP",
+          "body": {
+            "name": "Mua Combo Trưa - Giảm 30K Combo VIP",
+            "description": "Mua combo trưa hôm nay, nhận ngay ưu đãi giảm 30,000đ cho combo VIP!",
+            "promotion_type": "combo_discount",
+            "discount_type": "fixed_amount",
+            "discount_value": 30000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 30000,
+            "usage_limit": 400,
+            "type_data": {
+              "buy_combo_ids": ["94f7aa14-1b5a-4cad-a030-2d33dd7d451b"],
+              "discount_combo_ids": ["4eda12cc-7843-4b43-98c3-4889322ff3e9"]
+            }
+          }
+        },
+        {
+          "name": "Mua Combo Bất Kỳ - Giảm 40% Combo Khác",
+          "description": "Mua 1 combo giảm 40% combo thứ 2",
+          "body": {
+            "name": "Mua 1 Combo - Giảm 40% Combo Thứ 2",
+            "description": "Mua 1 combo bất kỳ, combo thứ 2 giảm ngay 40%!",
+            "promotion_type": "combo_discount",
+            "discount_type": "percentage",
+            "discount_value": 40,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 12,
+            "max_discount_amount": 50000,
+            "usage_limit": 600,
+            "type_data": {
+              "buy_combo_ids": [
+                "ed2236f0-023f-45f2-b5fc-99e81ff44d53",
+                "94f7aa14-1b5a-4cad-a030-2d33dd7d451b"
+              ],
+              "discount_combo_ids": [
+                "8737843b-ec65-48ba-a3c0-6e266510f38c",
+                "9d7268ed-a135-44cd-8ad6-e59217e0587e"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Tổng Bill - Giảm Phần Trăm",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm % Tổng Giá Trị Đơn Hàng\n\n## Loại CTKM\n- promotion_type: discount_percentage\n- discount_type: percentage\n- discount_value: Giá trị % giảm (1-100)\n\n## Thông tin\n- min_order_amount: Giá trị đơn hàng tối thiểu\n- max_discount_amount: Số tiền giảm tối đa\n\n## Ứng dụng\n- Khuyến mãi đơn hàng lớn\n- Tăng giá trị đơn hàng trung bình\n- Chương trình thành viên VIP\n- Sale theo mùa/lễ hội",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Giảm 20% Đơn Từ 200K",
+        "description": "Đơn hàng từ 200,000đ giảm ngay 20%, tối đa 100,000đ",
+        "promotion_type": "discount_percentage",
+        "discount_type": "percentage",
+        "discount_value": 20,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 5,
+        "min_order_amount": 200000,
+        "max_discount_amount": 100000,
+        "usage_limit": 1000,
+        "type_data": {
+          "description": "Giảm 20% cho đơn hàng từ 200K, giảm tối đa 100K"
+        }
+      },
+      "templates": [
+        {
+          "name": "Giảm 20% Đơn Từ 200K",
+          "description": "Giảm 20% cho đơn từ 200,000đ",
+          "body": {
+            "name": "Giảm 20% Đơn Từ 200K",
+            "description": "Đơn hàng từ 200,000đ giảm ngay 20%, tối đa 100,000đ",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 20,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "min_order_amount": 200000,
+            "max_discount_amount": 100000,
+            "usage_limit": 1000
+          }
+        },
+        {
+          "name": "Giảm 15% Đơn Từ 150K",
+          "description": "Giảm 15% cho đơn từ 150,000đ",
+          "body": {
+            "name": "Giảm 15% Đơn Từ 150K",
+            "description": "Đơn hàng từ 150,000đ giảm ngay 15%, tối đa 70,000đ",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 15,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "min_order_amount": 150000,
+            "max_discount_amount": 70000,
+            "usage_limit": 1500
+          }
+        },
+        {
+          "name": "Giảm 30% Đơn Từ 300K - VIP",
+          "description": "Giảm 30% cho đơn từ 300,000đ",
+          "body": {
+            "name": "VIP - Giảm 30% Đơn Từ 300K",
+            "description": "Chương trình VIP: Đơn hàng từ 300,000đ giảm ngay 30%, tối đa 150,000đ!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 30,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "min_order_amount": 300000,
+            "max_discount_amount": 150000,
+            "usage_limit": 500
+          }
+        },
+        {
+          "name": "Giảm 10% Đơn Từ 100K",
+          "description": "Giảm 10% cho đơn từ 100,000đ",
+          "body": {
+            "name": "Giảm 10% Đơn Từ 100K",
+            "description": "Đơn hàng từ 100,000đ giảm ngay 10%, tối đa 50,000đ. Áp dụng cho mọi đơn hàng.",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 10,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 3,
+            "min_order_amount": 100000,
+            "max_discount_amount": 50000,
+            "usage_limit": 3000
+          }
+        },
+        {
+          "name": "Giảm 25% Đơn Từ 250K - Cuối Tuần",
+          "description": "Giảm 25% cuối tuần cho đơn từ 250,000đ",
+          "body": {
+            "name": "Weekend Sale - Giảm 25% Đơn Từ 250K",
+            "description": "Cuối tuần vui vẻ! Đơn từ 250,000đ giảm 25%, tối đa 120,000đ. Chỉ áp dụng thứ 7 & CN.",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 25,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 8,
+            "min_order_amount": 250000,
+            "max_discount_amount": 120000,
+            "usage_limit": 800,
+            "conditions": [
+              {
+                "condition_type": "day_of_week",
+                "condition_value": {
+                  "days": ["saturday", "sunday"]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 50% Đơn Từ 500K - Flash Sale",
+          "description": "Flash sale: Giảm 50% cho đơn từ 500,000đ",
+          "body": {
+            "name": "FLASH SALE - Giảm 50% Đơn Từ 500K",
+            "description": "FLASH SALE TRONG NGÀY! Đơn từ 500,000đ giảm sốc 50%, tối đa 300,000đ!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 50,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-06T23:59:59Z",
+            "priority": 30,
+            "min_order_amount": 500000,
+            "max_discount_amount": 300000,
+            "usage_limit": 100
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Tổng Bill - Giảm Tiền Cố Định",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm Số Tiền Cố Định Cho Đơn Hàng\n\n## Loại CTKM\n- promotion_type: discount_fixed_amount\n- discount_type: fixed_amount\n- discount_value: Số tiền giảm (VNĐ)\n\n## Thông tin\n- min_order_amount: Giá trị đơn hàng tối thiểu\n\n## Ứng dụng\n- Voucher giảm giá dễ hiểu\n- Khuyến mãi đơn hàng đầu tiên\n- Chương trình tặng voucher\n- Giảm giá cố định theo ngưỡng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Giảm 50K Cho Đơn Từ 200K",
+        "description": "Đơn hàng từ 200,000đ giảm ngay 50,000đ",
+        "promotion_type": "discount_fixed_amount",
+        "discount_type": "fixed_amount",
+        "discount_value": 50000,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-02-28T23:59:59Z",
+        "priority": 5,
+        "min_order_amount": 200000,
+        "max_discount_amount": 50000,
+        "usage_limit": 2000,
+        "type_data": {
+          "description": "Giảm 50,000đ cho đơn hàng từ 200,000đ"
+        }
+      },
+      "templates": [
+        {
+          "name": "Giảm 50K Cho Đơn Từ 200K",
+          "description": "Giảm 50,000đ cho đơn từ 200,000đ",
+          "body": {
+            "name": "Giảm 50K Cho Đơn Từ 200K",
+            "description": "Đơn hàng từ 200,000đ giảm ngay 50,000đ",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 50000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "min_order_amount": 200000,
+            "max_discount_amount": 50000,
+            "usage_limit": 2000
+          }
+        },
+        {
+          "name": "Giảm 30K Cho Đơn Từ 150K",
+          "description": "Giảm 30,000đ cho đơn từ 150,000đ",
+          "body": {
+            "name": "Giảm 30K Cho Đơn Từ 150K",
+            "description": "Đơn hàng từ 150,000đ giảm ngay 30,000đ. Tiết kiệm cho mọi đơn hàng!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 30000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "min_order_amount": 150000,
+            "max_discount_amount": 30000,
+            "usage_limit": 2500
+          }
+        },
+        {
+          "name": "Giảm 20K Cho Đơn Từ 100K",
+          "description": "Giảm 20,000đ cho đơn từ 100,000đ",
+          "body": {
+            "name": "Giảm 20K Cho Đơn Từ 100K",
+            "description": "Đơn hàng từ 100,000đ giảm ngay 20,000đ. Áp dụng cho tất cả khách hàng.",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 20000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 3,
+            "min_order_amount": 100000,
+            "max_discount_amount": 20000,
+            "usage_limit": 4000
+          }
+        },
+        {
+          "name": "Giảm 100K Cho Đơn Từ 400K",
+          "description": "Giảm 100,000đ cho đơn từ 400,000đ",
+          "body": {
+            "name": "Giảm 100K Cho Đơn Từ 400K",
+            "description": "Siêu ưu đãi! Đơn hàng từ 400,000đ giảm ngay 100,000đ!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 100000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "min_order_amount": 400000,
+            "max_discount_amount": 100000,
+            "usage_limit": 500
+          }
+        },
+        {
+          "name": "Giảm 15K Cho Đơn Đầu Tiên",
+          "description": "Giảm 15,000đ cho khách hàng mới",
+          "body": {
+            "name": "Khách Hàng Mới - Giảm 15K",
+            "description": "Chào mừng khách hàng mới! Đơn đầu tiên giảm ngay 15,000đ cho đơn từ 50,000đ.",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 15000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-12-31T23:59:59Z",
+            "priority": 15,
+            "min_order_amount": 50000,
+            "max_discount_amount": 15000,
+            "usage_limit": 5000,
+            "conditions": [
+              {
+                "condition_type": "first_order",
+                "condition_value": {
+                  "is_first_order": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 200K Cho Đơn Từ 1 Triệu - VIP",
+          "description": "Giảm 200,000đ cho đơn hàng lớn",
+          "body": {
+            "name": "VIP - Giảm 200K Cho Đơn Từ 1 Triệu",
+            "description": "Chương trình VIP! Đơn hàng từ 1,000,000đ giảm ngay 200,000đ!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 200000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-03-31T23:59:59Z",
+            "priority": 20,
+            "min_order_amount": 1000000,
+            "max_discount_amount": 200000,
+            "usage_limit": 200
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Tiền Sản Phẩm - Giảm Phần Trăm",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm % Giá Sản Phẩm Cụ Thể\n\n## Loại CTKM\n- promotion_type: discount_percentage\n- discount_type: percentage\n\n## Cấu trúc products\n- product_id: ID sản phẩm được giảm\n- discount_type: percentage\n- discount_value: % giảm\n\n## Ứng dụng\n- Flash sale sản phẩm\n- Giảm giá sản phẩm mới\n- Thanh lý sản phẩm\n- Sale theo mùa",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Giảm 30% Cafe Phin",
+        "description": "Cafe Phin Sữa Đá giảm ngay 30% trong tháng 1",
+        "promotion_type": "discount_percentage",
+        "discount_type": "percentage",
+        "discount_value": 30,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-01-31T23:59:59Z",
+        "priority": 10,
+        "max_discount_amount": 20000,
+        "usage_limit": 1000,
+        "products": [
+          {
+            "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+            "discount_type": "percentage",
+            "discount_value": 30
+          }
+        ],
+        "type_data": {
+          "description": "Giảm 30% cho Cafe Phin Sữa Đá"
+        }
+      },
+      "templates": [
+        {
+          "name": "Giảm 30% Cafe Phin",
+          "description": "Giảm 30% cho cafe phin",
+          "body": {
+            "name": "Giảm 30% Cafe Phin",
+            "description": "Cafe Phin Sữa Đá giảm ngay 30% trong tháng 1",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 30,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 20000,
+            "usage_limit": 1000,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "percentage",
+                "discount_value": 30
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 25% Trà Đào",
+          "description": "Giảm 25% cho trà đào",
+          "body": {
+            "name": "Giảm 25% Trà Đào Cam Sả",
+            "description": "Trà Đào Cam Sả giảm 25% cả tháng. Giải nhiệt mùa hè!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 25,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 18000,
+            "usage_limit": 1200,
+            "products": [
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "percentage",
+                "discount_value": 25
+              }
+            ]
+          }
+        },
+        {
+          "name": "Flash Sale - Giảm 50% Nhiều Sản Phẩm",
+          "description": "Flash sale: Giảm 50% nhiều món",
+          "body": {
+            "name": "FLASH SALE - Giảm 50% Đồ Uống",
+            "description": "FLASH SALE TRONG NGÀY! Nhiều đồ uống giảm sốc 50%!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 50,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-06T23:59:59Z",
+            "priority": 30,
+            "max_discount_amount": 30000,
+            "usage_limit": 200,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "percentage",
+                "discount_value": 50
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "percentage",
+                "discount_value": 50
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 20% Tất Cả Đồ Uống",
+          "description": "Giảm 20% cho tất cả đồ uống",
+          "body": {
+            "name": "Giảm 20% Tất Cả Đồ Uống",
+            "description": "Tất cả đồ uống giảm 20%. Áp dụng cả ngày!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 20,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 5,
+            "max_discount_amount": 25000,
+            "usage_limit": 3000,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "percentage",
+                "discount_value": 20
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "percentage",
+                "discount_value": 20
+              }
+            ]
+          }
+        },
+        {
+          "name": "Happy Hour - Giảm 40% Cafe",
+          "description": "Khung giờ vàng: Giảm 40% cafe",
+          "body": {
+            "name": "Happy Hour - Cafe Giảm 40%",
+            "description": "Khung giờ vàng 14h-16h: Tất cả cafe giảm 40%!",
+            "promotion_type": "discount_percentage",
+            "discount_type": "percentage",
+            "discount_value": 40,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 12,
+            "max_discount_amount": 25000,
+            "usage_limit": 800,
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "14:00",
+                  "end_time": "16:00"
+                }
+              }
+            ],
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "percentage",
+                "discount_value": 40
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tạo CTKM - Giảm Tiền Sản Phẩm - Giảm Tiền Cố Định",
+      "method": "POST",
+      "endpoint": "/api/promotional-programs",
+      "description": "## Mục đích\nTạo chương trình khuyến mãi: Giảm Số Tiền Cố Định Cho Sản Phẩm\n\n## Loại CTKM\n- promotion_type: discount_fixed_amount\n- discount_type: fixed_amount\n\n## Cấu trúc products\n- product_id: ID sản phẩm được giảm\n- discount_type: fixed_amount\n- discount_value: Số tiền giảm (VNĐ)\n\n## Ứng dụng\n- Giảm giá dễ hiểu\n- Flash sale sản phẩm\n- Thanh lý hàng tồn\n- Khuyến mãi sản phẩm mới",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Giảm 10K - Cafe Phin",
+        "description": "Cafe Phin Sữa Đá giảm ngay 10,000đ",
+        "promotion_type": "discount_fixed_amount",
+        "discount_type": "fixed_amount",
+        "discount_value": 10000,
+        "start_date": "2025-01-06T00:00:00Z",
+        "end_date": "2025-01-31T23:59:59Z",
+        "priority": 10,
+        "max_discount_amount": 10000,
+        "usage_limit": 1500,
+        "products": [
+          {
+            "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+            "discount_type": "fixed_amount",
+            "discount_value": 10000
+          }
+        ],
+        "type_data": {
+          "description": "Giảm 10,000đ cho Cafe Phin Sữa Đá"
+        }
+      },
+      "templates": [
+        {
+          "name": "Giảm 10K - Cafe Phin",
+          "description": "Cafe giảm 10,000đ",
+          "body": {
+            "name": "Giảm 10K - Cafe Phin",
+            "description": "Cafe Phin Sữa Đá giảm ngay 10,000đ",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 10000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 10000,
+            "usage_limit": 1500,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "fixed_amount",
+                "discount_value": 10000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 8K - Trà Đào",
+          "description": "Trà giảm 8,000đ",
+          "body": {
+            "name": "Giảm 8K - Trà Đào Cam Sả",
+            "description": "Trà Đào Cam Sả giảm ngay 8,000đ. Mát lạnh tiết kiệm!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 8000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-31T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 8000,
+            "usage_limit": 1800,
+            "products": [
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "fixed_amount",
+                "discount_value": 8000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 15K - Nhiều Sản Phẩm",
+          "description": "Nhiều sản phẩm giảm 15,000đ",
+          "body": {
+            "name": "Giảm 15K - Đồ Uống Chọn Lọc",
+            "description": "Các đồ uống chọn lọc giảm ngay 15,000đ!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 15000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 10,
+            "max_discount_amount": 15000,
+            "usage_limit": 2000,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "fixed_amount",
+                "discount_value": 15000
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "fixed_amount",
+                "discount_value": 15000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Flash Sale - Giảm 20K",
+          "description": "Flash sale: Sản phẩm giảm 20,000đ",
+          "body": {
+            "name": "FLASH SALE - Giảm 20K Đồ Uống",
+            "description": "FLASH SALE TRONG NGÀY! Đồ uống giảm ngay 20,000đ!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 20000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-01-06T23:59:59Z",
+            "priority": 30,
+            "max_discount_amount": 20000,
+            "usage_limit": 300,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "fixed_amount",
+                "discount_value": 20000
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "fixed_amount",
+                "discount_value": 20000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Giảm 5K - Tất Cả Sản Phẩm",
+          "description": "Tất cả sản phẩm giảm 5,000đ",
+          "body": {
+            "name": "Giảm 5K - Tất Cả Đồ Uống",
+            "description": "Tất cả đồ uống giảm 5,000đ. Tiết kiệm mỗi ngày!",
+            "promotion_type": "discount_fixed_amount",
+            "discount_type": "fixed_amount",
+            "discount_value": 5000,
+            "start_date": "2025-01-06T00:00:00Z",
+            "end_date": "2025-02-28T23:59:59Z",
+            "priority": 3,
+            "max_discount_amount": 5000,
+            "usage_limit": 5000,
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "discount_type": "fixed_amount",
+                "discount_value": 5000
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "discount_type": "fixed_amount",
+                "discount_value": 5000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Promotional Program",
+      "method": "PUT",
+      "endpoint": "/api/promotional-programs/{id}",
+      "description": "## Mục đích\nCập nhật thông tin chương trình khuyến mãi\n\n## Update Logic\n✨ API tự động so sánh và chỉ update những gì thay đổi:\n- **Basic fields** (name, description...): Chỉ update nếu gửi lên\n- **Arrays** (products, stores, conditions): \n  • FE GỬI FULL LIST hiện tại (như form submit)\n  • API tự động: UPDATE records thay đổi, INSERT records mới, DELETE records không còn\n  • Không gửi array = giữ nguyên\n  • Gửi array rỗng [] = xóa hết\n\n## Real IDs Used in Templates\n📝 Product IDs (from database):\n- `231228ee-e9b7-4bae-8150-f24dfdb067f4` → Cafe Phin Sữa Đá\n- `11e3e792-5014-4574-b096-d86f07cab248` → Trà Đào Cam Sả\n- `aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee` → NEW PRODUCT (placeholder - replace with real ID)\n\n📦 Store IDs (placeholders - replace with real IDs):\n- `f3e2c02f-5ca1-4f63-9843-4a0ae8d6f262` → Store 1\n- `66666666-7777-8888-9999-000000000000` → Store 2\n\n🏪 Store Product IDs (placeholders - replace with real IDs from store_products table):\n- `5b97b9a4-b0ca-4499-ac1f-d8f3761a25f8` → Cafe Phin at Store 1\n- `cccccccc-4444-5555-6666-dddddddddddd` → Cafe Phin at Store 2\n\n## Yêu cầu\n- id: UUID của program (trong URL path)\n- Tất cả fields đều optional\n- ⚠️ KHÔNG THỂ đổi promotion_type sau khi tạo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "name": "Tên chương trình đã cập nhật",
+        "description": "Mô tả mới",
+        "priority": 15
+      },
+      "templates": [
+        {
+          "name": "1. Full Update - Sửa Tất Cả",
+          "description": "Cập nhật toàn bộ: Basic fields + Products + Stores + Conditions",
+          "body": {
+            "name": "Flash Sale Cuối Tuần - Updated",
+            "description": "Chương trình mới với nhiều ưu đãi",
+            "discount_value": 30,
+            "priority": 20,
+            "end_date": "2025-04-30T23:59:59Z",
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 5,
+                "is_free_item": false,
+                "discount_type": "percentage",
+                "discount_value": 20
+              }
+            ],
+            "stores": [
+              {
+                "store_id": "f3e2c02f-5ca1-4f63-9843-4a0ae8d6f262",
+                "active": true
+              }
+            ],
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "14:00",
+                  "end_time": "18:00"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "2. Update - Sửa 1 Product (Full List)",
+          "description": "FE gửi FULL list products (như form submit). API tự động: UPDATE product thay đổi, GIỮ NGUYÊN products không đổi. Ví dụ: Có 2 products, sửa quantity của product 1 từ 2→3.",
+          "body": {
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 3,
+                "is_free_item": false
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 1,
+                "is_free_item": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "3. Update - Thêm Product Mới",
+          "description": "FE gửi full list (2 cũ + 1 mới). API tự động: GIỮ 2 cũ, INSERT 1 mới.",
+          "body": {
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 2,
+                "is_free_item": false
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 1,
+                "is_free_item": true
+              },
+              {
+                "product_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+                "quantity": 1,
+                "is_free_item": false
+              }
+            ]
+          }
+        },
+        {
+          "name": "4. Update - Xóa Product",
+          "description": "FE gửi list không có product cần xóa. API tự động DELETE product không có trong list. Ví dụ: Có 3 products, chỉ gửi 2 → xóa product thứ 3.",
+          "body": {
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "quantity": 2,
+                "is_free_item": false
+              },
+              {
+                "product_id": "11e3e792-5014-4574-b096-d86f07cab248",
+                "quantity": 1,
+                "is_free_item": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "5. Update - Xóa TẤT CẢ Products",
+          "description": "Gửi array rỗng = xóa tất cả products",
+          "body": {
+            "products": []
+          }
+        },
+        {
+          "name": "6. Update - Stores (Full List)",
+          "description": "FE gửi full list stores. API tự động so sánh và UPDATE/INSERT/DELETE.",
+          "body": {
+            "stores": [
+              {
+                "store_id": "3f73a415-2e42-4d17-916a-5761e7293e4c",
+                "active": true
+              },
+              {
+                "store_id": "f3e2c02f-5ca1-4f63-9843-4a0ae8d6f262",
+                "active": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "7. Update - Conditions (Full List)",
+          "description": "FE gửi full list conditions. API tự động so sánh và UPDATE/INSERT/DELETE.",
+          "body": {
+            "conditions": [
+              {
+                "condition_type": "time_range",
+                "condition_value": {
+                  "start_time": "18:00",
+                  "end_time": "22:00"
+                }
+              },
+              {
+                "condition_type": "day_of_week",
+                "condition_value": {
+                  "days": [5, 6, 0]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "8. Update Basic Fields",
+          "description": "Cập nhật các trường đơn giản (name, description, dates). Chỉ gửi fields cần thay đổi.",
+          "body": {
+            "name": "Tên mới - Flash Sale Cuối Tuần",
+            "description": "Áp dụng từ 18h-22h thứ 6, 7, CN",
+            "end_date": "2025-03-31T23:59:59Z",
+            "priority": 15
+          }
+        },
+        {
+          "name": "9. Update - Chỉ Name & Priority (Không Đổi Arrays)",
+          "description": "Chỉ sửa 2 fields. KHÔNG GỬI products/stores/conditions = GIỮ NGUYÊN arrays cũ.",
+          "body": {
+            "name": "Tên mới ngắn gọn",
+            "priority": 25
+          }
+        },
+        {
+          "name": "10. ERROR - Đổi Promotion Type",
+          "description": "LỖI: Không được đổi promotion_type sau khi tạo. Ví dụ: Tạo 'buy_x_get_y' không thể đổi sang 'combo_discount'",
+          "body": {
+            "name": "Mua 2 Tặng 1 - Cafe",
+            "promotion_type": "combo_discount"
+          },
+          "expectedError": {
+            "statusCode": 400,
+            "message": "Không thể thay đổi loại chương trình khuyến mãi"
+          }
+        },
+        {
+          "name": "11. ERROR - End Date Trước Start Date",
+          "description": "LỖI: Ngày kết thúc phải sau ngày bắt đầu",
+          "body": {
+            "start_date": "2025-03-01T00:00:00Z",
+            "end_date": "2025-02-01T00:00:00Z"
+          },
+          "expectedError": {
+            "statusCode": 400,
+            "message": "Ngày kết thúc phải sau ngày bắt đầu"
+          }
+        },
+        {
+          "name": "12. Complex Update - Products với Store Product ID",
+          "description": "Update products có store_product_id (sản phẩm tại chi nhánh cụ thể)",
+          "body": {
+            "products": [
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "store_product_id": "b0da0b8e-b6b8-4b6a-86c8-3c27add50477",
+                "quantity": 2,
+                "is_free_item": false
+              },
+              {
+                "product_id": "231228ee-e9b7-4bae-8150-f24dfdb067f4",
+                "store_product_id": "4e6168f6-4514-466a-9227-c45fb05674a8",
+                "quantity": 1,
+                "is_free_item": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Toggle Active - Disable",
+      "method": "PATCH",
+      "endpoint": "/api/promotional-programs/{id}/toggle-active",
+      "description": "## Mục đích\nTắt chương trình khuyến mãi\n\n## Yêu cầu\n- active: false để tắt\n- reason: Lý do tắt (optional)",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "active": false,
+        "reason": "Hết ngân sách khuyến mãi"
+      },
+      "templates": [
+        {
+          "name": "Disable with Reason",
+          "description": "Tắt chương trình với lý do",
+          "body": {
+            "active": false,
+            "reason": "Hết ngân sách"
+          }
+        },
+        {
+          "name": "Enable Program",
+          "description": "Bật lại chương trình",
+          "body": {
+            "active": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Promotional Program",
+      "method": "DELETE",
+      "endpoint": "/api/promotional-programs/{id}",
+      "description": "## Mục đích\nXóa chương trình khuyến mãi khỏi hệ thống\n\n## Cảnh báo\n- Xóa vĩnh viễn (hard delete)\n- Cascade xóa các records liên quan",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Products List",
+      "method": "GET",
+      "endpoint": "/api/product?page=1&size=20&language=vi",
+      "description": "## Mục đích\nLấy danh sách sản phẩm với phân trang\n\n## Query Parameters\n- page: Số trang (default: 1)\n- size: Số items/trang (default: 20)\n- language: Ngôn ngữ (vi/en/jp) - BẮT BUỘC\n- search: Tìm kiếm theo tên/code\n- active: Lọc active (true/false)\n- category_id: Lọc theo danh mục\n\n## Ứng dụng\n- Lấy danh sách sản phẩm để tạo CTKM\n- Tìm product_id cho chương trình khuyến mãi\n- Quản lý sản phẩm",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Get All Products - Page 1",
+          "description": "Lấy tất cả sản phẩm trang 1 (Tiếng Việt)",
+          "endpoint": "/api/product?page=1&size=20&language=vi"
+        },
+        {
+          "name": "Get Active Products",
+          "description": "Lấy chỉ sản phẩm đang hoạt động",
+          "endpoint": "/api/product?page=1&size=20&language=vi&active=true"
+        },
+        {
+          "name": "Search Products",
+          "description": "Tìm kiếm sản phẩm theo từ khóa",
+          "endpoint": "/api/product?page=1&size=20&language=vi&search=cafe"
+        },
+        {
+          "name": "Get Products By Category",
+          "description": "Lấy sản phẩm theo danh mục",
+          "endpoint": "/api/product?page=1&size=20&language=vi&category_id=YOUR_CATEGORY_ID"
+        },
+        {
+          "name": "Get All - Large Page Size",
+          "description": "Lấy nhiều sản phẩm cho dropdown/select",
+          "endpoint": "/api/product?page=1&size=100&language=vi&active=true"
+        }
+      ]
+    },
+    {
+      "name": "Get Product Detail",
+      "method": "GET",
+      "endpoint": "/api/product/{id}",
+      "description": "## Mục đích\nLấy thông tin chi tiết sản phẩm\n\n## Yêu cầu\n- id: UUID của sản phẩm\n\n## Kết quả\nThông tin đầy đủ về sản phẩm bao gồm giá, mô tả, hình ảnh, size, topping",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get All Products (With Language)",
+      "method": "GET",
+      "endpoint": "/api/product/all?language=vi",
+      "description": "## Mục đích\nLấy TẤT CẢ sản phẩm (không phân trang) với ngôn ngữ\n\n## Query Parameters\n- language: Ngôn ngữ (vi/en/jp) - default: en\n\n## Ứng dụng\n- Lấy toàn bộ sản phẩm cho dropdown/select\n- Dữ liệu đã bao gồm translation theo ngôn ngữ\n- Không có phân trang (trả về tất cả)",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Get All - Vietnamese",
+          "description": "Lấy tất cả sản phẩm với ngôn ngữ tiếng Việt",
+          "endpoint": "/api/product/all?language=vi"
+        },
+        {
+          "name": "Get All - English",
+          "description": "Lấy tất cả sản phẩm với ngôn ngữ tiếng Anh",
+          "endpoint": "/api/product/all?language=en"
+        }
+      ]
+    },
+    {
+      "name": "Get Stores List",
+      "method": "GET",
+      "endpoint": "/api/stores?page=1&size=20",
+      "description": "## Mục đích\nLấy danh sách cửa hàng với phân trang\n\n## Query Parameters\n- page: Số trang (default: 1)\n- size: Số items/trang (default: 20)\n- search: Tìm kiếm theo tên/địa chỉ\n- active: Lọc active (true/false)\n- city: Lọc theo thành phố\n- district: Lọc theo quận/huyện\n\n## Ứng dụng\n- Lấy danh sách cửa hàng để tạo CTKM\n- Tìm store_id cho chương trình khuyến mãi\n- Quản lý cửa hàng",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "templates": [
+        {
+          "name": "Get All Stores - Page 1",
+          "description": "Lấy tất cả cửa hàng trang 1",
+          "endpoint": "/api/stores?page=1&size=20"
+        },
+        {
+          "name": "Get Active Stores",
+          "description": "Lấy chỉ cửa hàng đang hoạt động",
+          "endpoint": "/api/stores?page=1&size=20&active=true"
+        },
+        {
+          "name": "Search Stores",
+          "description": "Tìm kiếm cửa hàng theo từ khóa",
+          "endpoint": "/api/stores?page=1&size=20&search=quan 1"
+        },
+        {
+          "name": "Get Stores By City",
+          "description": "Lấy cửa hàng theo thành phố",
+          "endpoint": "/api/stores?page=1&size=20&city=Ho Chi Minh"
+        },
+        {
+          "name": "Get Stores By District",
+          "description": "Lấy cửa hàng theo quận/huyện",
+          "endpoint": "/api/stores?page=1&size=20&district=Quan 1"
+        },
+        {
+          "name": "Get All - Large Page Size",
+          "description": "Lấy nhiều cửa hàng cho dropdown/select",
+          "endpoint": "/api/stores?page=1&size=100&active=true"
+        }
+      ]
+    },
+    {
+      "name": "Get Store Detail",
+      "method": "GET",
+      "endpoint": "/api/stores/{id}",
+      "description": "## Mục đích\nLấy thông tin chi tiết cửa hàng\n\n## Yêu cầu\n- id: UUID của cửa hàng\n\n## Kết quả\nThông tin đầy đủ về cửa hàng bao gồm địa chỉ, giờ mở cửa, liên hệ, tọa độ",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Combos List",
+      "method": "GET",
+      "endpoint": "/api/combos?page=1&size=10",
+      "description": "## Mục đích\nLấy danh sách combo với phân trang\n\n## Query Parameters\n- page: Số trang\n- size: Số items/trang\n- search: Tìm kiếm theo code/name\n- active: Lọc active",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Combo Detail",
+      "method": "GET",
+      "endpoint": "/api/combos/{id}",
+      "description": "## Mục đích\nLấy thông tin chi tiết combo\n\n## Yêu cầu\n- id: UUID của combo",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Search Combos",
+      "method": "GET",
+      "endpoint": "/api/combos/search/{keyword}",
+      "description": "## Mục đích\nTìm kiếm combo theo từ khóa\n\n## Yêu cầu\n- keyword: Từ khóa tìm kiếm (code hoặc name)",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Promotional Programs, Products, Stores & Combos API",
+    "version": "1.0.0",
+    "description": "API Collection cho module Promotional Programs, Products, Stores và Combos - Taco Web CMS",
+    "created": "2025-01-07",
+    "auth": {
+      "type": "Bearer Token",
+      "username": "boss",
+      "password": "1"
+    },
+    "note": "Tất cả API (trừ login) đều yêu cầu Bearer Token trong header Authorization"
+  }
+}

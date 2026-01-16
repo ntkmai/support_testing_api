@@ -1,0 +1,21 @@
+{
+  "projectId": "{PROJECT_ID}",
+  "projectName": "{PROJECT_NAME}",
+  "description": "{DESCRIPTION}",
+  "version": "1.0.0",
+  "baseUrl": "http://localhost:5000",
+  "createdAt": "2026-01-05",
+  "folders": [
+    {
+      "name": "{PROJECT_NAME}",
+      "path": "",
+      "color": "#38b2ac",
+      "description": "{DESCRIPTION}",
+      "files": [
+        { "name": "README.md", "name_alias": "Hướng dẫn" },
+        { "name": "API-DOCUMENT.md", "name_alias": "API Document" },
+        { "name": "api-json-template.json", "name_alias": "API Tests" }
+      ]
+    }
+  ]
+}

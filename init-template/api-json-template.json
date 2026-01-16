@@ -124,7 +124,7 @@
       }
     }
   ],
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "http://localhost:5000",
   "metadata": {
     "name": "API Test Collection",
     "version": "1.0.0",

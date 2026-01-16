@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khởi tạo Dự án Kế toán</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .status {
+            font-size: 1.1rem;
+            color: #718096;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 10px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success {
+            color: #48bb78;
+        }
+
+        .error {
+            color: #f56565;
+        }
+
+        .info-box {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            color: #2d3748;
+        }
+
+        .info-item strong {
+            color: #667eea;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🧮</div>
+        <h1>Khởi tạo Dự án Kế toán</h1>
+        
+        <div class="status" id="status">
+            Nhấn nút bên dưới để tạo dự án kế toán mặc định
+        </div>
+
+        <div id="spinner" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="infoBox" class="info-box" style="display: none;">
+            <div class="info-item">
+                <strong>📁 Thư mục:</strong>
+                <span id="folderPath">-</span>
+            </div>
+            <div class="info-item">
+                <strong>🎨 Màu:</strong>
+                <span id="color">-</span>
+            </div>
+            <div class="info-item">
+                <strong>📋 ID:</strong>
+                <span id="projectId">-</span>
+            </div>
+            <div class="info-item">
+                <strong>📊 Số API folders:</strong>
+                <span id="apiCount">4</span>
+            </div>
+        </div>
+
+        <button class="button" id="initBtn" onclick="initializeProject()">
+            🚀 Tạo Dự án Kế toán
+        </button>
+
+        <button class="button" id="openBtn" style="display: none;" onclick="openProjectHome()">
+            📂 Mở Danh sách Dự án
+        </button>
+    </div>
+
+    <script type="module">
+        import { ProjectManager } from './js/project-manager.js';
+
+        window.projectManager = new ProjectManager();
+        window.createdProject = null;
+
+        window.initializeProject = async function() {
+            const statusEl = document.getElementById('status');
+            const spinnerEl = document.getElementById('spinner');
+            const initBtn = document.getElementById('initBtn');
+            const openBtn = document.getElementById('openBtn');
+            const infoBox = document.getElementById('infoBox');
+
+            // Disable button and show spinner
+            initBtn.disabled = true;
+            spinnerEl.style.display = 'block';
+            statusEl.textContent = 'Đang kiểm tra dự án hiện có...';
+
+            try {
+                // Load existing projects
+                await window.projectManager.loadProjects();
+                const existingProjects = window.projectManager.getAllProjects();
+
+                // Check if accounting project exists
+                const accountingProject = existingProjects.find(p => 
+                    p.name === 'Dự án Kế toán Mobile' || 
+                    p.apiFolder === 'apis/ke-toan'
+                );
+
+                if (accountingProject) {
+                    statusEl.innerHTML = '<span class="success">✅ Dự án Kế toán đã tồn tại!</span>';
+                    window.createdProject = accountingProject;
+                    showProjectInfo(accountingProject);
+                    spinnerEl.style.display = 'none';
+                    initBtn.style.display = 'none';
+                    openBtn.style.display = 'inline-block';
+                    return;
+                }
+
+                // Create new project
+                statusEl.textContent = '📝 Đang tạo dự án Kế toán mới...';
+
+                const project = await window.projectManager.createProject(
+                    'Dự án Kế toán Mobile',
+                    'Hệ thống API kế toán cho ứng dụng di động - Bao gồm: Tỷ lệ lọ, Phiếu thanh toán, Phiếu tạm ứng, và các API mobile',
+                    '#667eea'
+                );
+
+                if (project) {
+                    // Update with accounting settings
+                    await window.projectManager.updateProject(project.id, {
+                        apiFolder: 'apis/ke-toan',
+                        settings: {
+                            baseUrl: 'http://localhost:3000',
+                            theme: 'light',
+                            defaultFolder: 'mobile-api-accountant'
+                        }
+                    });
+
+                    window.createdProject = project;
+                    statusEl.innerHTML = '<span class="success">🎉 Tạo dự án Kế toán thành công!</span>';
+                    showProjectInfo(project);
+                    spinnerEl.style.display = 'none';
+                    initBtn.style.display = 'none';
+                    openBtn.style.display = 'inline-block';
+                } else {
+                    throw new Error('Không thể tạo dự án');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                statusEl.innerHTML = `<span class="error">❌ Lỗi: ${error.message}</span>`;
+                spinnerEl.style.display = 'none';
+                initBtn.disabled = false;
+            }
+        };
+
+        function showProjectInfo(project) {
+            const infoBox = document.getElementById('infoBox');
+            document.getElementById('folderPath').textContent = project.apiFolder || 'apis/ke-toan';
+            document.getElementById('color').innerHTML = `<span style="display:inline-block;width:20px;height:20px;background:${project.color};border-radius:4px;"></span> ${project.color}`;
+            document.getElementById('projectId').textContent = project.id;
+            infoBox.style.display = 'block';
+        }
+
+        window.openProjectHome = function() {
+            window.location.href = 'project-home.html';
+        };
+    </script>
+</body>
+</html>

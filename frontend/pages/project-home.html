@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Dự Án - API Test Tool</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/project-dropdown-menu.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #48bb78;
+            --error-color: #f56565;
+            --warning-color: #f6ad55;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--card-gradient-start, #667eea) 0%, var(--card-gradient-end, #764ba2) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .project-card-content {
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .project-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--card-gradient-start, #667eea) 0%, var(--card-gradient-end, #764ba2) 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .project-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .project-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .create-project-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .create-project-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        .create-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .pattern-lock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .pattern-canvas {
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            cursor: crosshair;
+        }
+
+        .pattern-info {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .empty-state h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: 16px;
+            right: 60px;
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i data-lucide="folder-kanban" style="vertical-align: middle;"></i> Dự Án API Test</h1>
+            <p>Chọn hoặc tạo dự án mới để bắt đầu</p>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Floating Admin Button -->
+    <div style="position: relative;">
+        <button id="floatingAdminBtn" class="floating-admin-btn" onclick="toggleAdminMode(event)" title="Chế độ Quản trị">
+            <i data-lucide="shield" id="adminIcon"></i>
+            <span id="adminStatus" class="admin-status"></span>
+        </button>
+        <div class="dropdown-menu" id="adminMenu" style="position: fixed; top: 70px; right: 30px;">
+            <button onclick="event.stopPropagation(); changeAdminPassword()">
+                <i data-lucide="key"></i> Đổi mật khẩu
+            </button>
+            <button onclick="event.stopPropagation(); logoutAdmin()">
+                <i data-lucide="log-out"></i> Đăng xuất
+            </button>
+        </div>
+    </div>
+
+    <!-- Create/Edit Project Modal -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Tạo Dự Án Mới</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="projectForm" onsubmit="saveProject(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên dự án *</label>
+                    <input type="text" class="form-input" id="projectName" required placeholder="Nhập tên dự án...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-input form-textarea" id="projectDescription" placeholder="Mô tả ngắn về dự án..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Màu sắc</label>
+                    <div class="color-picker" id="colorPicker">
+                        <!-- Color options will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        <i data-lucide="x"></i> Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="check"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div class="modal" id="patternModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="patternModalTitle">Mật Khẩu Quản Trị</h2>
+                <button class="modal-close" onclick="closePatternModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="pattern-lock-container">
+                <canvas id="patternCanvas" class="pattern-canvas" width="300" height="300"></canvas>
+                <div class="pattern-info" id="patternInfo">
+                    Vẽ mẫu hình để xác thực quản trị viên
+                </div>
+                <div class="modal-actions" style="width: 100%;">
+                    <button type="button" class="btn btn-secondary" onclick="closePatternModal()">
+                        <i data-lucide="x"></i> Hủy
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="setupAdminPassword()" id="setupAdminBtn" style="display: none;">
+                        <i data-lucide="settings"></i> Thiết lập mật khẩu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" id="notificationModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="notificationTitle">Thông báo</h2>
+                <button class="modal-close" onclick="closeNotificationModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div style="padding: 20px;">
+                <p id="notificationMessage" style="white-space: pre-line; line-height: 1.6;"></p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" onclick="closeNotificationModal()">
+                    <i data-lucide="check"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirmationTitle">Xác nhận</h2>
+                <button class="modal-close" onclick="closeConfirmationModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div style="padding: 20px;">
+                <p id="confirmationMessage" style="white-space: pre-line; line-height: 1.6;"></p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal()">
+                    <i data-lucide="x"></i> Không
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmationYesBtn">
+                    <i data-lucide="check"></i> Có
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { ProjectManager } from './js/project-manager.js';
+        import { PatternLock } from './js/pattern-lock.js';
+
+        // Initialize
+        const projectManager = new ProjectManager();
+        let patternLock = null;
+        let currentEditingProject = null;
+        let selectedColor = '#667eea';
+        let firstPattern = null; // Lưu pattern lần đầu để xác nhận
+        let isAdminAuthenticated = localStorage.getItem('admin_session') === 'true'; // Trạng thái admin
+
+        const colors = [
+            '#667eea', '#764ba2', '#f6ad55', '#48bb78', 
+            '#4299e1', '#ed64a6', '#9f7aea', '#f56565'
+        ];
+
+        // Render projects
+        async function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            let projects = []; // Declare outside try block
+            
+            // Show loading
+            grid.innerHTML = '<div class="empty-state"><h2>Đang tải dự án...</h2></div>';
+            
+            try {
+                // Load projects from API
+                await projectManager.loadProjects();
+                projects = projectManager.getAllProjects();
+
+                // Auto-create sample projects if no projects exist
+                if (projects.length === 0) {
+                    console.log('No projects found, creating sample projects...');
+                    
+                    const sampleProjects = [
+                        {
+                            name: 'Dự án Kế toán Mobile',
+                            description: 'Hệ thống API kế toán cho ứng dụng di động - Bao gồm: Tỷ lệ lọ, Phiếu thanh toán, Phiếu tạm ứng',
+                            color: '#667eea',
+                            gradientStart: '#667eea',
+                            gradientEnd: '#764ba2'
+                        },
+                        {
+                            name: 'Payment Gateway API',
+                            description: 'Tích hợp cổng thanh toán đa nền tảng - VNPay, MoMo, ZaloPay, Stripe, PayPal',
+                            color: '#48bb78',
+                            gradientStart: '#38b2ac',
+                            gradientEnd: '#48bb78'
+                        },
+                        {
+                            name: 'User Management System',
+                            description: 'Quản lý người dùng, xác thực JWT, phân quyền RBAC và quản lý session',
+                            color: '#f6ad55',
+                            gradientStart: '#f6ad55',
+                            gradientEnd: '#ed8936'
+                        },
+                        {
+                            name: 'E-commerce API',
+                            description: 'API thương mại điện tử - Sản phẩm, Giỏ hàng, Đơn hàng, Khách hàng, Khuyến mãi',
+                            color: '#ed64a6',
+                            gradientStart: '#ed64a6',
+                            gradientEnd: '#d53f8c'
+                        },
+                        {
+                            name: 'Notification Service',
+                            description: 'Dịch vụ gửi thông báo đa kênh - Email SMTP, SMS, Push Notification, In-app',
+                            color: '#4299e1',
+                            gradientStart: '#4299e1',
+                            gradientEnd: '#3182ce'
+                        },
+                        {
+                            name: 'Analytics Dashboard API',
+                            description: 'API phân tích dữ liệu và báo cáo - Thống kê, Biểu đồ, Chart, Export Excel/PDF',
+                            color: '#9f7aea',
+                            gradientStart: '#9f7aea',
+                            gradientEnd: '#805ad5'
+                        },
+                        {
+                            name: 'Inventory Management',
+                            description: 'Quản lý kho hàng - Nhập xuất tồn, Phiếu nhập, Phiếu xuất, Chuyển kho, Kiểm kê',
+                            color: '#f56565',
+                            gradientStart: '#fc8181',
+                            gradientEnd: '#f56565'
+                        },
+                        {
+                            name: 'CRM System API',
+                            description: 'Quản lý quan hệ khách hàng - Lead, Contact, Deal, Pipeline, Email Marketing',
+                            color: '#4fd1c5',
+                            gradientStart: '#4fd1c5',
+                            gradientEnd: '#38b2ac'
+                        },
+                        {
+                            name: 'Hotel Booking System',
+                            description: 'Hệ thống đặt phòng khách sạn - Tìm kiếm, Đặt phòng, Thanh toán, Quản lý booking',
+                            color: '#fbb6ce',
+                            gradientStart: '#fbb6ce',
+                            gradientEnd: '#ed64a6'
+                        },
+                        {
+                            name: 'Learning Management System',
+                            description: 'Nền tảng học trực tuyến - Khóa học, Bài giảng, Quiz, Assignment, Certificate',
+                            color: '#90cdf4',
+                            gradientStart: '#90cdf4',
+                            gradientEnd: '#4299e1'
+                        },
+                        {
+                            name: 'Food Delivery API',
+                            description: 'API giao đồ ăn - Nhà hàng, Thực đơn, Đơn hàng, Tracking, Shipper management',
+                            color: '#fbd38d',
+                            gradientStart: '#fbd38d',
+                            gradientEnd: '#f6ad55'
+                        },
+                        {
+                            name: 'Real Estate Platform',
+                            description: 'Nền tảng bất động sản - Nhà đất, Tìm kiếm, Liên hệ, Booking xem nhà, Đánh giá',
+                            color: '#c4b5fd',
+                            gradientStart: '#c4b5fd',
+                            gradientEnd: '#9f7aea'
+                        },
+                        {
+                            name: 'Social Media API',
+                            description: 'Mạng xã hội - Post, Comment, Like, Follow, Message, Story, Notification',
+                            color: '#a0aec0',
+                            gradientStart: '#cbd5e0',
+                            gradientEnd: '#a0aec0'
+                        },
+                        {
+                            name: 'Healthcare Management',
+                            description: 'Quản lý y tế - Bệnh nhân, Lịch hẹn, Bệnh án, Đơn thuốc, Kết quả xét nghiệm',
+                            color: '#81e6d9',
+                            gradientStart: '#81e6d9',
+                            gradientEnd: '#4fd1c5'
+                        },
+                        {
+                            name: 'Project Management Tool',
+                            description: 'Quản lý dự án - Task, Sprint, Kanban, Gantt chart, Time tracking, Team collaboration',
+                            color: '#feb2b2',
+                            gradientStart: '#feb2b2',
+                            gradientEnd: '#fc8181'
+                        }
+                    ];
+                    
+                    for (const sample of sampleProjects) {
+                        const newProject = await projectManager.createProject(
+                            sample.name,
+                            sample.description,
+                            sample.color
+                        );
+                        
+                        if (newProject && sample.gradientStart) {
+                            await projectManager.updateProject(newProject.id, {
+                                settings: {
+                                    gradientStart: sample.gradientStart,
+                                    gradientEnd: sample.gradientEnd || sample.color
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Reload projects
+                    await projectManager.loadProjects();
+                    projects = projectManager.getAllProjects();
+                    console.log('✅ Sample projects created!');
+                }
+
+                if (projects.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <h2>Chưa có dự án nào</h2>
+                            <p>Tạo dự án đầu tiên để bắt đầu</p>
+                        </div>
+                    `;
+                    
+                    // Add create card only
+                    const createCard = document.createElement('div');
+                    createCard.className = 'project-card create-project-card';
+                    createCard.innerHTML = `
+                        <div class="create-icon">
+                            <i data-lucide="plus"></i>
+                        </div>
+                        <h3>Tạo Dự Án Mới</h3>
+                    `;
+                    createCard.onclick = () => openCreateModal();
+                    grid.appendChild(createCard);
+                    
+                    lucide.createIcons();
+                    return;
+                }
+                
+                // Clear grid for project cards
+                grid.innerHTML = '';
+                
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h2 style="color: #f56565;">❌ Lỗi kết nối</h2>
+                        <p>Không thể kết nối đến server. Vui lòng kiểm tra:</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            1. Backend server đang chạy (Port 3001)<br>
+                            2. MongoDB connection string đúng<br>
+                            3. Refresh trang để thử lại
+                        </p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Add create card only if admin is authenticated
+            if (isAdminAuthenticated) {
+                const createCard = document.createElement('div');
+                createCard.className = 'project-card create-project-card';
+                createCard.innerHTML = `
+                    <div class="create-icon">
+                        <i data-lucide="plus"></i>
+                    </div>
+                    <h3>Tạo Dự Án Mới</h3>
+                `;
+                createCard.onclick = () => openCreateModal();
+                grid.appendChild(createCard);
+            }
+
+            // Add project cards
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                
+                // Set gradient colors from settings or use default
+                const gradientStart = project.settings?.gradientStart || project.color;
+                const gradientEnd = project.settings?.gradientEnd || project.color;
+                card.style.setProperty('--card-gradient-start', gradientStart);
+                card.style.setProperty('--card-gradient-end', gradientEnd);
+                
+                card.innerHTML = `
+                    <div class="project-card-content">
+                        <div class="project-card-header">
+                            <div class="project-icon">
+                                <i data-lucide="folder"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-name">${project.name}</div>
+                                <div class="project-description">${project.description || 'Không có mô tả'}</div>
+                            </div>
+                            <div class="project-menu">
+                                <button class="menu-btn" onclick="event.stopPropagation(); toggleProjectMenu('${project.id}')" title="Tùy chọn">
+                                    <i data-lucide="more-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu" id="menu-${project.id}">
+                                    <button onclick="event.stopPropagation(); editProject('${project.id}')">
+                                        <i data-lucide="edit-2"></i> Chỉnh sửa
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteProject('${project.id}')">
+                                        <i data-lucide="trash-2"></i> Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-meta">
+                            <div class="project-meta-item">
+                                <i data-lucide="calendar"></i>
+                                ${new Date(project.createdAt).toLocaleDateString('vi-VN')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => openProject(project.id);
+                grid.appendChild(card);
+            });
+
+            // Refresh Lucide icons
+            lucide.createIcons();
+            
+            // Restore admin button state on page load
+            updateAdminButtonState();
+        }
+
+        // Open create modal
+        window.openCreateModal = function() {
+            if (!checkAdminAuth()) return;
+            
+            currentEditingProject = null;
+            document.getElementById('modalTitle').textContent = 'Tạo Dự Án Mới';
+            document.getElementById('projectName').value = '';
+            document.getElementById('projectDescription').value = '';
+            selectedColor = '#667eea';
+            renderColorPicker();
+            document.getElementById('projectModal').classList.add('active');
+        };
+
+        // Edit project
+        window.editProject = function(projectId) {
+            if (!checkAdminAuth()) return;
+            
+            const project = projectManager.getProject(projectId);
+            if (!project) return;
+
+            currentEditingProject = project;
+            document.getElementById('modalTitle').textContent = 'Chỉnh sửa Dự Án';
+            document.getElementById('projectName').value = project.name;
+            document.getElementById('projectDescription').value = project.description || '';
+            selectedColor = project.color;
+            renderColorPicker();
+            document.getElementById('projectModal').classList.add('active');
+        };
+
+        // Save project
+        window.saveProject = async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('projectName').value.trim();
+            const description = document.getElementById('projectDescription').value.trim();
+
+            if (!name) return;
+
+            if (currentEditingProject) {
+                await projectManager.updateProject(currentEditingProject.id, {
+                    name,
+                    description,
+                    color: selectedColor
+                });
+            } else {
+                await projectManager.createProject(name, description, selectedColor);
+            }
+
+            closeModal();
+            await renderProjects();
+        };
+
+        // Delete project
+        window.deleteProject = async function(projectId) {
+            if (!checkAdminAuth()) return;
+            
+            if (confirm('Bạn có chắc muốn xóa dự án này?')) {
+                await projectManager.deleteProject(projectId);
+                await renderProjects();
+            }
+        };
+
+        // Toggle project menu dropdown
+        window.toggleProjectMenu = function(projectId) {
+            const menu = document.getElementById(`menu-${projectId}`);
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            
+            // Close all other menus
+            allMenus.forEach(m => {
+                if (m.id !== `menu-${projectId}`) {
+                    m.classList.remove('active');
+                }
+            });
+            
+            menu.classList.toggle('active');
+        };
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            console.log('Document click event, target:', e.target);
+            
+            if (!e.target.closest('.project-menu') && !e.target.closest('.floating-admin-btn') && !e.target.closest('#adminMenu')) {
+                console.log('Closing all menus');
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    m.classList.remove('active');
+                });
+            } else {
+                console.log('Click inside menu area, not closing');
+            }
+        });
+
+        // Check admin authentication
+        function checkAdminAuth() {
+            if (isAdminAuthenticated) return true;
+            
+            // Check if admin password exists
+            const adminPattern = localStorage.getItem('admin_password');
+            if (!adminPattern) {
+                // First time setup
+                showAdminSetup();
+                return false;
+            }
+            
+            // Prompt for password
+            showAdminLogin();
+            return false;
+        }
+
+        // Show admin login
+        function showAdminLogin() {
+            document.getElementById('patternModalTitle').textContent = 'Đăng nhập Quản trị';
+            document.getElementById('patternInfo').textContent = 'Vẽ mẫu hình để xác thực quản trị viên';
+            document.getElementById('setupAdminBtn').style.display = 'none';
+            document.getElementById('patternModal').classList.add('active');
+            
+            setTimeout(() => {
+                if (!patternLock) {
+                    patternLock = new PatternLock('patternCanvas', {
+                        activeColor: '#3b82f6'
+                    });
+                }
+                
+                patternLock.onPatternComplete(async (pattern) => {
+                    const adminPattern = localStorage.getItem('admin_password');
+                    if (JSON.stringify(pattern) === adminPattern) {
+                        patternLock.showSuccess();
+                        document.getElementById('patternInfo').textContent = '✅ Xác thực thành công!';
+                        document.getElementById('patternInfo').style.color = '#48bb78';
+                        
+                        isAdminAuthenticated = true;
+                        updateAdminButtonState();
+                        setTimeout(() => {
+                            closePatternModal();
+                            renderProjects(); // Re-render to show create button
+                        }, 800);
+                    } else {
+                        patternLock.showError();
+                        document.getElementById('patternInfo').textContent = '❌ Mật khẩu sai! Vui lòng thử lại';
+                        document.getElementById('patternInfo').style.color = '#f56565';
+                        setTimeout(() => {
+                            document.getElementById('patternInfo').textContent = 'Vẽ mẫu hình để xác thực quản trị viên';
+                            document.getElementById('patternInfo').style.color = '#718096';
+                        }, 1500);
+                    }
+                });
+            }, 100);
+        }
+
+        // Show admin setup
+        function showAdminSetup() {
+            firstPattern = null;
+            document.getElementById('patternModalTitle').textContent = 'Thiết lập Mật khẩu Quản trị';
+            document.getElementById('patternInfo').textContent = 'Vẽ mẫu hình để đặt mật khẩu admin (ít nhất 4 điểm, sẽ xác nhận 2 lần)';
+            document.getElementById('setupAdminBtn').style.display = 'none';
+            document.getElementById('patternModal').classList.add('active');
+            
+            setTimeout(() => {
+                if (!patternLock) {
+                    patternLock = new PatternLock('patternCanvas', {
+                        activeColor: '#3b82f6'
+                    });
+                }
+                
+                patternLock.onPatternComplete(async (pattern) => {
+                    if (pattern.length < 4) {
+                        document.getElementById('patternInfo').textContent = 'Mẫu hình quá ngắn! Vui lòng vẽ ít nhất 4 điểm';
+                        document.getElementById('patternInfo').style.color = '#f56565';
+                        patternLock.showError();
+                        return;
+                    }
+
+                    if (!firstPattern) {
+                        firstPattern = pattern;
+                        patternLock.showSuccess();
+                        document.getElementById('patternInfo').textContent = '✅ Tốt! Vui lòng vẽ lại để xác nhận (Pattern: [' + pattern.join(', ') + '])';
+                        document.getElementById('patternInfo').style.color = '#48bb78';
+                        
+                        setTimeout(() => {
+                            patternLock.reset();
+                            document.getElementById('patternInfo').textContent = 'Vẽ lại mẫu hình để xác nhận';
+                            document.getElementById('patternInfo').style.color = '#718096';
+                        }, 1500);
+                    } else {
+                        if (JSON.stringify(pattern) === JSON.stringify(firstPattern)) {
+                            localStorage.setItem('admin_password', JSON.stringify(pattern));
+                            patternLock.showSuccess();
+                            document.getElementById('patternInfo').textContent = '🎉 Đã thiết lập mật khẩu admin thành công!';
+                            document.getElementById('patternInfo').style.color = '#48bb78';
+                            
+                            isAdminAuthenticated = true;
+                            firstPattern = null;
+                            updateAdminButtonState();
+                            
+                            setTimeout(() => {
+                                closePatternModal();
+                                renderProjects(); // Re-render to show create button
+                            }, 800);
+                        } else {
+                            firstPattern = null;
+                            patternLock.showError();
+                            document.getElementById('patternInfo').textContent = '❌ Không khớp! Vui lòng vẽ lại từ đầu';
+                            document.getElementById('patternInfo').style.color = '#f56565';
+                            
+                            setTimeout(() => {
+                                patternLock.reset();
+                                document.getElementById('patternInfo').textContent = 'Vẽ mẫu hình để đặt mật khẩu admin';
+                                document.getElementById('patternInfo').style.color = '#718096';
+                            }, 1500);
+                        }
+                    }
+                });
+            }, 100);
+        }
+
+        // Setup admin password (for button)
+        window.setupAdminPassword = function() {
+            showAdminSetup();
+        };
+
+        // Close modal
+        window.closeModal = function() {
+            document.getElementById('projectModal').classList.remove('active');
+        };
+
+        // Render color picker
+        function renderColorPicker() {
+            const picker = document.getElementById('colorPicker');
+            picker.innerHTML = colors.map(color => `
+                <div class="color-option ${color === selectedColor ? 'active' : ''}" 
+                     style="background: ${color}"
+                     onclick="selectColor('${color}')"></div>
+            `).join('');
+        }
+
+        // Select color
+        window.selectColor = function(color) {
+            selectedColor = color;
+            renderColorPicker();
+        };
+
+        // Show notification modal
+        window.showNotification = function(title, message) {
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            document.getElementById('notificationModal').style.display = 'flex';
+            lucide.createIcons();
+        };
+
+        // Close notification modal
+        window.closeNotificationModal = function() {
+            document.getElementById('notificationModal').style.display = 'none';
+        };
+
+        // Show confirmation modal
+        window.showConfirmation = function(title, message, onConfirm) {
+            document.getElementById('confirmationTitle').textContent = title;
+            document.getElementById('confirmationMessage').textContent = message;
+            document.getElementById('confirmationModal').style.display = 'flex';
+            
+            const yesBtn = document.getElementById('confirmationYesBtn');
+            yesBtn.onclick = function() {
+                closeConfirmationModal();
+                if (onConfirm) onConfirm();
+            };
+            
+            lucide.createIcons();
+        };
+
+        // Close confirmation modal
+        window.closeConfirmationModal = function() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        };
+
+        // Toggle admin mode
+        window.toggleAdminMode = function(event) {
+            if (event) {
+                event.stopPropagation();
+                console.log('Event propagation stopped');
+            }
+            
+            console.log('=== toggleAdminMode called ===');
+            console.log('isAdminAuthenticated:', isAdminAuthenticated);
+            
+            const adminPattern = localStorage.getItem('admin_password');
+            console.log('adminPattern exists:', !!adminPattern);
+            
+            if (!adminPattern) {
+                // First time setup
+                console.log('No admin pattern, showing setup');
+                showAdminSetup();
+                return;
+            }
+            
+            if (isAdminAuthenticated) {
+                // Show admin menu
+                console.log('Admin authenticated, calling toggleAdminMenu()');
+                toggleAdminMenu();
+            } else {
+                // Login
+                console.log('Not authenticated, showing login');
+                showAdminLogin();
+            }
+        };
+
+        // Toggle admin menu
+        window.toggleAdminMenu = function() {
+            console.log('=== toggleAdminMenu called ===');
+            
+            const menu = document.getElementById('adminMenu');
+            console.log('Menu element:', menu);
+            console.log('Menu has active class:', menu ? menu.classList.contains('active') : 'null');
+            
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            console.log('Total dropdown menus:', allMenus.length);
+            
+            // Close other menus
+            allMenus.forEach(m => {
+                if (m.id !== 'adminMenu') {
+                    m.classList.remove('active');
+                }
+            });
+            
+            // Toggle admin menu
+            if (menu.classList.contains('active')) {
+                console.log('Hiding menu');
+                menu.classList.remove('active');
+            } else {
+                console.log('Showing menu');
+                menu.classList.add('active');
+                lucide.createIcons();
+            }
+            
+            console.log('Menu after toggle, has active:', menu.classList.contains('active'));
+        };
+
+        // Change admin password
+        window.changeAdminPassword = function() {
+            document.getElementById('adminMenu').classList.remove('active');
+            showAdminSetup();
+        };
+
+        // Logout admin
+        window.logoutAdmin = function() {
+            document.getElementById('adminMenu').classList.remove('active');
+            isAdminAuthenticated = false;
+            localStorage.removeItem('admin_session');
+            updateAdminButtonState();
+            renderProjects(); // Re-render to hide create button
+            showNotification('Đăng xuất', 'Đã đăng xuất khỏi chế độ quản trị');
+        };
+
+        // Update admin button state
+        function updateAdminButtonState() {
+            console.log('=== updateAdminButtonState called ===');
+            console.log('isAdminAuthenticated:', isAdminAuthenticated);
+            
+            const btn = document.getElementById('floatingAdminBtn');
+            if (isAdminAuthenticated) {
+                localStorage.setItem('admin_session', 'true');
+            } else {
+                localStorage.removeItem('admin_session');
+            }
+            
+            if (isAdminAuthenticated) {
+                btn.classList.add('authenticated');
+                btn.title = 'Chế độ Quản trị (Đã đăng nhập) - Click để đăng xuất';
+            } else {
+                btn.classList.remove('authenticated');
+                btn.title = 'Chế độ Quản trị (Chưa đăng nhập) - Click để đăng nhập';
+            }
+            lucide.createIcons();
+        }
+
+        // Close pattern modal
+        window.closePatternModal = function() {
+            document.getElementById('patternModal').classList.remove('active');
+            if (patternLock) {
+                patternLock.reset();
+            }
+            firstPattern = null;
+            document.getElementById('patternInfo').textContent = 'Vẽ mẫu hình để xác thực quản trị viên';
+            document.getElementById('patternInfo').style.color = '#718096';
+        };
+
+        // Open project (no password check needed)
+        window.openProject = async function(projectId) {
+            console.log('🔓 openProject called with ID:', projectId);
+            const project = projectManager.getProject(projectId);
+            if (!project) return;
+            
+            // Simply enter project without password
+            enterProject(projectId);
+        };
+
+        // Enter project
+        async function enterProject(projectId) {
+            await projectManager.setCurrentProject(projectId);
+            window.location.href = 'index.html';
+        }
+
+        // Initialize
+        (async () => {
+            await renderProjects();
+            updateAdminButtonState();
+            lucide.createIcons();
+        })();
+    </script>
+</body>
+</html>

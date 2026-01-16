@@ -4,7 +4,8 @@ Mô tả flow nghiệp vụ và các test case cho API.
 
 ## 📋 Overview
 
-**Project**: [Tên dự án]  
+**Project**: {PROJECT_NAME}  
+**Description**: {DESCRIPTION}  
 **Base URL**: `http://localhost:3000`  
 **Version**: 1.0.0
 

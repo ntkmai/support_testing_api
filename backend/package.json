@@ -1,0 +1,32 @@
+{
+  "name": "api-test-tool-backend",
+  "version": "1.0.0",
+  "description": "Backend API for API Test Tool with MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:memory": "node server-inmemory.js",
+    "start:multi": "node server-multiproject.js",
+    "dev": "nodemon server.js",
+    "dev:memory": "nodemon server-inmemory.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "mongodb",
+    "express",
+    "project-management"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "mongodb": "^6.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "nodemon": "^3.0.2"
+  }
+}

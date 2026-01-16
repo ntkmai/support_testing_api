@@ -1,6 +1,14 @@
-# Hướng dẫn sử dụng Template
+# {PROJECT_NAME}
 
-Thư mục này chứa file template mẫu để tạo test collection cho API Tester.
+{DESCRIPTION}
+
+## 📋 Overview
+
+**Project ID**: `{PROJECT_ID}`  
+**Version**: 1.0.0  
+**Created**: 2026-01-05
+
+## Hướng dẫn sử dụng Template
 
 ## Files
 

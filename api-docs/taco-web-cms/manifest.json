@@ -1,0 +1,38 @@
+{
+  "projectId": "taco-web-cms",
+  "projectName": "Taco Web CMS API",
+  "description": "API cho dự án sushi Taco",
+  "version": "1.0.0",
+  "baseUrl": "http://localhost:9000",
+  "createdAt": "2026-01-07",
+  "folders": [
+    {
+      "name": "Chương trình KM",
+      "path": "",
+      "color": "#38b2ac",
+      "description": "Chương trình khuyến mãi cho Taco Web CMS",
+      "files": [
+        {
+          "name": "MANIFEST.md",
+          "name_alias": "Tổng quan"
+        },
+        {
+          "name": "QUICK-START.md",
+          "name_alias": "Giới thiệu"
+        },
+        {
+          "name": "ENUMS.md",
+          "name_alias": "Enums & Constants"
+        },
+        {
+          "name": "API-REFERENCE.md",
+          "name_alias": "Tài liệu chi tiết API"
+        },
+        {
+          "name": "promotional-programs-api.json",
+          "name_alias": "Test nhanh API"
+        }
+      ]
+    }
+  ]
+}

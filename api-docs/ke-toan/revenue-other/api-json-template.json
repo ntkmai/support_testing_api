@@ -1,0 +1,490 @@
+{
+  "requests": [
+    {
+      "name": "Login",
+      "method": "POST",
+      "endpoint": "/api/auth/login",
+      "description": "## Mục đích\nĐăng nhập vào hệ thống\n\n## Yêu cầu\n- username: Tên đăng nhập\n- password: Mật khẩu\n\n## Kết quả\nTrả về JWT token",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "username": "797979",
+        "password": "666666"
+      },
+      "templates": [
+        {
+          "name": "Main Account",
+          "description": "Đăng nhập với tài khoản chính",
+          "body": {
+            "username": "797979",
+            "password": "666666"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Revenue Other List",
+      "method": "GET",
+      "endpoint": "/api/revenue-other",
+      "description": "## Mục đích\nLấy danh sách phiếu thu khác\n\n## Yêu cầu\nCần Bearer token trong header",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Get Revenue Other By ID",
+      "method": "GET",
+      "endpoint": "/api/revenue-other/{id}",
+      "description": "Lấy thông tin chi tiết phiếu thu khác theo ID",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Create Revenue Other - Company Type",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "## Mục đích\nTạo phiếu thu khác với đối tượng là Công ty\n\n## Thông tin\n- posting_date: Ngày hạch toán\n- revenue_date: Ngày doanh thu\n- details: Chi tiết các giao dịch",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+            "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+            "debit_disburser_type": "company",
+            "debit_disburser_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+            "credit_disburser_type": "bank_account",
+            "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+            "statistic_code_id": "42c8e44b-2fb6-4f8e-9ede-f87dea60c950",
+            "description": "Thu từ công ty vào tài khoản ngân hàng",
+            "amount": 10000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Company Debit",
+          "description": "Đối tượng nợ là công ty",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+                "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+                "debit_disburser_type": "company",
+                "debit_disburser_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+                "credit_disburser_type": "bank_account",
+                "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+                "statistic_code_id": "42c8e44b-2fb6-4f8e-9ede-f87dea60c950",
+                "description": "Thu từ công ty vào tài khoản ngân hàng",
+                "amount": 10000000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Revenue Other - Bank Account Type",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "Tạo phiếu thu khác với đối tượng là Tài khoản ngân hàng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+            "credit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+            "debit_disburser_type": "department",
+            "debit_disburser_id": "f69db0e3-8056-e911-80bf-00155d0a0f08",
+            "credit_disburser_type": "bank_account",
+            "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+            "statistic_code_id": "7724dea1-130d-40dc-9bd4-b6d3e787caac",
+            "description": "Thu từ phòng ban qua tài khoản ngân hàng",
+            "amount": 5000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Bank Account 1",
+          "description": "Tài khoản ngân hàng 1",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+                "credit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+                "debit_disburser_type": "department",
+                "debit_disburser_id": "f69db0e3-8056-e911-80bf-00155d0a0f08",
+                "credit_disburser_type": "bank_account",
+                "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+                "statistic_code_id": "7724dea1-130d-40dc-9bd4-b6d3e787caac",
+                "description": "Thu từ phòng ban qua tài khoản ngân hàng",
+                "amount": 5000000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Bank Account 2",
+          "description": "Tài khoản ngân hàng 2",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+                "credit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+                "debit_disburser_type": "bank_account",
+                "debit_disburser_id": "8c367d7a-229e-4a8d-918e-c1975650e160",
+                "credit_disburser_type": "store",
+                "credit_disburser_id": "66cd5a4c-1c21-49a2-bfc4-174283ace17a",
+                "statistic_code_id": "712c6135-389f-4f07-9038-39e9cb0e4ef3",
+                "description": "Thu từ ngân hàng vào cửa hàng",
+                "amount": 7500000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Revenue Other - Department Type",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "Tạo phiếu thu khác với đối tượng là Phòng ban",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+            "credit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+            "debit_disburser_type": "department",
+            "debit_disburser_id": "f69db0e3-8056-e911-80bf-00155d0a0f08",
+            "credit_disburser_type": "disburser",
+            "credit_disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+            "statistic_code_id": "bcd06fbb-cf6e-4717-9df9-e12afc87c966",
+            "description": "Thu từ phòng Nghiên Cứu & Phát Triển",
+            "amount": 3000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "R&D Department",
+          "description": "Phòng Nghiên Cứu & Phát Triển",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+                "credit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+                "debit_disburser_type": "department",
+                "debit_disburser_id": "f69db0e3-8056-e911-80bf-00155d0a0f08",
+                "credit_disburser_type": "disburser",
+                "credit_disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+                "statistic_code_id": "bcd06fbb-cf6e-4717-9df9-e12afc87c966",
+                "description": "Thu từ phòng Nghiên Cứu & Phát Triển",
+                "amount": 3000000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Finance Department",
+          "description": "Phòng Tài Chính",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+                "credit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+                "debit_disburser_type": "company",
+                "debit_disburser_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+                "credit_disburser_type": "department",
+                "credit_disburser_id": "94afc6b2-8156-e911-80bf-00155d0a0f08",
+                "statistic_code_id": "caa83373-ba0f-4295-805c-3ac6f9e6721f",
+                "description": "Thu từ công ty vào phòng Tài Chính",
+                "amount": 4500000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Revenue Other - Store Type",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "Tạo phiếu thu khác với đối tượng là Cửa hàng",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+            "credit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+            "debit_disburser_type": "store",
+            "debit_disburser_id": "66cd5a4c-1c21-49a2-bfc4-174283ace17a",
+            "credit_disburser_type": "bank_account",
+            "credit_disburser_id": "4aa7a8be-48de-473b-9953-f16372f70459",
+            "statistic_code_id": "302dfaf7-c292-490c-8079-f67709f4e5b7",
+            "description": "Thu từ cửa hàng vào ngân hàng",
+            "amount": 8000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Store 1",
+          "description": "Cửa hàng 1",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+                "credit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+                "debit_disburser_type": "store",
+                "debit_disburser_id": "66cd5a4c-1c21-49a2-bfc4-174283ace17a",
+                "credit_disburser_type": "bank_account",
+                "credit_disburser_id": "4aa7a8be-48de-473b-9953-f16372f70459",
+                "statistic_code_id": "302dfaf7-c292-490c-8079-f67709f4e5b7",
+                "description": "Thu từ cửa hàng vào ngân hàng",
+                "amount": 8000000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Revenue Other - Disburser Type",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "Tạo phiếu thu khác với đối tượng chi",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+            "credit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+            "debit_disburser_type": "bank_account",
+            "debit_disburser_id": "a8eb8907-17bb-460a-9380-2f9982212540",
+            "credit_disburser_type": "disburser",
+            "credit_disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+            "statistic_code_id": "8d576bdf-2538-4c6c-b247-5ebf89b126c0",
+            "description": "Thu từ ngân hàng vào đối tượng chi",
+            "amount": 6000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Disburser 1",
+          "description": "Đối tượng chi 1",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+                "credit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+                "debit_disburser_type": "bank_account",
+                "debit_disburser_id": "a8eb8907-17bb-460a-9380-2f9982212540",
+                "credit_disburser_type": "disburser",
+                "credit_disburser_id": "06be8c33-bf86-4b9e-b716-1fff27db53e5",
+                "statistic_code_id": "8d576bdf-2538-4c6c-b247-5ebf89b126c0",
+                "description": "Thu từ ngân hàng vào đối tượng chi",
+                "amount": 6000000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Disburser 2",
+          "description": "Đối tượng chi 2",
+          "body": {
+            "posting_date": "2026-01-08",
+            "revenue_date": "2026-01-08",
+            "details": [
+              {
+                "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+                "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+                "debit_disburser_type": "disburser",
+                "debit_disburser_id": "0d6c0b17-6a12-4453-876b-f8e98bb6d945",
+                "credit_disburser_type": "store",
+                "credit_disburser_id": "e92cf911-b543-4638-b996-2c4441ca0480",
+                "statistic_code_id": "f84fa4a1-fa54-4876-9f4f-4d36b6d1e076",
+                "description": "Thu từ đối tượng chi vào cửa hàng",
+                "amount": 9500000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Revenue Other - Multiple Details",
+      "method": "POST",
+      "endpoint": "/api/revenue-other",
+      "description": "Tạo phiếu thu khác với nhiều chi tiết",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-08",
+        "revenue_date": "2026-01-08",
+        "details": [
+          {
+            "debit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+            "credit_account_id": "ddb52d80-84d9-47bf-aecc-a13578d1741c",
+            "debit_disburser_type": "company",
+            "debit_disburser_id": "9e2ba481-7040-404a-9da0-d612d28303f5",
+            "credit_disburser_type": "bank_account",
+            "credit_disburser_id": "74eb3886-f8eb-4e92-963a-3c6efaf54cf4",
+            "statistic_code_id": "42c8e44b-2fb6-4f8e-9ede-f87dea60c950",
+            "description": "Thu từ công ty",
+            "amount": 5000000
+          },
+          {
+            "debit_account_id": "f65016bc-e66f-4d0d-b14b-041c799e8675",
+            "credit_account_id": "0762acc1-bf60-48a5-8e62-e9b0ccf39e03",
+            "debit_disburser_type": "department",
+            "debit_disburser_id": "94afc6b2-8156-e911-80bf-00155d0a0f08",
+            "credit_disburser_type": "bank_account",
+            "credit_disburser_id": "0f43bbe8-c264-405e-a8a7-d05fb88865c3",
+            "statistic_code_id": "7724dea1-130d-40dc-9bd4-b6d3e787caac",
+            "description": "Thu qua ngân hàng",
+            "amount": 3000000
+          },
+          {
+            "debit_account_id": "074c2ec5-e7c1-478d-924b-82b2418c6e20",
+            "credit_account_id": "0435f67c-4d11-4fb0-9411-0452e4f8dffd",
+            "debit_disburser_type": "department",
+            "debit_disburser_id": "e4408871-5271-ed11-80fb-00155dc46400",
+            "credit_disburser_type": "disburser",
+            "credit_disburser_id": "4ea893c1-c5fd-484e-8208-d92476302d23",
+            "statistic_code_id": "8b7e9223-6c6b-4654-9132-d94cad546514",
+            "description": "Thu từ phòng ban",
+            "amount": 2000000
+          }
+        ]
+      }
+    },
+    {
+      "name": "Update Revenue Other",
+      "method": "PUT",
+      "endpoint": "/api/revenue-other/{id}",
+      "description": "Cập nhật phiếu thu khác",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      },
+      "body": {
+        "posting_date": "2026-01-09",
+        "revenue_date": "2026-01-09",
+        "details": [
+          {
+            "id": "existing-detail-id",
+            "debit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+            "credit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+            "debit_disburser_type": "store",
+            "debit_disburser_id": "66cd5a4c-1c21-49a2-bfc4-174283ace17a",
+            "credit_disburser_type": "disburser",
+            "credit_disburser_id": "4ea893c1-c5fd-484e-8208-d92476302d23",
+            "statistic_code_id": "302dfaf7-c292-490c-8079-f67709f4e5b7",
+            "description": "Cập nhật mô tả",
+            "amount": 12000000
+          }
+        ]
+      },
+      "templates": [
+        {
+          "name": "Update Amount",
+          "description": "Cập nhật số tiền",
+          "body": {
+            "details": [
+              {
+                "id": "existing-detail-id",
+                "debit_account_id": "50fa2857-6650-4cb4-8823-7287c7af9e2f",
+                "credit_account_id": "4ffd48e4-2f4f-4a6c-9687-300b7eb9b482",
+                "debit_disburser_type": "store",
+                "debit_disburser_id": "66cd5a4c-1c21-49a2-bfc4-174283ace17a",
+                "credit_disburser_type": "disburser",
+                "credit_disburser_id": "4ea893c1-c5fd-484e-8208-d92476302d23",
+                "statistic_code_id": "302dfaf7-c292-490c-8079-f67709f4e5b7",
+                "description": "Cập nhật số tiền",
+                "amount": 15000000
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update Date",
+          "description": "Cập nhật ngày",
+          "body": {
+            "posting_date": "2026-01-10",
+            "revenue_date": "2026-01-10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Revenue Other",
+      "method": "DELETE",
+      "endpoint": "/api/revenue-other/{id}",
+      "description": "Xóa phiếu thu khác",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    },
+    {
+      "name": "Export Revenue Other",
+      "method": "GET",
+      "endpoint": "/api/revenue-other/export",
+      "description": "Xuất danh sách phiếu thu khác ra Excel",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  ],
+  "baseUrl": "http://localhost:3000",
+  "metadata": {
+    "name": "Revenue Other API Test Collection",
+    "version": "1.0.0",
+    "description": "Template test cho module Revenue Other - Phiếu thu khác",
+    "created": "2026-01-08"
+  }
+}

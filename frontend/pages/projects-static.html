@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dự Án API Test</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="stylesheet" href="/assets/css/projects-static.css" />
+    <style>
+      /* Modal styles - Dark Mode */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(8px);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        display: none;
+      }
+
+      .modal.active {
+        display: flex !important;
+      }
+
+      .modal-content {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px) scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .modal-title {
+        text-align: center;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        flex: 1;
+        background: linear-gradient(90deg, #ff7eb3, #ff758c, #ffb199);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .modal-close {
+        position: absolute;
+        right: 0;
+      }
+
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        color: #cbd5e1;
+      }
+
+      .modal-close:hover {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      .pattern-lock-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .pattern-canvas {
+        border: 3px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+        cursor: crosshair;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4),
+          0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      }
+
+      .pattern-canvas:hover {
+        border-color: rgba(96, 165, 250, 0.4);
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4),
+          0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      }
+
+      .pattern-info {
+        text-align: center;
+        color: #cbd5e1;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.6;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      /* Success State */
+      .success-state {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding: 40px 20px;
+      }
+
+      .success-state.active {
+        display: flex;
+        animation: successFadeIn 0.5s ease;
+      }
+
+      @keyframes successFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: successBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      }
+
+      .success-icon i {
+        width: 48px;
+        height: 48px;
+        color: white;
+      }
+
+      @keyframes successBounce {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .success-text {
+        color: #f1f5f9;
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .btn-close-success {
+        padding: 12px 32px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn-close-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+      }
+
+      /* Loading State */
+      .loading-state {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 40px 20px;
+      }
+
+      .loading-state.active {
+        display: flex;
+      }
+
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(96, 165, 250, 0.2);
+        border-top-color: #60a5fa;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        color: #cbd5e1;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <!-- Canvas Honeycomb background -->
+    <div class="honeycomb-container">
+      <canvas id="honeycombCanvas"></canvas>
+    </div>
+
+    <!-- Toggle Button for Control Panel -->
+    <div class="panel-toggle-btn" id="panelToggleBtn">
+      <i data-lucide="settings"></i>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel hidden" id="controlPanel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i data-lucide="settings"></i>
+          <span>Điều Chỉnh Layout</span>
+        </div>
+        <button class="toggle-btn" id="toggleBtn">
+          <i data-lucide="minimize-2"></i>
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="control-group">
+          <label class="control-label">Khoảng cách giữa cards (px)</label>
+          <div class="control-input-group">
+            <input
+              type="range"
+              class="control-slider"
+              id="hexGapSlider"
+              min="0"
+              max="50"
+              value="10"
+            />
+            <input
+              type="number"
+              class="control-input"
+              id="hexGapInput"
+              value="10"
+              style="max-width: 70px"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Khoảng cách giữa hàng (px)</label>
+          <div class="control-input-group">
+            <input
+              type="range"
+              class="control-slider"
+              id="rowSpacingSlider"
+              min="-100"
+              max="50"
+              value="-30"
+            />
+            <input
+              type="number"
+              class="control-input"
+              id="rowSpacingInput"
+              value="-30"
+              style="max-width: 70px"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Dịch hàng 2 sang phải (px)</label>
+          <div class="control-input-group">
+            <input
+              type="range"
+              class="control-slider"
+              id="row2OffsetSlider"
+              min="0"
+              max="400"
+              value="165"
+            />
+            <input
+              type="number"
+              class="control-input"
+              id="row2OffsetInput"
+              value="165"
+              style="max-width: 70px"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Dịch hàng 3 sang phải (px)</label>
+          <div class="control-input-group">
+            <input
+              type="range"
+              class="control-slider"
+              id="row3OffsetSlider"
+              min="0"
+              max="500"
+              value="330"
+            />
+            <input
+              type="number"
+              class="control-input"
+              id="row3OffsetInput"
+              value="330"
+              style="max-width: 70px"
+            />
+          </div>
+        </div>
+
+        <div class="control-buttons">
+          <button class="control-btn reset-btn" id="resetBtn">
+            <i data-lucide="rotate-ccw"></i>
+            Reset
+          </button>
+          <button class="control-btn copy-btn" id="copyBtn">
+            <i data-lucide="copy"></i>
+            Copy CSS
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>MASTER BACK-END API</h1>
+        <p>Chọn 1 dự án để bắt đầu</p>
+      </div>
+
+      <div class="honeycomb" id="honeycomb"></div>
+    </div>
+
+    <!-- Project Password Modal -->
+    <div class="modal" id="projectPasswordModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="passwordModalTitle">Mở khóa Project</h2>
+          <button
+            class="modal-close"
+            onclick="window.projectUnlock?.closePasswordModal()"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <!-- Pattern Input State -->
+        <div class="pattern-lock-container" id="patternInputState">
+          <canvas
+            id="projectPatternCanvas"
+            class="pattern-canvas"
+            width="300"
+            height="300"
+          ></canvas>
+          <div class="pattern-info" id="passwordInfo">
+            Vẽ mẫu hình để mở khóa
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Đang xử lý...</div>
+        </div>
+
+        <!-- Success State -->
+        <div class="success-state" id="successState">
+          <div class="success-icon">
+            <i data-lucide="lock-open"></i>
+          </div>
+          <div class="success-text">Đã thiết lập mật khẩu thành công!</div>
+          <button
+            class="btn-close-success"
+            onclick="window.projectUnlock?.proceedAfterSuccess()"
+          >
+            <i
+              data-lucide="arrow-right"
+              style="
+                width: 20px;
+                height: 20px;
+                display: inline;
+                vertical-align: middle;
+              "
+            ></i>
+            Tiếp tục
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="../assets/js/projects-static.js"></script>
+  </body>
+</html>
